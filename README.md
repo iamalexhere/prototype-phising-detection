@@ -61,25 +61,113 @@ Our URL Phishing Detection system works like a highly trained security expert wh
 
 ## System Architecture
 
-Think of our system like a factory with different departments working together:
+Our URL Phishing Detection system is built with a modular architecture that ensures efficient processing and accurate predictions. Here's a detailed look at how the system works:
 
-### High-Level System Design
 ```mermaid
-flowchart LR
-    A[URL Input] -->|Feature Extraction|> B[Feature Vector]
-    B -->|Model Prediction|> C[Prediction Output]
-    C -->|Post-processing|> D[Final Output]
-    style A fill:#f9f,stroke:#333,stroke-width:4px
-    style B fill:#f9f,stroke:#333,stroke-width:4px
-    style C fill:#f9f,stroke:#333,stroke-width:4px
-    style D fill:#f9f,stroke:#333,stroke-width:4px
+graph TD
+    subgraph User Interface
+        A[Web Browser] -->|URL Input| B[Flask Frontend]
+        A -->|QR Code Upload| B
+    end
+    
+    subgraph Backend Processing
+        B -->|HTTP Request| C[Flask Backend]
+        C -->|URL Features| D[Feature Extractor]
+        D -->|18 Features| E[Random Forest Model]
+        E -->|Prediction| F[Result Processor]
+        F -->|JSON Response| B
+    end
+    
+    subgraph Feature Extraction
+        D --> G[Length Features]
+        D --> H[Character Features]
+        D --> I[Security Features]
+        G --> D1[URL/Domain/Path Length]
+        H --> D2[Special Chars/Digits]
+        I --> D3[HTTPS/Dots/Tokens]
+    end
+    
+    subgraph Model Training
+        J[Training Data] -->|Preprocessing| K[Balanced Dataset]
+        K -->|70%| L[Training Set]
+        K -->|15%| M[Validation Set]
+        K -->|15%| N[Test Set]
+        L --> O[GridSearchCV]
+        O -->|Best Parameters| P[Final Model]
+    end
 ```
 
-In simple terms:
-1. **Reception (Frontend)**: Where users enter the URL they want to check
-2. **Analysis Department (Backend)**: Where all the security checks happen
-3. **Security Expert (Model)**: Makes the final decision about the URL
-4. **Report Generator**: Creates an easy-to-understand report for the user
+The system architecture diagram above shows:
+1. **User Interface**: A web-based interface where users can input URLs or upload QR codes
+2. **Backend Processing**: Flask-based server that handles requests and coordinates the detection process
+3. **Feature Extraction**: Extracts 18 distinct features from URLs (detailed below)
+4. **Model Training**: Shows how our Random Forest model was trained and optimized
+
+### Feature Extraction Process
+
+The feature extraction is a critical component that transforms URLs into meaningful numerical features:
+
+```mermaid
+graph LR
+    A[Input URL] --> B[URL Parser]
+    B --> C[Length Features]
+    B --> D[Character Features]
+    B --> E[Security Features]
+    
+    subgraph Length Features
+        C --> C1[URL Length]
+        C --> C2[Domain Length]
+        C --> C3[Path Length]
+        C --> C4[Subdomain Length]
+        C --> C5[TLD Length]
+    end
+    
+    subgraph Character Features
+        D --> D1[Special Chars]
+        D --> D2[Digit Count]
+        D --> D3[@Symbol]
+        D --> D4[IP Detection]
+        D --> D5[Underscore Count]
+        D --> D6[Percent Symbol Count]
+        D --> D7[Hash Symbol Count]
+    end
+    
+    subgraph Security Features
+        E --> E1[HTTPS]
+        E --> E2[Dots Count]
+        E --> E3[Hyphens]
+        E --> E4[Domain Tokens]
+        E --> E5[Query Params]
+        E --> E6[Ampersand Count]
+    end
+```
+
+Our feature extractor processes URLs in three main categories:
+1. **Length Features**: Analyzes various length-based characteristics (5 features)
+   - URL total length
+   - Domain length
+   - Path length
+   - Subdomain length
+   - TLD length
+
+2. **Character Features**: Examines character patterns (7 features)
+   - Special character count
+   - Digit count
+   - @ symbol presence
+   - IP address detection
+   - Underscore count
+   - Percent symbol count
+   - Hash symbol count
+
+3. **Security Features**: Checks security-related indicators (6 features)
+   - HTTPS usage
+   - Dot count
+   - Hyphen usage
+   - Domain token count
+   - Query parameter count
+   - Ampersand count
+
+All these features (total of 18) are implemented in our `URLFeatureExtractor` class and have been proven effective in identifying phishing URLs.
 
 ## Dataset Analysis
 
@@ -154,7 +242,10 @@ Category Distribution (Top 5):
            'special_chars_count': len(re.findall(r'[^a-zA-Z0-9]', url)),
            'digits_count': len(re.findall(r'\d', url)),
            'has_at_symbol': int('@' in url),
-           'is_ip_address': is_ip_address(url)
+           'is_ip_address': is_ip_address(url),
+           'underscore_count': len(re.findall(r'_', url)),
+           'percent_symbol_count': len(re.findall(r'%', url)),
+           'hash_symbol_count': len(re.findall(r'#', url))
        }
    ```
 
@@ -167,7 +258,8 @@ Category Distribution (Top 5):
            'num_dots': url.count('.'),
            'num_hyphens': url.count('-'),
            'domain_token_count': len(re.findall(r'[a-zA-Z0-9]+', parsed.netloc)),
-           'num_query_components': len(parsed.query.split('&')) if parsed.query else 0
+           'num_query_components': len(parsed.query.split('&')) if parsed.query else 0,
+           'ampersand_count': len(re.findall(r'&', url))
        }
    ```
 
