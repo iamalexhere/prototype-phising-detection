@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Phishing Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="theme-toggle">
+        <button id="themeToggle" class="theme-toggle-btn">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>URL Phishing Detector</h1>
+            <p>Check if a URL is potentially malicious using our advanced machine learning model</p>
+        </div>
+
+        <div class="input-section">
+            <input type="url" id="urlInput" class="url-input" placeholder="Enter URL to analyze">
+            <button id="analyzeBtn" class="analyze-btn">Analyze URL</button>
+            
+            <div id="dropzone" class="dropzone">
+                <p>Drop QR code image here or click to upload</p>
+                <input type="file" id="fileInput" hidden accept="image/*">
+            </div>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Analyzing URL...</p>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+
+        <div id="results" class="results-section">
+            <div class="result-header">
+                <div class="result-icon">
+                    <i id="resultIcon" class="fas"></i>
+                </div>
+                <div class="result-details">
+                    <h2 id="resultTitle"></h2>
+                    <p id="resultUrl"></p>
+                </div>
+            </div>
+
+            <div class="confidence-section">
+                <p>Confidence Level</p>
+                <div class="confidence-bar">
+                    <div id="confidenceLevel" class="confidence-level"></div>
+                </div>
+                <p id="confidenceText"></p>
+            </div>
+
+            <div class="features-section">
+                <h3>URL Analysis Details</h3>
+                <div id="featuresGrid" class="features-grid">
+                    <!-- Features will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlInput = document.getElementById('urlInput');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.getElementById('fileInput');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const errorMessage = document.getElementById('errorMessage');
+            const themeToggle = document.getElementById('themeToggle');
+
+            // Theme Toggle Logic
+            function setTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                themeToggle.classList.toggle('dark', theme === 'dark');
+            }
+
+            // Check for saved theme preference or default to 'light'
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+                
+                // Add animation class
+                document.body.classList.add('theme-transition');
+                setTimeout(() => {
+                    document.body.classList.remove('theme-transition');
+                }, 1000);
+            });
+
+            function showLoading() {
+                loading.classList.add('show');
+                results.classList.remove('show');
+                errorMessage.classList.remove('show');
+            }
+
+            function hideLoading() {
+                loading.classList.remove('show');
+            }
+
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.classList.add('show');
+                hideLoading();
+            }
+
+            function displayResults(data) {
+                const resultIcon = document.getElementById('resultIcon');
+                const resultTitle = document.getElementById('resultTitle');
+                const resultUrl = document.getElementById('resultUrl');
+                const confidenceLevel = document.getElementById('confidenceLevel');
+                const confidenceText = document.getElementById('confidenceText');
+                const featuresGrid = document.getElementById('featuresGrid');
+
+                // Update result header
+                if (data.is_phishing) {
+                    resultIcon.className = 'fas fa-exclamation-triangle';
+                    resultIcon.style.color = 'var(--danger-color)';
+                    resultTitle.textContent = 'Potential Phishing URL Detected';
+                } else {
+                    resultIcon.className = 'fas fa-check-circle';
+                    resultIcon.style.color = 'var(--success-color)';
+                    resultTitle.textContent = 'Safe URL';
+                }
+
+                resultUrl.textContent = data.url;
+
+                // Update confidence bar
+                const confidence = data.confidence * 100;
+                confidenceLevel.style.width = `${confidence}%`;
+                confidenceLevel.style.backgroundColor = data.is_phishing ? 'var(--danger-color)' : 'var(--success-color)';
+                confidenceText.textContent = `${confidence.toFixed(1)}% confidence`;
+
+                // Display features
+                featuresGrid.innerHTML = '';
+                Object.entries(data.features).forEach(([key, value]) => {
+                    const featureCard = document.createElement('div');
+                    featureCard.className = 'feature-card';
+                    featureCard.innerHTML = `
+                        <h3>${key.replace(/_/g, ' ').toUpperCase()}</h3>
+                        <p>${typeof value === 'number' ? value.toFixed(2) : value}</p>
+                    `;
+                    featuresGrid.appendChild(featureCard);
+                });
+
+                results.classList.add('show');
+                hideLoading();
+            }
+
+            async function analyzeUrl(url) {
+                showLoading();
+                try {
+                    const formData = new FormData();
+                    formData.append('url', url);
+
+                    const response = await fetch('/analyze', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (data.error) {
+                        showError(data.error);
+                    } else {
+                        displayResults(data);
+                    }
+                } catch (error) {
+                    showError('An error occurred while analyzing the URL');
+                }
+            }
+
+            async function handleFile(file) {
+                showLoading();
+                try {
+                    const formData = new FormData();
+                    formData.append('qr_image', file);
+
+                    const response = await fetch('/analyze', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (data.error) {
+                        showError(data.error);
+                    } else {
+                        displayResults(data);
+                    }
+                } catch (error) {
+                    showError('An error occurred while processing the QR code');
+                }
+            }
+
+            // Event Listeners
+            analyzeBtn.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                ripple.style.left = `${e.clientX - rect.left}px`;
+                ripple.style.top = `${e.clientY - rect.top}px`;
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 1000);
+                
+                const url = urlInput.value.trim();
+                if (url) {
+                    analyzeUrl(url);
+                } else {
+                    showError('Please enter a URL');
+                }
+            });
+
+            dropzone.addEventListener('click', () => fileInput.click());
+
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('dragover');
+            });
+
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.classList.remove('dragover');
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    handleFile(file);
+                } else {
+                    showError('Please drop a valid image file');
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    handleFile(file);
+                }
+            });
+
+            urlInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    analyzeBtn.click();
+                }
+            });
+
+            urlInput.addEventListener('focus', () => {
+                urlInput.classList.add('input-focus');
+            });
+
+            urlInput.addEventListener('blur', () => {
+                urlInput.classList.remove('input-focus');
+            });
+        });
+    </script>
+</body>
+</html>

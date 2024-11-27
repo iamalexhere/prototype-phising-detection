@@ -1,0 +1,31 @@
+graph TD
+    subgraph User Interface
+        A[Web Browser] -->|URL Input| B[Flask Frontend]
+        A -->|QR Code Upload| B
+    end
+    
+    subgraph Backend Processing
+        B -->|HTTP Request| C[Flask Backend]
+        C -->|URL Features| D[Feature Extractor]
+        D -->|18 Features| E[Random Forest Model]
+        E -->|Prediction| F[Result Processor]
+        F -->|JSON Response| B
+    end
+    
+    subgraph Feature Extraction
+        D --> G[Length Features]
+        D --> H[Character Features]
+        D --> I[Security Features]
+        G --> D1[URL/Domain/Path Length]
+        H --> D2[Special Chars/Digits]
+        I --> D3[HTTPS/Dots/Tokens]
+    end
+    
+    subgraph Model Training
+        J[Training Data] -->|Preprocessing| K[Balanced Dataset]
+        K -->|70%| L[Training Set]
+        K -->|15%| M[Validation Set]
+        K -->|15%| N[Test Set]
+        L --> O[GridSearchCV]
+        O -->|Best Parameters| P[Final Model]
+    end

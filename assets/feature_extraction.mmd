@@ -1,0 +1,28 @@
+graph LR
+    A[Input URL] --> B[URL Parser]
+    B --> C[Length Features]
+    B --> D[Character Features]
+    B --> E[Security Features]
+    
+    subgraph Length Features
+        C --> C1[URL Length]
+        C --> C2[Domain Length]
+        C --> C3[Path Length]
+        C --> C4[Subdomain Length]
+        C --> C5[TLD Length]
+    end
+    
+    subgraph Character Features
+        D --> D1[Special Chars]
+        D --> D2[Digit Count]
+        D --> D3[@Symbol]
+        D --> D4[IP Detection]
+    end
+    
+    subgraph Security Features
+        E --> E1[HTTPS]
+        E --> E2[Dots Count]
+        E --> E3[Hyphens]
+        E --> E4[Domain Tokens]
+        E --> E5[Query Params]
+    end
