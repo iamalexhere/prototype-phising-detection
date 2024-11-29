@@ -9,13 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="theme-toggle">
-        <button id="themeToggle" class="theme-toggle-btn">
-            <i class="fas fa-moon"></i>
-            <i class="fas fa-sun"></i>
-        </button>
-    </div>
-
     <div class="container">
         <div class="header">
             <h1>URL Phishing Detector</h1>
@@ -60,9 +53,7 @@
 
             <div class="features-section">
                 <h3>URL Analysis Details</h3>
-                <div id="featuresGrid" class="features-grid">
-                    <!-- Features will be dynamically added here -->
-                </div>
+                <div id="featuresGrid" class="features-grid"></div>
             </div>
         </div>
     </div>
@@ -76,30 +67,6 @@
             const loading = document.getElementById('loading');
             const results = document.getElementById('results');
             const errorMessage = document.getElementById('errorMessage');
-            const themeToggle = document.getElementById('themeToggle');
-
-            // Theme Toggle Logic
-            function setTheme(theme) {
-                document.documentElement.setAttribute('data-theme', theme);
-                localStorage.setItem('theme', theme);
-                themeToggle.classList.toggle('dark', theme === 'dark');
-            }
-
-            // Check for saved theme preference or default to 'light'
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            setTheme(savedTheme);
-
-            themeToggle.addEventListener('click', () => {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                setTheme(newTheme);
-                
-                // Add animation class
-                document.body.classList.add('theme-transition');
-                setTimeout(() => {
-                    document.body.classList.remove('theme-transition');
-                }, 1000);
-            });
 
             function showLoading() {
                 loading.classList.add('show');
@@ -125,7 +92,6 @@
                 const confidenceText = document.getElementById('confidenceText');
                 const featuresGrid = document.getElementById('featuresGrid');
 
-                // Update result header
                 if (data.is_phishing) {
                     resultIcon.className = 'fas fa-exclamation-triangle';
                     resultIcon.style.color = 'var(--danger-color)';
@@ -138,13 +104,11 @@
 
                 resultUrl.textContent = data.url;
 
-                // Update confidence bar
                 const confidence = data.confidence * 100;
                 confidenceLevel.style.width = `${confidence}%`;
                 confidenceLevel.style.backgroundColor = data.is_phishing ? 'var(--danger-color)' : 'var(--success-color)';
                 confidenceText.textContent = `${confidence.toFixed(1)}% confidence`;
 
-                // Display features
                 featuresGrid.innerHTML = '';
                 Object.entries(data.features).forEach(([key, value]) => {
                     const featureCard = document.createElement('div');
@@ -206,27 +170,17 @@
                 }
             }
 
-            // Event Listeners
-            analyzeBtn.addEventListener('click', function(e) {
-                const rect = this.getBoundingClientRect();
-                const ripple = document.createElement('span');
-                ripple.className = 'ripple';
-                ripple.style.left = `${e.clientX - rect.left}px`;
-                ripple.style.top = `${e.clientY - rect.top}px`;
-                this.appendChild(ripple);
-                
-                setTimeout(() => ripple.remove(), 1000);
-                
+            analyzeBtn.addEventListener('click', () => {
                 const url = urlInput.value.trim();
-                if (url) {
-                    analyzeUrl(url);
-                } else {
+                if (!url) {
                     showError('Please enter a URL');
+                    return;
                 }
+                analyzeUrl(url);
             });
 
             dropzone.addEventListener('click', () => fileInput.click());
-
+            
             dropzone.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 dropzone.classList.add('dragover');
@@ -240,32 +194,12 @@
                 e.preventDefault();
                 dropzone.classList.remove('dragover');
                 const file = e.dataTransfer.files[0];
-                if (file && file.type.startsWith('image/')) {
-                    handleFile(file);
-                } else {
-                    showError('Please drop a valid image file');
-                }
+                if (file) handleFile(file);
             });
 
             fileInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
-                if (file) {
-                    handleFile(file);
-                }
-            });
-
-            urlInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    analyzeBtn.click();
-                }
-            });
-
-            urlInput.addEventListener('focus', () => {
-                urlInput.classList.add('input-focus');
-            });
-
-            urlInput.addEventListener('blur', () => {
-                urlInput.classList.remove('input-focus');
+                if (file) handleFile(file);
             });
         });
     </script>
