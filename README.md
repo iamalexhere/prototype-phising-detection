@@ -11,6 +11,7 @@
 8. [Performance Analysis](#performance-analysis)
 9. [Limitations and Challenges](#limitations-and-challenges)
 10. [Recommendations](#recommendations)
+11. [How To Run](#how-to-run)
 
 ## Introduction
 
@@ -505,3 +506,55 @@ Response Time      250ms    200ms
    - Real-time updates
 
 The model provides a solid foundation but requires continuous improvement to handle evolving threats and reduce false positives effectively.
+
+## How To Run
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/iamalexhere/prototype-phising-detection.git
+cd prototype-phising-detection
+```
+
+### 2. Create a Virtual Environment
+```bash
+# On Windows
+python -m venv venv
+
+# On macOS/Linux
+python3 -m venv venv
+```
+
+### 3. Activate the Virtual Environment
+```bash
+# On Windows
+venv\Scripts\activate
+
+# On macOS/Linux
+source venv/bin/activate
+```
+
+### 4. Install Requirements
+```bash
+pip install -r requirements.txt
+```
+
+### 5. Run the Application
+```bash
+python app.py
+```
+
+### 7. Deactivate Virtual Environment
+When you're done, you can deactivate the virtual environment:
+```bash
+deactivate
+```
+
+## Troubleshooting
+- Ensure all dependencies are installed correctly
+- Check that you're using the correct Python version
+- Verify all environment variables are set
+
+## Additional Notes
+- This project requires Python 3.8+
+- All dependencies are listed in `requirements.txt`
+- For development, it's recommended to use the virtual environment
