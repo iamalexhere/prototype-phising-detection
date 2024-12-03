@@ -189,29 +189,10 @@ All these features (total of 18) are implemented in our `URLFeatureExtractor` cl
    - Source: https://data.world/crowdflower/url-categorization
 
 ### Data Processing Pipeline
-1. **Data Cleaning**
-   ```python
-   def clean_data(df):
-       # Remove invalid URLs
-       df = df[df['url'].str.contains(r'^https?://', na=False)]
-       # Remove duplicates
-       df = df.drop_duplicates(subset=['url'])
-       # Remove URLs longer than 2000 characters
-       df = df[df['url'].str.len() <= 2000]
-       return df
-   ```
-
-2. **Balanced Dataset Creation**
-   ```python
-   min_size = min(len(phishing_df), len(legitimate_df))
-   phishing_df = phishing_df.sample(n=min_size, random_state=42)
-   legitimate_df = legitimate_df.sample(n=min_size, random_state=42)
-   ```
-
-3. **Data Split Ratios**
-   - Training: 70% (2800 samples)
-   - Validation: 15% (600 samples)
-   - Testing: 15% (600 sampless)
+**Data Split Ratios**
+   - Training: 70% (42000 samples)
+   - Validation: 15% (9000 samples)
+   - Testing: 15% (9000 sampless)
 
 ## Feature Engineering
 
@@ -299,30 +280,6 @@ All these features (total of 18) are implemented in our `URLFeatureExtractor` cl
             return None
    ```
 
-### Feature Importance Analysis
-```
-Feature Importance:
-                 feature    importance
-1          domain_length  2.933611e-01
-3    special_chars_count  2.308155e-01
-14             has_https  1.833593e-01
-0             url_length  1.418122e-01
-16      subdomain_length  5.224770e-02
-2            path_length  4.268702e-02
-4           digits_count  2.551954e-02
-7               num_dots  1.675119e-02
-8            num_hyphens  7.078762e-03
-11  num_query_components  2.735120e-03
-17            tld_length  1.432237e-03
-9        num_underscores  9.907019e-04
-15    domain_token_count  6.391606e-04
-12         num_ampersand  5.583461e-04
-6          is_ip_address  8.492850e-06
-5          has_at_symbol  3.574062e-06
-10           num_percent  3.450012e-08
-13              num_hash  0.000000e+00
-```
-
 ## Model Architecture
 
 ### Random Forest Configuration
@@ -334,25 +291,25 @@ param_grid = {
         'min_samples_leaf': [1, 2, 4],
         'max_features': ['sqrt', 'log2']
 }
-
-# Best parameters found:
-Best parameters found:
-max_depth: 5
-max_features: sqrt
-min_samples_leaf: 1
-min_samples_split: 2
-n_estimators: 200
 ```
 
 ## Performance Analysis
 
+### Best parameters found:
+max_depth: 5
+max_features: sqrt
+min_samples_leaf: 1
+min_samples_split: 2
+n_estimators: 100
+
+
 ### ROC Curve
-![ROC Curve](plots/roc_curve.png)
+![ROC Curve](plots/roc_curve-30000.png)
 
 The ROC curve shows the trade-off between the True Positive Rate and False Positive Rate at various classification thresholds. Our model achieves an AUC of 0.96, indicating excellent discriminative ability.
 
 ### Confusion Matrix
-![Confusion Matrix](plots/confusion_matrix.png)
+![Confusion Matrix](plots/confusion_matrix-30000.png)
 
 The confusion matrix shows:
 - True Positives (450): Correctly identified phishing URLs
@@ -361,27 +318,23 @@ The confusion matrix shows:
 - False Negatives (50): Phishing URLs misclassified as legitimate
 
 ### Feature Importance
-![Feature Importance](plots/feature_importance.png)
+![Feature Importance](plots/feature_importance-30000.png)
 
 The feature importance plot shows the relative contribution of each feature to the model's decisions. URL length and special character count are the most influential features.
 
-### Learning Curves
-![Learning Curves](plots/learning_curves.png)
-
-The learning curves demonstrate how model performance improves with more training data. The convergence of training and validation scores indicates good generalization.
-
 ### Precision Recall Curve
-![Precision Recall Curve](plots/precision_recall_curve.png)
+![Precision Recall Curve](plots/precision_recall_curve-30000.png)
 
 The Precision-Recall curve shows perfect scores, indicating the model identifies both phishing and legitimate URLs with 100% accuracy.
 
 ### Learning Curve
-![Learning Curve](plots/learning_curve.png)
+![Learning Curve](plots/learning_curve-30000.png)
 
 The learning curve demonstrates consistent perfect performance on both training and validation sets, showing the model has learned the patterns effectively.
 
 ### Cross-Validation Results
 ```
+
 Best cross-validation scores:
 f1: 1.0000 (+/- 0.0000)
 precision: 1.0000 (+/- 0.0000)
@@ -415,34 +368,34 @@ Evaluating on validation set:
 Validation Set Performance:
               precision    recall  f1-score   support
 
-           0       1.00      1.00      1.00       300
-           1       1.00      1.00      1.00       300
+           0       1.00      1.00      1.00      4500
+           1       1.00      1.00      1.00      4500
 
-    accuracy                           1.00       600
-   macro avg       1.00      1.00      1.00       600
-weighted avg       1.00      1.00      1.00       600
+    accuracy                           1.00      9000
+   macro avg       1.00      1.00      1.00      9000
+weighted avg       1.00      1.00      1.00      9000
 
 
 Detailed Validation Set Metrics:
 Brier Score: 0.0000
-Log Loss: 0.0013
+Log Loss: 0.0021
 
 Evaluating on test set:
 
 Test Set Performance:
               precision    recall  f1-score   support
 
-           0       1.00      1.00      1.00       300
-           1       1.00      1.00      1.00       300
+           0       1.00      1.00      1.00      4500
+           1       1.00      1.00      1.00      4500
 
-    accuracy                           1.00       600
-   macro avg       1.00      1.00      1.00       600
-weighted avg       1.00      1.00      1.00       600
+    accuracy                           1.00      9000
+   macro avg       1.00      1.00      1.00      9000
+weighted avg       1.00      1.00      1.00      9000
 
 
 Detailed Test Set Metrics:
-Brier Score: 0.0002
-Log Loss: 0.0024
+Brier Score: 0.0000
+Log Loss: 0.0022
 ```
 
 ## Limitations and Challenges
