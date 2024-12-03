@@ -114,7 +114,7 @@ class URLFeatureExtractor:
             print(f"Error message: {str(e)}")
             return None
 
-def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=20):
+def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=2000):
     """
     Load and process both phishing and legitimate URL datasets
     """
@@ -432,7 +432,7 @@ def main():
         
         # Load and process data
         print("Starting phishing URL detection model training...")
-        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=20)
+        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=2000)
         
         # Split the data
         print("\nSplitting data into train, validation, and test sets...")
