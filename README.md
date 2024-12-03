@@ -334,7 +334,6 @@ The learning curve demonstrates consistent perfect performance on both training 
 
 ### Cross-Validation Results
 ```
-
 Best cross-validation scores:
 f1: 1.0000 (+/- 0.0000)
 precision: 1.0000 (+/- 0.0000)
