@@ -17,10 +17,17 @@ import ipaddress
 import joblib
 import tldextract
 from datetime import datetime
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
 import os
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning)
+
+# Configure matplotlib for non-interactive backend
+plt.ioff()
 
 class URLFeatureExtractor:
     """
@@ -107,7 +114,7 @@ class URLFeatureExtractor:
             print(f"Error message: {str(e)}")
             return None
 
-def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=50):
+def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=20):
     """
     Load and process both phishing and legitimate URL datasets
     """
@@ -324,7 +331,7 @@ class ModelVisualizer:
         """Save the current plot to the output directory"""
         plt.tight_layout()
         plt.savefig(self.output_dir / f"{plot_name}.png", dpi=300, bbox_inches='tight')
-        plt.close()
+        plt.close('all')  # Properly close all figures
 
     def plot_confusion_matrix(self, y_true, y_pred, classes=['Legitimate', 'Phishing']):
         """Generate and save confusion matrix plot"""
@@ -415,59 +422,64 @@ class ModelVisualizer:
         self.save_plot('learning_curve')
 
 def main():
-    # File paths
-    phishing_file_path = "verified_online.csv"
-    legitimate_file_path = "URL-categorization-DFE.csv"
-    
-    # Initialize visualizer
-    visualizer = ModelVisualizer()
-    
-    # Load and process data with sample size of 100
-    print("Starting phishing URL detection model training (test mode with 100 samples)...")
-    features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=100)
-    
-    # Split the data
-    print("\nSplitting data into train, validation, and test sets...")
-    X_train, X_val, X_test, y_train, y_val, y_test = prepare_data_splits(features_df)
-    
-    # Perform hyperparameter tuning with enhanced cross-validation
-    best_model = tune_random_forest(X_train, y_train)
-    
-    # Generate learning curve plot
-    print("\nGenerating learning curve plot...")
-    visualizer.plot_learning_curve(best_model, X_train, y_train)
-    
-    # Evaluate on validation set
-    print("\nEvaluating on validation set:")
-    y_val_pred, y_val_prob = evaluate_model(best_model, X_val, y_val, "Validation Set")
-    
-    # Generate validation set plots
-    visualizer.plot_confusion_matrix(y_val, y_val_pred)
-    visualizer.plot_roc_curve(y_val, y_val_prob)
-    visualizer.plot_precision_recall_curve(y_val, y_val_prob)
-    
-    # Final evaluation on test set
-    print("\nEvaluating on test set:")
-    y_test_pred, y_test_prob = evaluate_model(best_model, X_test, y_test, "Test Set")
-    
-    # Generate test set plots
-    print("\nGenerating evaluation plots...")
-    visualizer.plot_confusion_matrix(y_test, y_test_pred)
-    visualizer.plot_roc_curve(y_test, y_test_prob)
-    visualizer.plot_precision_recall_curve(y_test, y_test_prob)
-    
-    # Feature importance analysis and plot
-    feature_importance = pd.DataFrame({
-        'feature': X_train.columns,
-        'importance': best_model.feature_importances_
-    }).sort_values('importance', ascending=False)
-    
-    print("\nFeature Importance:")
-    print(feature_importance)
-    visualizer.plot_feature_importance(X_train.columns, best_model.feature_importances_)
-    
-    # Save the model and feature names
-    model_path, feature_names_path = save_model(best_model, X_train.columns.tolist())
-
+    try:
+        # File paths
+        phishing_file_path = "verified_online.csv"
+        legitimate_file_path = "URL-categorization-DFE.csv"
+        
+        # Initialize visualizer
+        visualizer = ModelVisualizer()
+        
+        # Load and process data
+        print("Starting phishing URL detection model training...")
+        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=20)
+        
+        # Split the data
+        print("\nSplitting data into train, validation, and test sets...")
+        X_train, X_val, X_test, y_train, y_val, y_test = prepare_data_splits(features_df)
+        
+        # Perform hyperparameter tuning with enhanced cross-validation
+        best_model = tune_random_forest(X_train, y_train)
+        
+        # Generate learning curve plot
+        print("\nGenerating learning curve plot...")
+        visualizer.plot_learning_curve(best_model, X_train, y_train)
+        
+        # Evaluate on validation set
+        print("\nEvaluating on validation set:")
+        y_val_pred, y_val_prob = evaluate_model(best_model, X_val, y_val, "Validation Set")
+        
+        # Generate validation set plots
+        visualizer.plot_confusion_matrix(y_val, y_val_pred)
+        visualizer.plot_roc_curve(y_val, y_val_prob)
+        visualizer.plot_precision_recall_curve(y_val, y_val_prob)
+        
+        # Final evaluation on test set
+        print("\nEvaluating on test set:")
+        y_test_pred, y_test_prob = evaluate_model(best_model, X_test, y_test, "Test Set")
+        
+        # Generate test set plots
+        print("\nGenerating evaluation plots...")
+        visualizer.plot_confusion_matrix(y_test, y_test_pred)
+        visualizer.plot_roc_curve(y_test, y_test_prob)
+        visualizer.plot_precision_recall_curve(y_test, y_test_prob)
+        
+        # Feature importance analysis and plot
+        feature_importance = pd.DataFrame({
+            'feature': X_train.columns,
+            'importance': best_model.feature_importances_
+        }).sort_values('importance', ascending=False)
+        
+        print("\nFeature Importance:")
+        print(feature_importance)
+        visualizer.plot_feature_importance(X_train.columns, best_model.feature_importances_)
+        
+        # Save the model and feature names
+        model_path, feature_names_path = save_model(best_model, X_train.columns.tolist())
+        
+    finally:
+        # Cleanup
+        plt.close('all')
+        
 if __name__ == "__main__":
     main()
