@@ -2,11 +2,15 @@ import pandas as pd
 import numpy as np
 from urllib.parse import urlparse
 import re
-from sklearn.model_selection import train_test_split, learning_curve
+from sklearn.model_selection import (
+    train_test_split, learning_curve, StratifiedKFold,
+    cross_val_score, cross_validate
+)
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import (
     classification_report, confusion_matrix, roc_curve, auc,
-    precision_recall_curve, average_precision_score
+    precision_recall_curve, average_precision_score,
+    log_loss, brier_score_loss
 )
 from sklearn.model_selection import GridSearchCV
 import ipaddress
@@ -103,7 +107,7 @@ class URLFeatureExtractor:
             print(f"Error message: {str(e)}")
             return None
 
-def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=100):
+def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=50):
     """
     Load and process both phishing and legitimate URL datasets
     """
@@ -184,35 +188,104 @@ def prepare_data_splits(features_df, test_size=0.3, val_size=0.15):
 
 def tune_random_forest(X_train, y_train):
     """
-    Perform hyperparameter tuning for Random Forest using GridSearchCV
+    Perform hyperparameter tuning for Random Forest using GridSearchCV with enhanced cross-validation
     """
-    print("\nStarting Random Forest hyperparameter tuning...")
+    print("\nStarting Random Forest hyperparameter tuning with enhanced cross-validation...")
+    
+    # Define parameter grid
     param_grid = {
         'n_estimators': [100, 200, 300],
-        'max_depth': [10, 20, 30, None],
+        'max_depth': [5, 10, 15, None],
         'min_samples_split': [2, 5, 10],
         'min_samples_leaf': [1, 2, 4],
         'max_features': ['sqrt', 'log2']
     }
     
-    rf = RandomForestClassifier(random_state=42, class_weight='balanced')
+    # Initialize base model
+    rf = RandomForestClassifier(
+        random_state=42,
+        class_weight='balanced',
+        n_jobs=-1
+    )
+    
+    # Create StratifiedKFold cross-validator
+    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    
+    # Initialize GridSearchCV with multiple scoring metrics
     grid_search = GridSearchCV(
         estimator=rf,
         param_grid=param_grid,
-        cv=5,
+        cv=cv,
         n_jobs=-1,
-        scoring='f1',
-        verbose=2
+        scoring={
+            'accuracy': 'accuracy',
+            'precision': 'precision',
+            'recall': 'recall',
+            'f1': 'f1'
+        },
+        refit='f1',  # Use F1 score to select the best model
+        verbose=2,
+        return_train_score=True
     )
     
+    # Fit the grid search
     grid_search.fit(X_train, y_train)
+    
+    # Print detailed results
+    print("\nCross-validation results:")
+    means = grid_search.cv_results_['mean_test_f1']
+    stds = grid_search.cv_results_['std_test_f1']
+    for mean, std, params in zip(means, stds, grid_search.cv_results_['params']):
+        print(f"F1: {mean:0.3f} (+/-{std * 2:0.03f}) for {params}")
     
     print("\nBest parameters found:")
     for param, value in grid_search.best_params_.items():
         print(f"{param}: {value}")
-    print(f"Best cross-validation score: {grid_search.best_score_:.4f}")
+    
+    print("\nBest cross-validation scores:")
+    for metric in ['f1', 'precision', 'recall', 'accuracy']:
+        score = grid_search.cv_results_[f'mean_test_{metric}'][grid_search.best_index_]
+        std = grid_search.cv_results_[f'std_test_{metric}'][grid_search.best_index_]
+        print(f"{metric}: {score:.4f} (+/- {std * 2:.4f})")
+    
+    # Perform additional cross-validation on the best model
+    best_model = grid_search.best_estimator_
+    print("\nDetailed cross-validation of best model:")
+    cv_scores = cross_validate(
+        best_model,
+        X_train,
+        y_train,
+        cv=cv,
+        scoring=['accuracy', 'precision', 'recall', 'f1'],
+        return_train_score=True
+    )
+    
+    # Print detailed cross-validation metrics
+    print("\nDetailed Cross-Validation Metrics:")
+    for metric in ['accuracy', 'precision', 'recall', 'f1']:
+        train_scores = cv_scores[f'train_{metric}']
+        test_scores = cv_scores[f'test_{metric}']
+        print(f"\n{metric.capitalize()}:")
+        print(f"Training: {train_scores.mean():.4f} (+/- {train_scores.std() * 2:.4f})")
+        print(f"Testing:  {test_scores.mean():.4f} (+/- {test_scores.std() * 2:.4f})")
     
     return grid_search.best_estimator_
+
+def evaluate_model(model, X, y, set_name=""):
+    """
+    Comprehensive model evaluation function
+    """
+    predictions = model.predict(X)
+    probabilities = model.predict_proba(X)[:, 1]
+    
+    print(f"\n{set_name} Performance:")
+    print(classification_report(y, predictions))
+    
+    print(f"\nDetailed {set_name} Metrics:")
+    print(f"Brier Score: {brier_score_loss(y, probabilities):.4f}")
+    print(f"Log Loss: {log_loss(y, probabilities):.4f}")
+    
+    return predictions, probabilities
 
 def save_model(model, feature_names, output_dir='models'):
     """
@@ -357,7 +430,7 @@ def main():
     print("\nSplitting data into train, validation, and test sets...")
     X_train, X_val, X_test, y_train, y_val, y_test = prepare_data_splits(features_df)
     
-    # Perform hyperparameter tuning
+    # Perform hyperparameter tuning with enhanced cross-validation
     best_model = tune_random_forest(X_train, y_train)
     
     # Generate learning curve plot
@@ -365,10 +438,8 @@ def main():
     visualizer.plot_learning_curve(best_model, X_train, y_train)
     
     # Evaluate on validation set
-    print("\nValidation Set Performance:")
-    y_val_pred = best_model.predict(X_val)
-    y_val_prob = best_model.predict_proba(X_val)[:, 1]
-    print(classification_report(y_val, y_val_pred))
+    print("\nEvaluating on validation set:")
+    y_val_pred, y_val_prob = evaluate_model(best_model, X_val, y_val, "Validation Set")
     
     # Generate validation set plots
     visualizer.plot_confusion_matrix(y_val, y_val_pred)
@@ -376,10 +447,8 @@ def main():
     visualizer.plot_precision_recall_curve(y_val, y_val_prob)
     
     # Final evaluation on test set
-    print("\nTest Set Performance:")
-    y_test_pred = best_model.predict(X_test)
-    y_test_prob = best_model.predict_proba(X_test)[:, 1]
-    print(classification_report(y_test, y_test_pred))
+    print("\nEvaluating on test set:")
+    y_test_pred, y_test_prob = evaluate_model(best_model, X_test, y_test, "Test Set")
     
     # Generate test set plots
     print("\nGenerating evaluation plots...")
