@@ -449,6 +449,15 @@ Log Loss: 0.0024
 
 ### Current Limitations
 1. Overfitting
+It happens because of couples of reasons:
+- Perfect Training Scores: The model is achieving F1 scores of 1.000 (+/-0.000) across almost all hyperparameter combinations during cross-validation. This is a red flag indicating that the model is memorizing the training data rather than learning generalizable patterns.
+- Dataset Size and Split: The model is using a relatively small subset of the available data:
+Only 2000 URLs from each category (phishing and legitimate) are being used
+Total dataset of 4000 samples split into:
+Training: 2800 samples
+Validation: 600 samples
+Test: 600 samples
+- Hyperparameter Search: Despite trying various combinations of hyperparameters (different max_depth, max_features, min_samples_leaf, etc.), the model consistently achieves perfect scores, suggesting that it's not properly regularizing or generalizing
 
 ## Summary
 
