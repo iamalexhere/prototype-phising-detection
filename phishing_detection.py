@@ -7,6 +7,7 @@ from sklearn.model_selection import (
     cross_val_score, cross_validate
 )
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import (
     classification_report, confusion_matrix, roc_curve, auc,
     precision_recall_curve, average_precision_score,
@@ -321,58 +322,79 @@ def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=
     logging.info(f"Final dataset shape: {features_df.shape}")
     return features_df
 
+def extract_domain(url):
+    """Extract the base domain from a URL"""
+    try:
+        ext = tldextract.extract(url)
+        return f"{ext.domain}.{ext.suffix}"
+    except:
+        return None
+
 def prepare_data_splits(features_df, test_size=0.2, val_size=0.2):
     """
-    Split data into train, validation, and test sets efficiently
+    Split data into train, validation, and test sets using domain-based splitting
+    to prevent domain leakage between sets
     
     Parameters:
     - features_df: DataFrame containing features and labels
-    - test_size: 0.2 (20% for test set)
-    - val_size: 0.2 (20% for validation set)
-    - Remaining 60% for training set
+    - test_size: proportion of data for test set
+    - val_size: proportion of data for validation set
     
     Returns:
-    - X_train, X_val, X_test: feature matrices for training, validation, and test sets
-    - y_train, y_val, y_test: corresponding target vectors
+    - X_train, X_val, X_test: feature matrices
+    - y_train, y_val, y_test: target vectors
     - feature_names: list of feature names
     """
-    # Store feature names before converting to numpy arrays
-    feature_names = features_df.drop('label', axis=1).columns
+    logging.info("\nSplitting data into train, validation, and test sets...")
     
-    # Convert to numpy arrays for faster processing
-    X = features_df.drop('label', axis=1).values
-    y = features_df['label'].values
+    # Extract domains from URLs
+    domains = features_df['url'].apply(extract_domain)
+    unique_domains = domains.unique()
     
-    # First split: separate test set (20%)
-    X_temp, X_test, y_temp, y_test = train_test_split(
-        X, y,
-        test_size=test_size,
-        random_state=42,
-        stratify=y
-    )
+    # Split domains into train, validation, and test sets
+    n_domains = len(unique_domains)
+    n_test = int(n_domains * test_size)
+    n_val = int(n_domains * val_size)
     
-    # Second split: separate validation set from remaining data
-    # val_size = 0.2 / 0.8 ≈ 0.25 to get 20% of original data
-    val_ratio = val_size / (1 - test_size)
-    X_train, X_val, y_train, y_val = train_test_split(
-        X_temp, y_temp,
-        test_size=val_ratio,
-        random_state=42,
-        stratify=y_temp
-    )
+    # Randomly shuffle domains
+    np.random.seed(42)
+    shuffled_domains = np.random.permutation(unique_domains)
     
-    # Log the split sizes and class distribution
+    test_domains = set(shuffled_domains[:n_test])
+    val_domains = set(shuffled_domains[n_test:n_test + n_val])
+    train_domains = set(shuffled_domains[n_test + n_val:])
+    
+    # Split data based on domains
+    test_mask = domains.isin(test_domains)
+    val_mask = domains.isin(val_domains)
+    train_mask = domains.isin(train_domains)
+    
+    # Get feature names (excluding 'url' and 'label' columns)
+    feature_names = [col for col in features_df.columns if col not in ['url', 'label']]
+    
+    # Split features and labels
+    X = features_df[feature_names]
+    y = features_df['label']
+    
+    X_train = X[train_mask]
+    y_train = y[train_mask]
+    X_val = X[val_mask]
+    y_val = y[val_mask]
+    X_test = X[test_mask]
+    y_test = y[test_mask]
+    
+    # Log data split information
     logging.info("Data split sizes and class distribution:")
-    logging.info(f"Total dataset size: {len(X)} samples")
-    logging.info(f"Training set: {len(X_train)} samples ({len(X_train)/len(X)*100:.1f}%)")
+    logging.info(f"Total dataset size: {len(features_df)} samples")
+    logging.info(f"Training set: {len(X_train)} samples ({len(X_train)/len(features_df)*100:.1f}%)")
     logging.info(f"  - Class distribution: {np.bincount(y_train)}")
-    logging.info(f"Validation set: {len(X_val)} samples ({len(X_val)/len(X)*100:.1f}%)")
+    logging.info(f"  - Number of domains: {len(train_domains)}")
+    logging.info(f"Validation set: {len(X_val)} samples ({len(X_val)/len(features_df)*100:.1f}%)")
     logging.info(f"  - Class distribution: {np.bincount(y_val)}")
-    logging.info(f"Test set: {len(X_test)} samples ({len(X_test)/len(X)*100:.1f}%)")
+    logging.info(f"  - Number of domains: {len(val_domains)}")
+    logging.info(f"Test set: {len(X_test)} samples ({len(X_test)/len(features_df)*100:.1f}%)")
     logging.info(f"  - Class distribution: {np.bincount(y_test)}")
-    
-    # Clean up temporary arrays to free memory
-    del X_temp, y_temp
+    logging.info(f"  - Number of domains: {len(test_domains)}")
     
     return X_train, X_val, X_test, y_train, y_val, y_test, feature_names
 
@@ -383,104 +405,88 @@ def tune_random_forest(X_train, y_train):
     """
     logging.info("Starting hyperparameter tuning for Random Forest...")
     
-    # Define an expanded parameter grid
+    # Define parameter grid with regularization parameters
     param_grid = {
         'n_estimators': [50, 100],
-        'max_depth': [None, 5, 10],
+        'max_depth': [None, 10, 20],
         'min_samples_split': [2, 5],
         'min_samples_leaf': [1, 2],
-        'max_features': ['sqrt'],
+        'max_features': ['sqrt', 'log2'],
+        'max_samples': [0.8, 1.0],  # Bootstrap sample size
         'class_weight': ['balanced'],
-        'max_samples': [0.8],  # Bootstrap sample size (regularization)
-        'ccp_alpha': [0.0]  # Cost complexity pruning (regularization)
+        'ccp_alpha': [0.0, 0.01, 0.02]  # Pruning parameter
     }
     
-    # Initialize base model with regularization parameters
-    base_model = RandomForestClassifier(
-        random_state=42,
-        n_jobs=-1,  # Use all available cores
-        oob_score=True,  # Use out-of-bag score
-        bootstrap=True,  # Enable bootstrapping
-        warm_start=False  # Disable warm start for better randomization
-    )
+    # Initialize base classifier
+    base_clf = RandomForestClassifier(random_state=42)
     
-    # Initialize GridSearchCV with stratification and multiple metrics
+    # Use StratifiedKFold with shuffling for better cross-validation
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
     
-    scoring = {
-        'accuracy': 'accuracy',
-        'precision': 'precision',
-        'recall': 'recall',
-        'f1': 'f1',
-        'roc_auc': 'roc_auc'
-    }
-    
+    # Initialize GridSearchCV with multiple scoring metrics
     grid_search = GridSearchCV(
-        estimator=base_model,
+        estimator=base_clf,
         param_grid=param_grid,
         cv=cv,
-        scoring=scoring,
+        scoring={
+            'accuracy': 'accuracy',
+            'precision': 'precision',
+            'recall': 'recall',
+            'f1': 'f1',
+            'roc_auc': 'roc_auc'
+        },
         refit='f1',  # Use F1 score for selecting best model
         n_jobs=-1,
-        verbose=2,
-        return_train_score=True
+        verbose=1
     )
     
-    # Fit the grid search
+    # Fit GridSearchCV
     logging.info("Fitting GridSearchCV...")
     grid_search.fit(X_train, y_train)
     
-    # Log best parameters and scores
+    # Get best parameters and scores
     logging.info("\nBest parameters found:")
     logging.info(grid_search.best_params_)
     logging.info("\nBest cross-validation scores:")
-    for metric in scoring.keys():
-        logging.info(f"{metric}: {grid_search.cv_results_[f'mean_test_{metric}'][grid_search.best_index_]:.4f}")
+    for metric, score in grid_search.cv_results_['mean_test_' + grid_search.refit].items():
+        logging.info(f"{metric}: {score:.4f}")
     
-    # Get feature importances from best model
-    feature_importances = grid_search.best_estimator_.feature_importances_
+    # Calibrate probabilities using the best model
+    best_model = grid_search.best_estimator_
+    calibrated_model = CalibratedClassifierCV(
+        best_model, 
+        cv='prefit',
+        method='sigmoid'
+    )
+    calibrated_model.fit(X_train, y_train)
     
-    return grid_search.best_estimator_, feature_importances
+    return calibrated_model
 
 def evaluate_model(model, X, y, set_name=""):
     """
-    Comprehensive model evaluation function
+    Comprehensive model evaluation function with threshold optimization
     """
-    predictions = model.predict(X)
-    probabilities = model.predict_proba(X)[:, 1]
+    # Get predicted probabilities
+    y_prob = model.predict_proba(X)[:, 1]
     
-    logging.info(f"\n{set_name} Performance:")
-    logging.info(classification_report(y, predictions))
+    # Find optimal threshold using ROC curve
+    fpr, tpr, thresholds = roc_curve(y, y_prob)
+    optimal_idx = np.argmax(tpr - fpr)
+    optimal_threshold = thresholds[optimal_idx]
     
-    logging.info(f"\nDetailed {set_name} Metrics:")
-    logging.info(f"Brier Score: {brier_score_loss(y, probabilities):.4f}")
-    logging.info(f"Log Loss: {log_loss(y, probabilities):.4f}")
+    # Apply optimal threshold
+    y_pred = (y_prob >= optimal_threshold).astype(int)
     
-    return predictions, probabilities
-
-def save_model(model, feature_names, output_dir='models'):
-    """
-    Save the trained model and feature names
-    """
-    import os
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    # Calculate metrics
+    logging.info(f"\n{set_name} Set Performance:")
+    logging.info(classification_report(y, y_pred))
     
-    # Generate timestamp for versioning
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    logging.info(f"\nDetailed {set_name} Set Metrics:")
+    logging.info(f"Brier Score: {brier_score_loss(y, y_prob):.4f}")
+    logging.info(f"Log Loss: {log_loss(y, y_prob):.4f}")
+    logging.info(f"Optimal Threshold: {optimal_threshold:.4f}")
     
-    # Save the model
-    model_path = os.path.join(output_dir, f'phishing_detector_{timestamp}.joblib')
-    joblib.dump(model, model_path)
-    
-    # Save feature names
-    feature_names_path = os.path.join(output_dir, f'feature_names_{timestamp}.joblib')
-    joblib.dump(feature_names, feature_names_path)
-    
-    logging.info(f"\nModel saved to: {model_path}")
-    logging.info(f"Feature names saved to: {feature_names_path}")
-    
-    return model_path, feature_names_path
+    return y_pred, y_prob, optimal_threshold
 
 class ModelVisualizer:
     """
@@ -585,6 +591,30 @@ class ModelVisualizer:
         plt.grid(True)
         self.save_plot('learning_curve-100')
 
+def save_model(model, feature_names, output_dir='models'):
+    """
+    Save the trained model and feature names
+    """
+    import os
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    
+    # Generate timestamp for versioning
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    
+    # Save the model
+    model_path = os.path.join(output_dir, f'phishing_detector_{timestamp}.joblib')
+    joblib.dump(model, model_path)
+    
+    # Save feature names
+    feature_names_path = os.path.join(output_dir, f'feature_names_{timestamp}.joblib')
+    joblib.dump(feature_names, feature_names_path)
+    
+    logging.info(f"\nModel saved to: {model_path}")
+    logging.info(f"Feature names saved to: {feature_names_path}")
+    
+    return model_path, feature_names_path
+
 def main():
     try:
         # Setup logging
@@ -606,7 +636,7 @@ def main():
         X_train, X_val, X_test, y_train, y_val, y_test, feature_names = prepare_data_splits(features_df)
         
         # Perform hyperparameter tuning with enhanced cross-validation
-        best_model, feature_importances = tune_random_forest(X_train, y_train)
+        best_model = tune_random_forest(X_train, y_train)
         
         # Generate learning curve plot
         logging.info("\nGenerating learning curve plot...")
@@ -614,7 +644,7 @@ def main():
         
         # Evaluate on validation set
         logging.info("\nEvaluating on validation set:")
-        y_val_pred, y_val_prob = evaluate_model(best_model, X_val, y_val, "Validation Set")
+        y_val_pred, y_val_prob, _ = evaluate_model(best_model, X_val, y_val, "Validation Set")
         
         # Generate validation set plots
         visualizer.plot_confusion_matrix(y_val, y_val_pred)
@@ -623,7 +653,7 @@ def main():
         
         # Final evaluation on test set
         logging.info("\nEvaluating on test set:")
-        y_test_pred, y_test_prob = evaluate_model(best_model, X_test, y_test, "Test Set")
+        y_test_pred, y_test_prob, _ = evaluate_model(best_model, X_test, y_test, "Test Set")
         
         # Generate test set plots
         logging.info("\nGenerating evaluation plots...")
@@ -634,7 +664,7 @@ def main():
         # Feature importance analysis and plot
         feature_importance = pd.DataFrame({
             'feature': feature_names,
-            'importance': feature_importances
+            'importance': best_model.feature_importances_
         }).sort_values('importance', ascending=False)
         
         logging.info("\nFeature Importance:")
