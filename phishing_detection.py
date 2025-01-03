@@ -434,7 +434,7 @@ class ModelVisualizer:
         plt.title('Confusion Matrix')
         plt.ylabel('True Label')
         plt.xlabel('Predicted Label')
-        self.save_plot('confusion_matrix-100')
+        self.save_plot('confusion_matrix-1000')
 
     def plot_feature_importance(self, feature_names, importances):
         """Generate and save feature importance plot"""
@@ -448,7 +448,7 @@ class ModelVisualizer:
         plt.title('Feature Importance')
         plt.xlabel('Importance Score')
         plt.ylabel('Features')
-        self.save_plot('feature_importance-100')
+        self.save_plot('feature_importance-1000')
 
     def plot_roc_curve(self, y_true, y_prob):
         """Generate and save ROC curve plot"""
@@ -465,7 +465,7 @@ class ModelVisualizer:
         plt.ylabel('True Positive Rate')
         plt.title('Receiver Operating Characteristic (ROC) Curve')
         plt.legend(loc="lower right")
-        self.save_plot('roc_curve-100')
+        self.save_plot('roc_curve-1000')
 
     def plot_precision_recall_curve(self, y_true, y_prob):
         """Generate and save precision-recall curve plot"""
@@ -479,7 +479,7 @@ class ModelVisualizer:
         plt.ylabel('Precision')
         plt.title('Precision-Recall Curve')
         plt.legend(loc="lower left")
-        self.save_plot('precision_recall_curve-100')
+        self.save_plot('precision_recall_curve-1000')
 
     def plot_learning_curve(self, estimator, X, y, cv=5):
         """Generate and save learning curve plot"""
@@ -511,7 +511,7 @@ class ModelVisualizer:
         plt.title('Learning Curve')
         plt.legend(loc='lower right')
         plt.grid(True)
-        self.save_plot('learning_curve-100')
+        self.save_plot('learning_curve-1000')
 
 def main():
     try:
@@ -527,7 +527,7 @@ def main():
         
         # Load and process data
         logging.info("Starting phishing URL detection model training...")
-        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=100)
+        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=1000)
         
         # Split the data
         logging.info("\nSplitting data into train, validation, and test sets...")
