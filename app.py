@@ -85,6 +85,18 @@ def analyze_url(url):
         # Fill missing values
         feature_vector = feature_vector.fillna(-1)
         
+        # Ensure we only use features that the model was trained on
+        model_features = feature_names
+        missing_features = set(model_features) - set(feature_vector.columns)
+        extra_features = set(feature_vector.columns) - set(model_features)
+        
+        # Add missing features with default values
+        for feature in missing_features:
+            feature_vector[feature] = -1
+            
+        # Remove extra features
+        feature_vector = feature_vector[model_features]
+        
         # Make prediction
         probability = model.predict_proba(feature_vector)[0][1]
         prediction = 1 if probability > 0.5 else 0
@@ -147,7 +159,7 @@ def analyze_url(url):
                 'Hash (#)': convert_to_native(features.get('num_hash', 0))
             },
             'Security Indicators': {
-                'HTTPS': 'Present' if features.get('has_https', 0) == 1 else 'Absent',
+                'HTTPS': 'Present' if features.get('is_https', 0) == 1 else 'Absent',
                 'Is IP Address': 'Yes' if features.get('is_ip_address', 0) == 1 else 'No',
                 'Is Private IP': 'Yes' if features.get('is_private_ip', 0) == 1 else 'No',
                 'Query Components': convert_to_native(features.get('num_query_components', 0))
