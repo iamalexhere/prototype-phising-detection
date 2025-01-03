@@ -274,6 +274,9 @@ def prepare_data_splits(features_df, test_size=0.3, val_size=0.15):
     """
     Split data into train, validation, and test sets efficiently
     """
+    # Store feature names before converting to numpy arrays
+    feature_names = features_df.drop('label', axis=1).columns
+    
     # Convert to numpy arrays for faster processing
     X = features_df.drop('label', axis=1).values
     y = features_df['label'].values
@@ -298,7 +301,7 @@ def prepare_data_splits(features_df, test_size=0.3, val_size=0.15):
     # Use efficient memory management
     del X_temp, y_temp
     
-    return X_train, X_val, X_test, y_train, y_val, y_test
+    return X_train, X_val, X_test, y_train, y_val, y_test, feature_names
 
 def tune_random_forest(X_train, y_train):
     """
@@ -510,7 +513,7 @@ def main():
         
         # Split the data
         logging.info("\nSplitting data into train, validation, and test sets...")
-        X_train, X_val, X_test, y_train, y_val, y_test = prepare_data_splits(features_df)
+        X_train, X_val, X_test, y_train, y_val, y_test, feature_names = prepare_data_splits(features_df)
         
         # Perform hyperparameter tuning with enhanced cross-validation
         best_model = tune_random_forest(X_train, y_train)
@@ -540,17 +543,20 @@ def main():
         
         # Feature importance analysis and plot
         feature_importance = pd.DataFrame({
-            'feature': X_train.columns,
+            'feature': feature_names,
             'importance': best_model.feature_importances_
         }).sort_values('importance', ascending=False)
         
         logging.info("\nFeature Importance:")
         logging.info(feature_importance)
-        visualizer.plot_feature_importance(X_train.columns, best_model.feature_importances_)
+        visualizer.plot_feature_importance(
+            feature_importance['feature'].values,
+            feature_importance['importance'].values
+        )
         
         # Save the model and feature names
-        model_path, feature_names_path = save_model(best_model, X_train.columns.tolist())
-        
+        model_path, feature_names_path = save_model(best_model, feature_names)
+
     finally:
         # Cleanup
         plt.close('all')
