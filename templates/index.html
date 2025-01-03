@@ -12,7 +12,7 @@
     <div class="container">
         <div class="header">
             <h1>URL Phishing Detector</h1>
-            <p>Check if a URL is potentially malicious using our advanced machine learning model</p>
+            <p>Check if a URL is potentially malicious using our advanced machine learning model with DNS analysis</p>
         </div>
 
         <div class="input-section">
@@ -27,7 +27,7 @@
 
         <div id="loading" class="loading">
             <div class="spinner"></div>
-            <p>Analyzing URL...</p>
+            <p>Analyzing URL and DNS features...</p>
         </div>
 
         <div id="errorMessage" class="error-message"></div>
@@ -51,156 +51,265 @@
                 <p id="confidenceText"></p>
             </div>
 
-            <div class="features-section">
-                <h3>URL Analysis Details</h3>
-                <div id="featuresGrid" class="features-grid"></div>
+            <div class="dns-analysis">
+                <h3>DNS Analysis</h3>
+                <div class="dns-grid">
+                    <div class="dns-card" id="dnsRecords">
+                        <h4>DNS Records</h4>
+                        <div class="dns-content"></div>
+                    </div>
+                    <div class="dns-card" id="domainAge">
+                        <h4>Domain Age</h4>
+                        <div class="dns-content"></div>
+                    </div>
+                    <div class="dns-card" id="sslCert">
+                        <h4>SSL Certificate</h4>
+                        <div class="dns-content"></div>
+                    </div>
+                    <div class="dns-card" id="registration">
+                        <h4>Registration</h4>
+                        <div class="dns-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="all-features">
+                <h3>Extracted Features</h3>
+                <div class="features-grid">
+                    <div class="feature-card" id="urlStructure">
+                        <h4>URL Structure</h4>
+                        <div class="feature-content"></div>
+                    </div>
+                    <div class="feature-card" id="specialChars">
+                        <h4>Special Characters</h4>
+                        <div class="feature-content"></div>
+                    </div>
+                    <div class="feature-card" id="securityIndicators">
+                        <h4>Security Indicators</h4>
+                        <div class="feature-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-importance">
+                <h3>Feature Importance</h3>
+                <div id="featureChart"></div>
             </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlInput = document.getElementById('urlInput');
-            const analyzeBtn = document.getElementById('analyzeBtn');
-            const dropzone = document.getElementById('dropzone');
-            const fileInput = document.getElementById('fileInput');
-            const loading = document.getElementById('loading');
-            const results = document.getElementById('results');
-            const errorMessage = document.getElementById('errorMessage');
+        const urlInput = document.getElementById('urlInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const errorMessage = document.getElementById('errorMessage');
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
 
-            function showLoading() {
-                loading.classList.add('show');
-                results.classList.remove('show');
-                errorMessage.classList.remove('show');
+        function showLoading() {
+            loading.style.display = 'flex';
+            results.style.display = 'none';
+            errorMessage.style.display = 'none';
+        }
+
+        function hideLoading() {
+            loading.style.display = 'none';
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            results.style.display = 'none';
+            hideLoading();
+        }
+
+        function displayResults(data) {
+            if (data.error) {
+                showError(data.error);
+                return;
             }
 
-            function hideLoading() {
-                loading.classList.remove('show');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultUrl = document.getElementById('resultUrl');
+            const confidenceLevel = document.getElementById('confidenceLevel');
+            const confidenceText = document.getElementById('confidenceText');
+
+            // Update result header
+            if (data.prediction === 1) {
+                resultIcon.className = 'fas fa-exclamation-triangle';
+                resultIcon.style.color = '#dc3545';
+                resultTitle.textContent = 'Potential Phishing URL Detected';
+                resultTitle.style.color = '#dc3545';
+            } else {
+                resultIcon.className = 'fas fa-check-circle';
+                resultIcon.style.color = '#28a745';
+                resultTitle.textContent = 'Legitimate URL';
+                resultTitle.style.color = '#28a745';
             }
 
-            function showError(message) {
-                errorMessage.textContent = message;
-                errorMessage.classList.add('show');
-                hideLoading();
+            resultUrl.textContent = urlInput.value;
+
+            // Update confidence bar
+            const confidence = data.probability * 100;
+            confidenceLevel.style.width = `${confidence}%`;
+            confidenceText.textContent = `${confidence.toFixed(1)}% confidence`;
+
+            // Update DNS features
+            updateDNSCard('dnsRecords', data.dns_features['DNS Records']);
+            updateDNSCard('domainAge', data.dns_features['Domain Age']);
+            updateDNSCard('sslCert', data.dns_features['SSL Certificate']);
+            updateDNSCard('registration', data.dns_features['Registration']);
+
+            // Update feature cards
+            updateFeatureCard('urlStructure', data.all_features['URL Structure']);
+            updateFeatureCard('specialChars', data.all_features['Special Characters']);
+            updateFeatureCard('securityIndicators', data.all_features['Security Indicators']);
+
+            // Update feature importance
+            updateFeatureImportance(data.feature_importance);
+
+            results.style.display = 'block';
+            hideLoading();
+        }
+
+        function updateDNSCard(cardId, data) {
+            const card = document.getElementById(cardId);
+            const content = card.querySelector('.dns-content');
+            content.innerHTML = '';
+
+            for (const [key, value] of Object.entries(data)) {
+                const item = document.createElement('div');
+                item.className = 'dns-item';
+                item.innerHTML = `
+                    <span class="dns-label">${key}:</span>
+                    <span class="dns-value ${getValueClass(value)}">${value}</span>
+                `;
+                content.appendChild(item);
             }
+        }
 
-            function displayResults(data) {
-                const resultIcon = document.getElementById('resultIcon');
-                const resultTitle = document.getElementById('resultTitle');
-                const resultUrl = document.getElementById('resultUrl');
-                const confidenceLevel = document.getElementById('confidenceLevel');
-                const confidenceText = document.getElementById('confidenceText');
-                const featuresGrid = document.getElementById('featuresGrid');
+        function getValueClass(value) {
+            value = String(value);  // Convert value to string to ensure includes() is available
+            if (value === 'Present' || value === 'Valid' || value === 'Yes' || value.includes('Established')) {
+                return 'positive';
+            } else if (value === 'Missing' || value === 'Invalid' || value === 'No' || value.includes('Young')) {
+                return 'negative';
+            }
+            return '';
+        }
 
-                if (data.is_phishing) {
-                    resultIcon.className = 'fas fa-exclamation-triangle';
-                    resultIcon.style.color = 'var(--danger-color)';
-                    resultTitle.textContent = 'Potential Phishing URL Detected';
-                } else {
-                    resultIcon.className = 'fas fa-check-circle';
-                    resultIcon.style.color = 'var(--success-color)';
-                    resultTitle.textContent = 'Safe URL';
-                }
+        function updateFeatureCard(cardId, data) {
+            const card = document.getElementById(cardId);
+            const content = card.querySelector('.feature-content');
+            content.innerHTML = '';
 
-                resultUrl.textContent = data.url;
+            for (const [key, value] of Object.entries(data)) {
+                const item = document.createElement('div');
+                item.className = 'feature-item';
+                const formattedValue = typeof value === 'number' ? 
+                    (Number.isInteger(value) ? value : value.toFixed(2)) : 
+                    value;
+                item.innerHTML = `
+                    <span class="feature-label">${key}:</span>
+                    <span class="feature-value ${getValueClass(value)}">${formattedValue}</span>
+                `;
+                content.appendChild(item);
+            }
+        }
 
-                const confidence = data.confidence * 100;
-                confidenceLevel.style.width = `${confidence}%`;
-                confidenceLevel.style.backgroundColor = data.is_phishing ? 'var(--danger-color)' : 'var(--success-color)';
-                confidenceText.textContent = `${confidence.toFixed(1)}% confidence`;
+        function updateFeatureImportance(featureImportance) {
+            const chartDiv = document.getElementById('featureChart');
+            const features = Object.entries(featureImportance)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
 
-                featuresGrid.innerHTML = '';
-                Object.entries(data.features).forEach(([key, value]) => {
-                    const featureCard = document.createElement('div');
-                    featureCard.className = 'feature-card';
-                    featureCard.innerHTML = `
-                        <h3>${key.replace(/_/g, ' ').toUpperCase()}</h3>
-                        <p>${typeof value === 'number' ? value.toFixed(2) : value}</p>
-                    `;
-                    featuresGrid.appendChild(featureCard);
+            const chartHtml = features.map(([feature, importance]) => `
+                <div class="feature-bar">
+                    <div class="feature-name">${feature}</div>
+                    <div class="feature-value-bar">
+                        <div class="feature-value" style="width: ${importance * 100}%"></div>
+                    </div>
+                    <div class="feature-percentage">${(importance * 100).toFixed(1)}%</div>
+                </div>
+            `).join('');
+
+            chartDiv.innerHTML = chartHtml;
+        }
+
+        async function analyzeUrl(url) {
+            try {
+                showLoading();
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: url })
                 });
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                showError('Error analyzing URL: ' + error.message);
+            }
+        }
 
-                results.classList.add('show');
-                hideLoading();
+        function handleFile(file) {
+            if (!file || !file.type.startsWith('image/')) {
+                showError('Please upload an image file');
+                return;
             }
 
-            async function analyzeUrl(url) {
-                showLoading();
-                try {
-                    const formData = new FormData();
-                    formData.append('url', url);
+            const formData = new FormData();
+            formData.append('qr_image', file);
 
-                    const response = await fetch('/analyze', {
-                        method: 'POST',
-                        body: formData
-                    });
+            showLoading();
+            fetch('/analyze', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => displayResults(data))
+            .catch(error => showError('Error processing QR code: ' + error.message));
+        }
 
-                    const data = await response.json();
-
-                    if (data.error) {
-                        showError(data.error);
-                    } else {
-                        displayResults(data);
-                    }
-                } catch (error) {
-                    showError('An error occurred while analyzing the URL');
-                }
+        analyzeBtn.addEventListener('click', () => {
+            const url = urlInput.value.trim();
+            if (!url) {
+                showError('Please enter a URL');
+                return;
             }
+            analyzeUrl(url);
+        });
 
-            async function handleFile(file) {
-                showLoading();
-                try {
-                    const formData = new FormData();
-                    formData.append('qr_image', file);
-
-                    const response = await fetch('/analyze', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const data = await response.json();
-
-                    if (data.error) {
-                        showError(data.error);
-                    } else {
-                        displayResults(data);
-                    }
-                } catch (error) {
-                    showError('An error occurred while processing the QR code');
-                }
-            }
-
-            analyzeBtn.addEventListener('click', () => {
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
                 const url = urlInput.value.trim();
                 if (!url) {
                     showError('Please enter a URL');
                     return;
                 }
                 analyzeUrl(url);
-            });
+            }
+        });
 
-            dropzone.addEventListener('click', () => fileInput.click());
-            
-            dropzone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                dropzone.classList.add('dragover');
-            });
+        dropzone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 
-            dropzone.addEventListener('dragleave', () => {
-                dropzone.classList.remove('dragover');
-            });
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
 
-            dropzone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropzone.classList.remove('dragover');
-                const file = e.dataTransfer.files[0];
-                if (file) handleFile(file);
-            });
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+        });
 
-            fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) handleFile(file);
-            });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            handleFile(e.dataTransfer.files[0]);
         });
     </script>
 </body>

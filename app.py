@@ -7,13 +7,35 @@ from werkzeug.utils import secure_filename
 import cv2
 from pyzbar.pyzbar import decode
 import numpy as np
+import logging
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
-# Ensure upload directory exists
+# Setup logging
+def setup_app_logging(log_dir='logs'):
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    log_file = os.path.join(log_dir, f'webapp_{timestamp}.log')
+    
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler(log_file),
+            logging.StreamHandler()
+        ]
+    )
+    
+    logging.info(f"Web application logging setup complete. Log file: {log_file}")
+
+# Ensure directories exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+setup_app_logging()
 
 # Load the model and feature names
 model_dir = 'models'
@@ -41,7 +63,7 @@ def extract_url_from_qr(image_path):
             return decoded_objects[0].data.decode('utf-8')
         return None
     except Exception as e:
-        print(f"Error decoding QR code: {str(e)}")
+        logging.error(f"Error decoding QR code: {str(e)}")
         return None
 
 def analyze_url(url):
@@ -49,26 +71,94 @@ def analyze_url(url):
         # Extract features
         features = extractor.extract_features(url)
         if features is None:
-            return {"error": "Could not extract features from URL"}
+            return {
+                'error': 'Could not extract features from URL'
+            }
+        
+        # Create feature vector
+        feature_vector = pd.DataFrame([features])
+        
+        # Remove non-numeric features
+        if 'ip_address' in feature_vector.columns:
+            feature_vector = feature_vector.drop('ip_address', axis=1)
             
-        # Convert to DataFrame with correct feature order
-        features_df = pd.DataFrame([features])[feature_names]
+        # Fill missing values
+        feature_vector = feature_vector.fillna(-1)
         
         # Make prediction
-        prediction = model.predict(features_df)[0]
-        probabilities = model.predict_proba(features_df)[0]
+        probability = model.predict_proba(feature_vector)[0][1]
+        prediction = 1 if probability > 0.5 else 0
         
-        # Prepare feature information for display
-        feature_info = {name: float(value) for name, value in features.items()}
+        # Get feature importance
+        feature_importance = {
+            name: float(value) for name, value in zip(feature_vector.columns, model.feature_importances_)
+        }
+        
+        # Prepare DNS features for display
+        dns_features = {
+            'DNS Records': {
+                'A Record': 'Present' if features.get('has_a_record', 0) == 1 else 'Missing',
+                'MX Record': 'Present' if features.get('has_mx_record', 0) == 1 else 'Missing',
+                'NS Record': 'Present' if features.get('has_ns_record', 0) == 1 else 'Missing'
+            },
+            'Domain Age': {
+                'Age': f"{features.get('domain_age_days', -1)} days",
+                'Status': 'Young Domain' if features.get('is_domain_young', 1) == 1 else 'Established Domain'
+            },
+            'SSL Certificate': {
+                'Status': 'Valid' if features.get('ssl_is_valid', 0) == 1 else 'Invalid',
+                'Days Valid': features.get('ssl_days_valid', -1),
+                'Self Signed': 'Yes' if features.get('ssl_is_self_signed', 1) == 1 else 'No'
+            },
+            'Registration': {
+                'Has Registrar': 'Yes' if features.get('has_registrar', 0) == 1 else 'No',
+                'Has Registrant': 'Yes' if features.get('has_registrant', 0) == 1 else 'No',
+                'Days to Expiration': features.get('days_to_expiration', -1)
+            }
+        }
+        
+        # Prepare all features for display
+        all_features = {
+            'URL Structure': {
+                'URL Length': features.get('url_length', 0),
+                'Domain Length': features.get('domain_length', 0),
+                'Path Length': features.get('path_length', 0),
+                'Subdomain Length': features.get('subdomain_length', 0),
+                'TLD Length': features.get('tld_length', 0),
+                'Domain Token Count': features.get('domain_token_count', 0)
+            },
+            'Special Characters': {
+                'Special Characters Count': features.get('special_chars_count', 0),
+                'Digits Count': features.get('digits_count', 0),
+                'Dots': features.get('num_dots', 0),
+                'Hyphens': features.get('num_hyphens', 0),
+                'Underscores': features.get('num_underscores', 0),
+                'At Symbol (@)': 'Present' if features.get('has_at_symbol', 0) == 1 else 'Absent',
+                'Percent (%)': features.get('num_percent', 0),
+                'Ampersand (&)': features.get('num_ampersand', 0),
+                'Hash (#)': features.get('num_hash', 0)
+            },
+            'Security Indicators': {
+                'HTTPS': 'Present' if features.get('has_https', 0) == 1 else 'Absent',
+                'Is IP Address': 'Yes' if features.get('is_ip_address', 0) == 1 else 'No',
+                'Is Private IP': 'Yes' if features.get('is_private_ip', 0) == 1 else 'No',
+                'Query Components': features.get('num_query_components', 0)
+            }
+        }
         
         return {
-            "is_phishing": bool(prediction),
-            "confidence": float(probabilities[1]),
-            "features": feature_info,
-            "url": url
+            'prediction': int(prediction),
+            'probability': float(probability),
+            'dns_features': dns_features,
+            'feature_importance': feature_importance,
+            'all_features': all_features
         }
+        
     except Exception as e:
-        return {"error": str(e)}
+        logging.error(f"Error analyzing URL: {str(e)}")
+        return {
+            'error': str(e)
+        }
 
 @app.route('/')
 def home():
@@ -76,28 +166,22 @@ def home():
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    if 'url' in request.form:
-        url = request.form['url']
-        return jsonify(analyze_url(url))
-    elif 'qr_image' in request.files:
-        file = request.files['qr_image']
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
+    try:
+        data = request.get_json()
+        url = data.get('url')
+        
+        if not url:
+            return jsonify({'error': 'No URL provided'})
             
-            # Extract URL from QR code
-            url = extract_url_from_qr(filepath)
-            
-            # Clean up the uploaded file
-            os.remove(filepath)
-            
-            if url:
-                return jsonify(analyze_url(url))
-            return jsonify({"error": "Could not extract URL from QR code"})
-        return jsonify({"error": "Invalid file type"})
-    
-    return jsonify({"error": "No URL or QR code provided"})
+        logging.info(f"Analyzing URL: {url}")
+        result = analyze_url(url)
+        logging.info(f"Analysis result: {result}")
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        logging.error(f"Error in analyze endpoint: {str(e)}")
+        return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
     app.run(debug=True)
