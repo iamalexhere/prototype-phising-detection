@@ -241,7 +241,7 @@ class URLFeatureExtractor:
                 
         return (datetime.now() - creation_date).days
 
-def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=30000):
+def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=100):
     """
     Load and process both phishing and legitimate URL datasets with enhanced preprocessing
     
@@ -385,10 +385,10 @@ def tune_random_forest(X_train, y_train):
     
     # Define an expanded parameter grid
     param_grid = {
-        'n_estimators': [10, 20],
-        'max_depth': [None, 3, 5],
-        'min_samples_split': [2],
-        'min_samples_leaf': [1],
+        'n_estimators': [50, 100],
+        'max_depth': [None, 5, 10],
+        'min_samples_split': [2, 5],
+        'min_samples_leaf': [1, 2],
         'max_features': ['sqrt'],
         'class_weight': ['balanced'],
         'max_samples': [0.8],  # Bootstrap sample size (regularization)
@@ -405,7 +405,7 @@ def tune_random_forest(X_train, y_train):
     )
     
     # Initialize GridSearchCV with stratification and multiple metrics
-    cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
+    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
     
     scoring = {
         'accuracy': 'accuracy',
@@ -506,7 +506,7 @@ class ModelVisualizer:
         plt.title('Confusion Matrix')
         plt.ylabel('True Label')
         plt.xlabel('Predicted Label')
-        self.save_plot('confusion_matrix-10')
+        self.save_plot('confusion_matrix-100')
 
     def plot_feature_importance(self, feature_names, importances):
         """Generate and save feature importance plot"""
@@ -520,7 +520,7 @@ class ModelVisualizer:
         plt.title('Feature Importance')
         plt.xlabel('Importance Score')
         plt.ylabel('Features')
-        self.save_plot('feature_importance-10')
+        self.save_plot('feature_importance-100')
 
     def plot_roc_curve(self, y_true, y_prob):
         """Generate and save ROC curve plot"""
@@ -537,7 +537,7 @@ class ModelVisualizer:
         plt.ylabel('True Positive Rate')
         plt.title('Receiver Operating Characteristic (ROC) Curve')
         plt.legend(loc="lower right")
-        self.save_plot('roc_curve-10')
+        self.save_plot('roc_curve-100')
 
     def plot_precision_recall_curve(self, y_true, y_prob):
         """Generate and save precision-recall curve plot"""
@@ -551,13 +551,13 @@ class ModelVisualizer:
         plt.ylabel('Precision')
         plt.title('Precision-Recall Curve')
         plt.legend(loc="lower left")
-        self.save_plot('precision_recall_curve-10')
+        self.save_plot('precision_recall_curve-100')
 
-    def plot_learning_curve(self, estimator, X, y, cv=3):
+    def plot_learning_curve(self, estimator, X, y, cv=5):
         """Generate and save learning curve plot"""
         train_sizes, train_scores, test_scores = learning_curve(
             estimator, X, y, cv=cv, n_jobs=-1,
-            train_sizes=np.linspace(0.3, 1.0, 3),
+            train_sizes=np.linspace(0.3, 1.0, 5),
             scoring='f1'
         )
         
@@ -583,7 +583,7 @@ class ModelVisualizer:
         plt.title('Learning Curve')
         plt.legend(loc='lower right')
         plt.grid(True)
-        self.save_plot('learning_curve-10')
+        self.save_plot('learning_curve-100')
 
 def main():
     try:
@@ -599,7 +599,7 @@ def main():
         
         # Load and process data
         logging.info("Starting phishing URL detection model training...")
-        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=10)
+        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=100)
         
         # Split the data
         logging.info("\nSplitting data into train, validation, and test sets...")
