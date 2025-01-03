@@ -12,3 +12,7 @@ pathlib
 matplotlib
 seaborn
 gunicorn
+dnspython
+python-whois
+requests
+pyOpenSSL

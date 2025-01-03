@@ -32,6 +32,44 @@ from googlesearch import search
 import urllib3
 import dns.resolver
 from dns_features import extract_dns_features
+import logging
+from logging.handlers import RotatingFileHandler
+
+# Configure logging
+def setup_logging(log_dir='logs'):
+    """Setup logging configuration"""
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+        
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    log_file = os.path.join(log_dir, f'phishing_detection_{timestamp}.log')
+    
+    # Create formatters and handlers
+    file_formatter = logging.Formatter(
+        '%(asctime)s - %(levelname)s - %(message)s'
+    )
+    console_formatter = logging.Formatter(
+        '%(levelname)s - %(message)s'
+    )
+    
+    # Rotating file handler (max 10MB per file, keep 5 backup files)
+    file_handler = RotatingFileHandler(
+        log_file, maxBytes=10*1024*1024, backupCount=5
+    )
+    file_handler.setFormatter(file_formatter)
+    
+    # Console handler
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(console_formatter)
+    
+    # Setup root logger
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
+    
+    logging.info(f"Logging setup complete. Log file: {log_file}")
+    return log_file
 
 urllib3.disable_warnings()
 warnings.filterwarnings('ignore', category=UserWarning)
@@ -126,8 +164,8 @@ class URLFeatureExtractor:
             return features
             
         except Exception as e:
-            print(f"Error processing URL: {url}")
-            print(f"Error message: {str(e)}")
+            logging.error(f"Error processing URL: {url}")
+            logging.error(f"Error message: {str(e)}")
             return None
 
 def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=30000):
@@ -135,21 +173,21 @@ def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=
     Load and process both phishing and legitimate URL datasets
     """
     # Load the datasets
-    print("Loading datasets...")
+    logging.info("Loading datasets...")
     phishing_df = pd.read_csv(phishing_file_path, low_memory=False)
     legitimate_df = pd.read_csv(legitimate_file_path, low_memory=False)
     
-    print(f"Total phishing URLs available: {len(phishing_df)}")
-    print(f"Total legitimate URLs available: {len(legitimate_df)}")
+    logging.info(f"Total phishing URLs available: {len(phishing_df)}")
+    logging.info(f"Total legitimate URLs available: {len(legitimate_df)}")
     
     # Sample only specified number of URLs from both datasets
     phishing_df = phishing_df.sample(n=sample_size, random_state=42)
     legitimate_df = legitimate_df.sample(n=sample_size, random_state=42)
     
-    print(f"\nUsing {sample_size} URLs from each category for testing")
+    logging.info(f"\nUsing {sample_size} URLs from each category for testing")
     
     # Create feature lists for both types
-    print("\nExtracting features from URLs...")
+    logging.info("\nExtracting features from URLs...")
     
     def process_urls(urls, is_phishing):
         features_list = []
@@ -157,17 +195,20 @@ def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=
         for url in urls:
             features = URLFeatureExtractor.extract_features(url)
             if features:
+                # Remove non-numeric features that can't be used in the model
+                if 'ip_address' in features:
+                    del features['ip_address']
                 features_list.append(features)
                 labels.append(1 if is_phishing else 0)
         return features_list, labels
     
     # Process phishing URLs
     phishing_features, phishing_labels = process_urls(phishing_df['url'], True)
-    print(f"Processed {len(phishing_features)} phishing URLs")
+    logging.info(f"Processed {len(phishing_features)} phishing URLs")
     
     # Process legitimate URLs
     legitimate_features, legitimate_labels = process_urls(legitimate_df['url'], False)
-    print(f"Processed {len(legitimate_features)} legitimate URLs")
+    logging.info(f"Processed {len(legitimate_features)} legitimate URLs")
     
     # Combine features and labels
     all_features = phishing_features + legitimate_features
@@ -177,11 +218,14 @@ def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=
     features_df = pd.DataFrame(all_features)
     features_df['label'] = all_labels
     
-    print("\nFeature statistics:")
-    print(features_df.describe())
+    # Fill any missing values with -1
+    features_df = features_df.fillna(-1)
     
-    print("\nLabel distribution:")
-    print(features_df['label'].value_counts(normalize=True))
+    logging.info("\nFeature statistics:")
+    logging.info(features_df.describe())
+    
+    logging.info("\nLabel distribution:")
+    logging.info(features_df['label'].value_counts(normalize=True))
     
     return features_df
 
@@ -202,10 +246,10 @@ def prepare_data_splits(features_df, test_size=0.3, val_size=0.15):
         X_temp, y_temp, test_size=0.5, random_state=42, stratify=y_temp
     )
     
-    print("\nData split sizes:")
-    print(f"Training set: {len(X_train)} samples")
-    print(f"Validation set: {len(X_val)} samples")
-    print(f"Test set: {len(X_test)} samples")
+    logging.info("\nData split sizes:")
+    logging.info(f"Training set: {len(X_train)} samples")
+    logging.info(f"Validation set: {len(X_val)} samples")
+    logging.info(f"Test set: {len(X_test)} samples")
     
     return X_train, X_val, X_test, y_train, y_val, y_test
 
@@ -213,7 +257,7 @@ def tune_random_forest(X_train, y_train):
     """
     Perform hyperparameter tuning for Random Forest using GridSearchCV with enhanced cross-validation
     """
-    print("\nStarting Random Forest hyperparameter tuning with enhanced cross-validation...")
+    logging.info("\nStarting Random Forest hyperparameter tuning with enhanced cross-validation...")
     
     # Define parameter grid
     param_grid = {
@@ -255,25 +299,25 @@ def tune_random_forest(X_train, y_train):
     grid_search.fit(X_train, y_train)
     
     # Print detailed results
-    print("\nCross-validation results:")
+    logging.info("\nCross-validation results:")
     means = grid_search.cv_results_['mean_test_f1']
     stds = grid_search.cv_results_['std_test_f1']
     for mean, std, params in zip(means, stds, grid_search.cv_results_['params']):
-        print(f"F1: {mean:0.3f} (+/-{std * 2:0.03f}) for {params}")
+        logging.info(f"F1: {mean:0.3f} (+/-{std * 2:0.03f}) for {params}")
     
-    print("\nBest parameters found:")
+    logging.info("\nBest parameters found:")
     for param, value in grid_search.best_params_.items():
-        print(f"{param}: {value}")
+        logging.info(f"{param}: {value}")
     
-    print("\nBest cross-validation scores:")
+    logging.info("\nBest cross-validation scores:")
     for metric in ['f1', 'precision', 'recall', 'accuracy']:
         score = grid_search.cv_results_[f'mean_test_{metric}'][grid_search.best_index_]
         std = grid_search.cv_results_[f'std_test_{metric}'][grid_search.best_index_]
-        print(f"{metric}: {score:.4f} (+/- {std * 2:.4f})")
+        logging.info(f"{metric}: {score:.4f} (+/- {std * 2:.4f})")
     
     # Perform additional cross-validation on the best model
     best_model = grid_search.best_estimator_
-    print("\nDetailed cross-validation of best model:")
+    logging.info("\nDetailed cross-validation of best model:")
     cv_scores = cross_validate(
         best_model,
         X_train,
@@ -284,13 +328,13 @@ def tune_random_forest(X_train, y_train):
     )
     
     # Print detailed cross-validation metrics
-    print("\nDetailed Cross-Validation Metrics:")
+    logging.info("\nDetailed Cross-Validation Metrics:")
     for metric in ['accuracy', 'precision', 'recall', 'f1']:
         train_scores = cv_scores[f'train_{metric}']
         test_scores = cv_scores[f'test_{metric}']
-        print(f"\n{metric.capitalize()}:")
-        print(f"Training: {train_scores.mean():.4f} (+/- {train_scores.std() * 2:.4f})")
-        print(f"Testing:  {test_scores.mean():.4f} (+/- {test_scores.std() * 2:.4f})")
+        logging.info(f"\n{metric.capitalize()}:")
+        logging.info(f"Training: {train_scores.mean():.4f} (+/- {train_scores.std() * 2:.4f})")
+        logging.info(f"Testing:  {test_scores.mean():.4f} (+/- {test_scores.std() * 2:.4f})")
     
     return grid_search.best_estimator_
 
@@ -301,12 +345,12 @@ def evaluate_model(model, X, y, set_name=""):
     predictions = model.predict(X)
     probabilities = model.predict_proba(X)[:, 1]
     
-    print(f"\n{set_name} Performance:")
-    print(classification_report(y, predictions))
+    logging.info(f"\n{set_name} Performance:")
+    logging.info(classification_report(y, predictions))
     
-    print(f"\nDetailed {set_name} Metrics:")
-    print(f"Brier Score: {brier_score_loss(y, probabilities):.4f}")
-    print(f"Log Loss: {log_loss(y, probabilities):.4f}")
+    logging.info(f"\nDetailed {set_name} Metrics:")
+    logging.info(f"Brier Score: {brier_score_loss(y, probabilities):.4f}")
+    logging.info(f"Log Loss: {log_loss(y, probabilities):.4f}")
     
     return predictions, probabilities
 
@@ -329,8 +373,8 @@ def save_model(model, feature_names, output_dir='models'):
     feature_names_path = os.path.join(output_dir, f'feature_names_{timestamp}.joblib')
     joblib.dump(feature_names, feature_names_path)
     
-    print(f"\nModel saved to: {model_path}")
-    print(f"Feature names saved to: {feature_names_path}")
+    logging.info(f"\nModel saved to: {model_path}")
+    logging.info(f"Feature names saved to: {feature_names_path}")
     
     return model_path, feature_names_path
 
@@ -358,7 +402,7 @@ class ModelVisualizer:
         plt.title('Confusion Matrix')
         plt.ylabel('True Label')
         plt.xlabel('Predicted Label')
-        self.save_plot('confusion_matrix-3000')
+        self.save_plot('confusion_matrix-10')
 
     def plot_feature_importance(self, feature_names, importances):
         """Generate and save feature importance plot"""
@@ -372,7 +416,7 @@ class ModelVisualizer:
         plt.title('Feature Importance')
         plt.xlabel('Importance Score')
         plt.ylabel('Features')
-        self.save_plot('feature_importance-30000')
+        self.save_plot('feature_importance-10')
 
     def plot_roc_curve(self, y_true, y_prob):
         """Generate and save ROC curve plot"""
@@ -389,7 +433,7 @@ class ModelVisualizer:
         plt.ylabel('True Positive Rate')
         plt.title('Receiver Operating Characteristic (ROC) Curve')
         plt.legend(loc="lower right")
-        self.save_plot('roc_curve-30000')
+        self.save_plot('roc_curve-10')
 
     def plot_precision_recall_curve(self, y_true, y_prob):
         """Generate and save precision-recall curve plot"""
@@ -403,7 +447,7 @@ class ModelVisualizer:
         plt.ylabel('Precision')
         plt.title('Precision-Recall Curve')
         plt.legend(loc="lower left")
-        self.save_plot('precision_recall_curve-30000')
+        self.save_plot('precision_recall_curve-10')
 
     def plot_learning_curve(self, estimator, X, y, cv=5):
         """Generate and save learning curve plot"""
@@ -435,10 +479,13 @@ class ModelVisualizer:
         plt.title('Learning Curve')
         plt.legend(loc='lower right')
         plt.grid(True)
-        self.save_plot('learning_curve-30000')
+        self.save_plot('learning_curve-10')
 
 def main():
     try:
+        # Setup logging
+        log_file = setup_logging()
+        
         # File paths
         phishing_file_path = "verified_online.csv"
         legitimate_file_path = "URL-categorization-DFE.csv"
@@ -447,22 +494,22 @@ def main():
         visualizer = ModelVisualizer()
         
         # Load and process data
-        print("Starting phishing URL detection model training...")
-        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=30000)
+        logging.info("Starting phishing URL detection model training...")
+        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=10)
         
         # Split the data
-        print("\nSplitting data into train, validation, and test sets...")
+        logging.info("\nSplitting data into train, validation, and test sets...")
         X_train, X_val, X_test, y_train, y_val, y_test = prepare_data_splits(features_df)
         
         # Perform hyperparameter tuning with enhanced cross-validation
         best_model = tune_random_forest(X_train, y_train)
         
         # Generate learning curve plot
-        print("\nGenerating learning curve plot...")
+        logging.info("\nGenerating learning curve plot...")
         visualizer.plot_learning_curve(best_model, X_train, y_train)
         
         # Evaluate on validation set
-        print("\nEvaluating on validation set:")
+        logging.info("\nEvaluating on validation set:")
         y_val_pred, y_val_prob = evaluate_model(best_model, X_val, y_val, "Validation Set")
         
         # Generate validation set plots
@@ -471,11 +518,11 @@ def main():
         visualizer.plot_precision_recall_curve(y_val, y_val_prob)
         
         # Final evaluation on test set
-        print("\nEvaluating on test set:")
+        logging.info("\nEvaluating on test set:")
         y_test_pred, y_test_prob = evaluate_model(best_model, X_test, y_test, "Test Set")
         
         # Generate test set plots
-        print("\nGenerating evaluation plots...")
+        logging.info("\nGenerating evaluation plots...")
         visualizer.plot_confusion_matrix(y_test, y_test_pred)
         visualizer.plot_roc_curve(y_test, y_test_prob)
         visualizer.plot_precision_recall_curve(y_test, y_test_prob)
@@ -486,8 +533,8 @@ def main():
             'importance': best_model.feature_importances_
         }).sort_values('importance', ascending=False)
         
-        print("\nFeature Importance:")
-        print(feature_importance)
+        logging.info("\nFeature Importance:")
+        logging.info(feature_importance)
         visualizer.plot_feature_importance(X_train.columns, best_model.feature_importances_)
         
         # Save the model and feature names
