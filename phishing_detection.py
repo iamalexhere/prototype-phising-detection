@@ -288,9 +288,20 @@ def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=
     
     return features_df
 
-def prepare_data_splits(features_df, test_size=0.3, val_size=0.15):
+def prepare_data_splits(features_df, test_size=0.15, val_size=0.15):
     """
     Split data into train, validation, and test sets efficiently
+    
+    Parameters:
+    - features_df: DataFrame containing features and labels
+    - test_size: 0.15 (15% for test set)
+    - val_size: 0.15 (15% for validation set)
+    - Remaining 70% for training set
+    
+    Returns:
+    - X_train, X_val, X_test: feature matrices for training, validation, and test sets
+    - y_train, y_val, y_test: corresponding target vectors
+    - feature_names: list of feature names
     """
     # Store feature names before converting to numpy arrays
     feature_names = features_df.drop('label', axis=1).columns
@@ -299,7 +310,7 @@ def prepare_data_splits(features_df, test_size=0.3, val_size=0.15):
     X = features_df.drop('label', axis=1).values
     y = features_df['label'].values
     
-    # First split: separate test set
+    # First split: separate test set (15%)
     X_temp, X_test, y_temp, y_test = train_test_split(
         X, y,
         test_size=test_size,
@@ -307,7 +318,8 @@ def prepare_data_splits(features_df, test_size=0.3, val_size=0.15):
         stratify=y
     )
     
-    # Second split: separate validation set from training set
+    # Second split: separate validation set from remaining data
+    # val_size = 0.15 / 0.85 ≈ 0.176 to get 15% of original data
     val_ratio = val_size / (1 - test_size)
     X_train, X_val, y_train, y_val = train_test_split(
         X_temp, y_temp,
@@ -316,7 +328,17 @@ def prepare_data_splits(features_df, test_size=0.3, val_size=0.15):
         stratify=y_temp
     )
     
-    # Use efficient memory management
+    # Log the split sizes and class distribution
+    logging.info("Data split sizes and class distribution:")
+    logging.info(f"Total dataset size: {len(X)} samples")
+    logging.info(f"Training set: {len(X_train)} samples ({len(X_train)/len(X)*100:.1f}%)")
+    logging.info(f"  - Class distribution: {np.bincount(y_train)}")
+    logging.info(f"Validation set: {len(X_val)} samples ({len(X_val)/len(X)*100:.1f}%)")
+    logging.info(f"  - Class distribution: {np.bincount(y_val)}")
+    logging.info(f"Test set: {len(X_test)} samples ({len(X_test)/len(X)*100:.1f}%)")
+    logging.info(f"  - Class distribution: {np.bincount(y_test)}")
+    
+    # Clean up temporary arrays to free memory
     del X_temp, y_temp
     
     return X_train, X_val, X_test, y_train, y_val, y_test, feature_names
