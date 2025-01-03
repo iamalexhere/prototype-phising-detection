@@ -34,6 +34,13 @@ import dns.resolver
 from dns_features import extract_dns_features
 import logging
 from logging.handlers import RotatingFileHandler
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from functools import lru_cache
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+import threading
+from typing import List, Dict, Any
+import time
 
 # Configure logging
 def setup_logging(log_dir='logs'):
@@ -77,10 +84,46 @@ warnings.filterwarnings('ignore', category=UserWarning)
 # Configure matplotlib for non-interactive backend
 plt.ioff()
 
+# Create connection pool manager with retry strategy
+session = requests.Session()
+retries = Retry(total=5, backoff_factor=0.1, status_forcelist=[500, 502, 503, 504])
+adapter = HTTPAdapter(pool_connections=100, pool_maxsize=100, max_retries=retries)
+session.mount('http://', adapter)
+session.mount('https://', adapter)
+
+# Thread-local storage for session reuse
+thread_local = threading.local()
+
+def get_session():
+    if not hasattr(thread_local, "session"):
+        thread_local.session = requests.Session()
+        thread_local.session.mount('http://', adapter)
+        thread_local.session.mount('https://', adapter)
+    return thread_local.session
+
+# Cache for DNS and WHOIS lookups
+@lru_cache(maxsize=1024)
+def cached_dns_lookup(domain):
+    try:
+        return dns.resolver.resolve(domain, 'A')
+    except:
+        return None
+
+@lru_cache(maxsize=1024)
+def cached_whois_lookup(domain):
+    try:
+        return whois.whois(domain)
+    except:
+        return None
+
 class URLFeatureExtractor:
     """
-    A class to extract features from URLs for phishing detection
+    A class to extract features from URLs for phishing detection with optimized parallel processing
     """
+    
+    def __init__(self, max_workers=10):
+        self.max_workers = max_workers
+        self.feature_cache = {}
     
     @staticmethod
     def is_ip_address(url):
@@ -92,81 +135,93 @@ class URLFeatureExtractor:
         except:
             return 0
     
-    @staticmethod
-    def extract_features(url):
+    def extract_features_batch(self, urls: List[str], batch_size=100) -> pd.DataFrame:
+        """
+        Extract features from a batch of URLs using parallel processing
+        """
+        all_features = []
+        
+        # Process URLs in batches
+        for i in range(0, len(urls), batch_size):
+            batch_urls = urls[i:i + batch_size]
+            
+            with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+                future_to_url = {executor.submit(self.extract_features, url): url 
+                               for url in batch_urls if url not in self.feature_cache}
+                
+                for future in as_completed(future_to_url):
+                    url = future_to_url[future]
+                    try:
+                        features = future.result()
+                        self.feature_cache[url] = features
+                        all_features.append(features)
+                    except Exception as e:
+                        logging.error(f"Error extracting features for {url}: {str(e)}")
+                        continue
+            
+            # Add cached features
+            cached_features = [self.feature_cache[url] for url in batch_urls 
+                             if url in self.feature_cache]
+            all_features.extend(cached_features)
+            
+            # Log progress
+            logging.info(f"Processed {i + len(batch_urls)}/{len(urls)} URLs")
+        
+        # Convert to DataFrame efficiently
+        return pd.DataFrame(all_features)
+    
+    def extract_features(self, url: str) -> Dict[str, Any]:
         """
         Extract features from a given URL including DNS and domain-based features
         """
         try:
             parsed = urlparse(url)
-            extracted = tldextract.extract(url)
             domain = parsed.netloc
-
-            # Get DNS features
-            dns_features = extract_dns_features(url)
-            if dns_features is not None and not dns_features.empty:
-                dns_features_dict = dns_features.iloc[0].to_dict()
-                dns_features_dict.pop('url', None)  # Remove URL as it's not needed as a feature
-            else:
-                dns_features_dict = {}
             
-            # Basic URL features
-            url_length = len(url)
-            domain_length = len(domain)
-            path_length = len(parsed.path)
+            # Use cached DNS lookup
+            dns_info = cached_dns_lookup(domain)
+            whois_info = cached_whois_lookup(domain)
             
-            # Character-based features
-            special_chars = len(re.findall(r'[^a-zA-Z0-9]', url))
-            digits = len(re.findall(r'\d', url))
-            has_at_symbol = '@' in url
-            is_ip = URLFeatureExtractor.is_ip_address(url)
+            # Get session for HTTP requests
+            session = get_session()
             
-            # Additional security features
-            num_dots = url.count('.')
-            num_hyphens = url.count('-')
-            num_underscores = url.count('_')
-            num_percent = url.count('%')
-            num_query_components = len(parsed.query.split('&')) if parsed.query else 0
-            num_ampersand = url.count('&')
-            num_hash = url.count('#')
-            has_https = int(parsed.scheme == 'https')
-            
-            # Domain-based features
-            domain_token_count = len(re.findall(r'[a-zA-Z0-9]+', extracted.domain))
-            subdomain_length = len(extracted.subdomain)
-            tld_length = len(extracted.suffix) if extracted.suffix else 0
-            
-            # Combine all features
             features = {
-                'url_length': url_length,
-                'domain_length': domain_length,
-                'path_length': path_length,
-                'special_chars_count': special_chars,
-                'digits_count': digits,
-                'has_at_symbol': int(has_at_symbol),
-                'is_ip_address': is_ip,
-                'num_dots': num_dots,
-                'num_hyphens': num_hyphens,
-                'num_underscores': num_underscores,
-                'num_percent': num_percent,
-                'num_query_components': num_query_components,
-                'num_ampersand': num_ampersand,
-                'num_hash': num_hash,
-                'has_https': has_https,
-                'domain_token_count': domain_token_count,
-                'subdomain_length': subdomain_length,
-                'tld_length': tld_length
+                'url_length': len(url),
+                'domain_length': len(domain),
+                'has_ip': self.is_ip_address(url),
+                'has_at_symbol': '@' in url,
+                'has_double_slash': '//' in parsed.path,
+                'has_dash': '-' in domain,
+                'has_multiple_subdomains': len(domain.split('.')) > 2,
+                'is_https': parsed.scheme == 'https',
+                'domain_age': self._get_domain_age(whois_info) if whois_info else -1,
+                'has_dns_record': 1 if dns_info else 0,
             }
-            
-            # Update with DNS features
-            features.update(dns_features_dict)
             
             return features
             
         except Exception as e:
-            logging.error(f"Error processing URL: {url}")
-            logging.error(f"Error message: {str(e)}")
+            logging.error(f"Error extracting features for {url}: {str(e)}")
             return None
+    
+    @staticmethod
+    def _get_domain_age(whois_info):
+        """Calculate domain age in days"""
+        if not whois_info or not whois_info.creation_date:
+            return -1
+        
+        if isinstance(whois_info.creation_date, list):
+            creation_date = whois_info.creation_date[0]
+        else:
+            creation_date = whois_info.creation_date
+            
+        if isinstance(creation_date, str):
+            try:
+                creation_date = datetime.strptime(creation_date, '%Y-%m-%d')
+            except:
+                return -1
+                
+        return (datetime.now() - creation_date).days
 
 def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=30000):
     """
@@ -189,30 +244,16 @@ def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=
     # Create feature lists for both types
     logging.info("\nExtracting features from URLs...")
     
-    def process_urls(urls, is_phishing):
-        features_list = []
-        labels = []
-        for url in urls:
-            features = URLFeatureExtractor.extract_features(url)
-            if features:
-                # Remove non-numeric features that can't be used in the model
-                if 'ip_address' in features:
-                    del features['ip_address']
-                features_list.append(features)
-                labels.append(1 if is_phishing else 0)
-        return features_list, labels
+    extractor = URLFeatureExtractor()
+    phishing_features = extractor.extract_features_batch(phishing_df['url'])
+    legitimate_features = extractor.extract_features_batch(legitimate_df['url'])
     
-    # Process phishing URLs
-    phishing_features, phishing_labels = process_urls(phishing_df['url'], True)
     logging.info(f"Processed {len(phishing_features)} phishing URLs")
-    
-    # Process legitimate URLs
-    legitimate_features, legitimate_labels = process_urls(legitimate_df['url'], False)
     logging.info(f"Processed {len(legitimate_features)} legitimate URLs")
     
     # Combine features and labels
-    all_features = phishing_features + legitimate_features
-    all_labels = phishing_labels + legitimate_labels
+    all_features = pd.concat([phishing_features, legitimate_features])
+    all_labels = [1] * len(phishing_features) + [0] * len(legitimate_features)
     
     # Convert to DataFrame
     features_df = pd.DataFrame(all_features)
@@ -231,25 +272,31 @@ def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=
 
 def prepare_data_splits(features_df, test_size=0.3, val_size=0.15):
     """
-    Split data into train, validation, and test sets (70-15-15)
+    Split data into train, validation, and test sets efficiently
     """
-    # First split: 70% train, 30% temp (which will be split into validation and test)
-    X = features_df.drop('label', axis=1)
-    y = features_df['label']
+    # Convert to numpy arrays for faster processing
+    X = features_df.drop('label', axis=1).values
+    y = features_df['label'].values
     
-    X_train, X_temp, y_train, y_temp = train_test_split(
-        X, y, test_size=test_size, random_state=42, stratify=y
+    # First split: separate test set
+    X_temp, X_test, y_temp, y_test = train_test_split(
+        X, y,
+        test_size=test_size,
+        random_state=42,
+        stratify=y
     )
     
-    # Second split: Split temp into validation and test (50% each of the 30%)
-    X_val, X_test, y_val, y_test = train_test_split(
-        X_temp, y_temp, test_size=0.5, random_state=42, stratify=y_temp
+    # Second split: separate validation set from training set
+    val_ratio = val_size / (1 - test_size)
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_temp, y_temp,
+        test_size=val_ratio,
+        random_state=42,
+        stratify=y_temp
     )
     
-    logging.info("\nData split sizes:")
-    logging.info(f"Training set: {len(X_train)} samples")
-    logging.info(f"Validation set: {len(X_val)} samples")
-    logging.info(f"Test set: {len(X_test)} samples")
+    # Use efficient memory management
+    del X_temp, y_temp
     
     return X_train, X_val, X_test, y_train, y_val, y_test
 
@@ -257,84 +304,48 @@ def tune_random_forest(X_train, y_train):
     """
     Perform hyperparameter tuning for Random Forest using GridSearchCV with enhanced cross-validation
     """
-    logging.info("\nStarting Random Forest hyperparameter tuning with enhanced cross-validation...")
-    
-    # Define parameter grid
     param_grid = {
-        'n_estimators': [100, 200, 300],
-        'max_depth': [5, 10, 15, None],
-        'min_samples_split': [2, 5, 10],
-        'min_samples_leaf': [1, 2, 4],
-        'max_features': ['sqrt', 'log2']
+        'n_estimators': [100, 200],
+        'max_depth': [10, 20, None],
+        'min_samples_split': [2, 5],
+        'min_samples_leaf': [1, 2]
     }
     
-    # Initialize base model
-    rf = RandomForestClassifier(
+    # Initialize base model with n_jobs for parallel processing
+    base_model = RandomForestClassifier(
         random_state=42,
-        class_weight='balanced',
-        n_jobs=-1
+        n_jobs=-1,  # Use all available cores
+        class_weight='balanced'
     )
     
-    # Create StratifiedKFold cross-validator
-    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-    
-    # Initialize GridSearchCV with multiple scoring metrics
+    # Configure GridSearchCV with parallel processing
     grid_search = GridSearchCV(
-        estimator=rf,
+        estimator=base_model,
         param_grid=param_grid,
-        cv=cv,
-        n_jobs=-1,
-        scoring={
-            'accuracy': 'accuracy',
-            'precision': 'precision',
-            'recall': 'recall',
-            'f1': 'f1'
-        },
-        refit='f1',  # Use F1 score to select the best model
-        verbose=2,
-        return_train_score=True
+        cv=StratifiedKFold(n_splits=5, shuffle=True, random_state=42),
+        scoring='f1',
+        n_jobs=-1,  # Use all available cores for parallel processing
+        verbose=1
     )
     
-    # Fit the grid search
-    grid_search.fit(X_train, y_train)
+    # Fit the model using batches to optimize memory usage
+    batch_size = 10000
+    for i in range(0, len(X_train), batch_size):
+        end_idx = min(i + batch_size, len(X_train))
+        X_batch = X_train[i:end_idx]
+        y_batch = y_train[i:end_idx]
+        
+        if i == 0:
+            grid_search.fit(X_batch, y_batch)
+        else:
+            # Update the best estimator with new batch
+            grid_search.best_estimator_.fit(
+                X_batch, y_batch, 
+                warm_start=True  # Use warm start for incremental fitting
+            )
     
-    # Print detailed results
-    logging.info("\nCross-validation results:")
-    means = grid_search.cv_results_['mean_test_f1']
-    stds = grid_search.cv_results_['std_test_f1']
-    for mean, std, params in zip(means, stds, grid_search.cv_results_['params']):
-        logging.info(f"F1: {mean:0.3f} (+/-{std * 2:0.03f}) for {params}")
-    
-    logging.info("\nBest parameters found:")
-    for param, value in grid_search.best_params_.items():
-        logging.info(f"{param}: {value}")
-    
-    logging.info("\nBest cross-validation scores:")
-    for metric in ['f1', 'precision', 'recall', 'accuracy']:
-        score = grid_search.cv_results_[f'mean_test_{metric}'][grid_search.best_index_]
-        std = grid_search.cv_results_[f'std_test_{metric}'][grid_search.best_index_]
-        logging.info(f"{metric}: {score:.4f} (+/- {std * 2:.4f})")
-    
-    # Perform additional cross-validation on the best model
-    best_model = grid_search.best_estimator_
-    logging.info("\nDetailed cross-validation of best model:")
-    cv_scores = cross_validate(
-        best_model,
-        X_train,
-        y_train,
-        cv=cv,
-        scoring=['accuracy', 'precision', 'recall', 'f1'],
-        return_train_score=True
-    )
-    
-    # Print detailed cross-validation metrics
-    logging.info("\nDetailed Cross-Validation Metrics:")
-    for metric in ['accuracy', 'precision', 'recall', 'f1']:
-        train_scores = cv_scores[f'train_{metric}']
-        test_scores = cv_scores[f'test_{metric}']
-        logging.info(f"\n{metric.capitalize()}:")
-        logging.info(f"Training: {train_scores.mean():.4f} (+/- {train_scores.std() * 2:.4f})")
-        logging.info(f"Testing:  {test_scores.mean():.4f} (+/- {test_scores.std() * 2:.4f})")
+    logging.info("Best parameters found: %s", grid_search.best_params_)
+    logging.info("Best cross-validation score: %f", grid_search.best_score_)
     
     return grid_search.best_estimator_
 
@@ -402,7 +413,7 @@ class ModelVisualizer:
         plt.title('Confusion Matrix')
         plt.ylabel('True Label')
         plt.xlabel('Predicted Label')
-        self.save_plot('confusion_matrix-10')
+        self.save_plot('confusion_matrix-100')
 
     def plot_feature_importance(self, feature_names, importances):
         """Generate and save feature importance plot"""
@@ -416,7 +427,7 @@ class ModelVisualizer:
         plt.title('Feature Importance')
         plt.xlabel('Importance Score')
         plt.ylabel('Features')
-        self.save_plot('feature_importance-10')
+        self.save_plot('feature_importance-100')
 
     def plot_roc_curve(self, y_true, y_prob):
         """Generate and save ROC curve plot"""
@@ -433,7 +444,7 @@ class ModelVisualizer:
         plt.ylabel('True Positive Rate')
         plt.title('Receiver Operating Characteristic (ROC) Curve')
         plt.legend(loc="lower right")
-        self.save_plot('roc_curve-10')
+        self.save_plot('roc_curve-100')
 
     def plot_precision_recall_curve(self, y_true, y_prob):
         """Generate and save precision-recall curve plot"""
@@ -447,7 +458,7 @@ class ModelVisualizer:
         plt.ylabel('Precision')
         plt.title('Precision-Recall Curve')
         plt.legend(loc="lower left")
-        self.save_plot('precision_recall_curve-10')
+        self.save_plot('precision_recall_curve-100')
 
     def plot_learning_curve(self, estimator, X, y, cv=5):
         """Generate and save learning curve plot"""
@@ -479,7 +490,7 @@ class ModelVisualizer:
         plt.title('Learning Curve')
         plt.legend(loc='lower right')
         plt.grid(True)
-        self.save_plot('learning_curve-10')
+        self.save_plot('learning_curve-100')
 
 def main():
     try:
@@ -495,7 +506,7 @@ def main():
         
         # Load and process data
         logging.info("Starting phishing URL detection model training...")
-        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=10)
+        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=100)
         
         # Split the data
         logging.info("\nSplitting data into train, validation, and test sets...")
