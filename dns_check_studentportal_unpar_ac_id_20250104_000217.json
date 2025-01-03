@@ -1,0 +1,31 @@
+{
+    "domain": "studentportal.unpar.ac.id",
+    "check_time": "2025-01-04T00:02:14.515499",
+    "records": {
+        "A": [
+            "103.36.68.94"
+        ],
+        "AAAA": [],
+        "MX": [],
+        "NS": [],
+        "TXT": [],
+        "SOA": [],
+        "CNAME": []
+    },
+    "whois_info": {
+        "registrar": "PT Digital Registra Indonesia",
+        "creation_date": "1998-01-01 13:32:27",
+        "expiration_date": "2025-10-01 23:59:59",
+        "name_servers": [
+            "ns1.unpar.ac.id",
+            "ns2.unpar.ac.id",
+            "ns3.unpar.ac.id"
+        ]
+    },
+    "ip_info": [
+        {
+            "hostname": "studentportal.unpar.ac.id",
+            "ip": "103.36.68.94"
+        }
+    ]
+}

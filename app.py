@@ -94,6 +94,14 @@ def analyze_url(url):
             name: float(value) for name, value in zip(feature_vector.columns, model.feature_importances_)
         }
         
+        # Convert numpy values to Python native types
+        def convert_to_native(value):
+            if isinstance(value, (np.int64, np.int32, np.int16, np.int8)):
+                return int(value)
+            if isinstance(value, (np.float64, np.float32)):
+                return float(value)
+            return value
+        
         # Prepare DNS features for display
         dns_features = {
             'DNS Records': {
@@ -102,47 +110,47 @@ def analyze_url(url):
                 'NS Record': 'Present' if features.get('has_ns_record', 0) == 1 else 'Missing'
             },
             'Domain Age': {
-                'Age': f"{features.get('domain_age_days', -1)} days",
+                'Age': f"{convert_to_native(features.get('domain_age_days', -1))} days",
                 'Status': 'Young Domain' if features.get('is_domain_young', 1) == 1 else 'Established Domain'
             },
             'SSL Certificate': {
                 'Status': 'Valid' if features.get('ssl_is_valid', 0) == 1 else 'Invalid',
-                'Days Valid': features.get('ssl_days_valid', -1),
+                'Days Valid': convert_to_native(features.get('ssl_days_valid', -1)),
                 'Self Signed': 'Yes' if features.get('ssl_is_self_signed', 1) == 1 else 'No'
             },
             'Registration': {
                 'Has Registrar': 'Yes' if features.get('has_registrar', 0) == 1 else 'No',
                 'Has Registrant': 'Yes' if features.get('has_registrant', 0) == 1 else 'No',
-                'Days to Expiration': features.get('days_to_expiration', -1)
+                'Days to Expiration': convert_to_native(features.get('days_to_expiration', -1))
             }
         }
         
         # Prepare all features for display
         all_features = {
             'URL Structure': {
-                'URL Length': features.get('url_length', 0),
-                'Domain Length': features.get('domain_length', 0),
-                'Path Length': features.get('path_length', 0),
-                'Subdomain Length': features.get('subdomain_length', 0),
-                'TLD Length': features.get('tld_length', 0),
-                'Domain Token Count': features.get('domain_token_count', 0)
+                'URL Length': convert_to_native(features.get('url_length', 0)),
+                'Domain Length': convert_to_native(features.get('domain_length', 0)),
+                'Path Length': convert_to_native(features.get('path_length', 0)),
+                'Subdomain Length': convert_to_native(features.get('subdomain_length', 0)),
+                'TLD Length': convert_to_native(features.get('tld_length', 0)),
+                'Domain Token Count': convert_to_native(features.get('domain_token_count', 0))
             },
             'Special Characters': {
-                'Special Characters Count': features.get('special_chars_count', 0),
-                'Digits Count': features.get('digits_count', 0),
-                'Dots': features.get('num_dots', 0),
-                'Hyphens': features.get('num_hyphens', 0),
-                'Underscores': features.get('num_underscores', 0),
+                'Special Characters Count': convert_to_native(features.get('special_chars_count', 0)),
+                'Digits Count': convert_to_native(features.get('digits_count', 0)),
+                'Dots': convert_to_native(features.get('num_dots', 0)),
+                'Hyphens': convert_to_native(features.get('num_hyphens', 0)),
+                'Underscores': convert_to_native(features.get('num_underscores', 0)),
                 'At Symbol (@)': 'Present' if features.get('has_at_symbol', 0) == 1 else 'Absent',
-                'Percent (%)': features.get('num_percent', 0),
-                'Ampersand (&)': features.get('num_ampersand', 0),
-                'Hash (#)': features.get('num_hash', 0)
+                'Percent (%)': convert_to_native(features.get('num_percent', 0)),
+                'Ampersand (&)': convert_to_native(features.get('num_ampersand', 0)),
+                'Hash (#)': convert_to_native(features.get('num_hash', 0))
             },
             'Security Indicators': {
                 'HTTPS': 'Present' if features.get('has_https', 0) == 1 else 'Absent',
                 'Is IP Address': 'Yes' if features.get('is_ip_address', 0) == 1 else 'No',
                 'Is Private IP': 'Yes' if features.get('is_private_ip', 0) == 1 else 'No',
-                'Query Components': features.get('num_query_components', 0)
+                'Query Components': convert_to_native(features.get('num_query_components', 0))
             }
         }
         

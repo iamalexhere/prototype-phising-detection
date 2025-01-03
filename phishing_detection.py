@@ -178,13 +178,12 @@ class URLFeatureExtractor:
             parsed = urlparse(url)
             domain = parsed.netloc
             
-            # Use cached DNS lookup
-            dns_info = cached_dns_lookup(domain)
-            whois_info = cached_whois_lookup(domain)
+            # Extract DNS features using our improved dns_features module
+            dns_features_df = extract_dns_features(url)
+            # Convert Series to scalar values
+            dns_features = {col: dns_features_df[col].iloc[0] for col in dns_features_df.columns}
             
-            # Get session for HTTP requests
-            session = get_session()
-            
+            # Basic URL features
             features = {
                 'url_length': len(url),
                 'domain_length': len(domain),
@@ -194,9 +193,28 @@ class URLFeatureExtractor:
                 'has_dash': '-' in domain,
                 'has_multiple_subdomains': len(domain.split('.')) > 2,
                 'is_https': parsed.scheme == 'https',
-                'domain_age': self._get_domain_age(whois_info) if whois_info else -1,
-                'has_dns_record': 1 if dns_info else 0,
             }
+            
+            # Add DNS features
+            features.update({
+                'has_a_record': dns_features['has_a_record'],
+                'num_a_records': dns_features['num_a_records'],
+                'is_private_ip': dns_features['is_private_ip'],
+                'has_mx_record': dns_features['has_mx_record'],
+                'num_mx_records': dns_features['num_mx_records'],
+                'has_ns_record': dns_features['has_ns_record'],
+                'num_ns_records': dns_features['num_ns_records'],
+                'domain_age_days': dns_features['domain_age_days'],
+                'is_domain_young': dns_features['is_domain_young'],
+                'days_to_expiration': dns_features['days_to_expiration'],
+                'is_expiring_soon': dns_features['is_expiring_soon'],
+                'has_registrar': dns_features['has_registrar'],
+                'has_registrant': dns_features['has_registrant'],
+                'ssl_days_valid': dns_features['ssl_days_valid'],
+                'ssl_is_valid': dns_features['ssl_is_valid'],
+                'ssl_is_expired': dns_features['ssl_is_expired'],
+                'ssl_is_self_signed': dns_features['ssl_is_self_signed']
+            })
             
             return features
             
