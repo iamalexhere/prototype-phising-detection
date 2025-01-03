@@ -136,40 +136,32 @@ class URLFeatureExtractor:
         except:
             return 0
     
-    def extract_features_batch(self, urls: List[str], batch_size=100) -> pd.DataFrame:
+    def extract_features_batch(self, urls: List[str]) -> List[Dict[str, Any]]:
         """
         Extract features from a batch of URLs using parallel processing
+        Returns a list of feature dictionaries
         """
-        all_features = []
+        features_list = []
         
         # Process URLs in batches
-        for i in range(0, len(urls), batch_size):
-            batch_urls = urls[i:i + batch_size]
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            futures = []
+            for url in urls:
+                if url in self.feature_cache:
+                    features_list.append(self.feature_cache[url])
+                else:
+                    futures.append(executor.submit(self.extract_features, url))
             
-            with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-                future_to_url = {executor.submit(self.extract_features, url): url 
-                               for url in batch_urls if url not in self.feature_cache}
-                
-                for future in as_completed(future_to_url):
-                    url = future_to_url[future]
-                    try:
-                        features = future.result()
-                        self.feature_cache[url] = features
-                        all_features.append(features)
-                    except Exception as e:
-                        logging.error(f"Error extracting features for {url}: {str(e)}")
-                        continue
-            
-            # Add cached features
-            cached_features = [self.feature_cache[url] for url in batch_urls 
-                             if url in self.feature_cache]
-            all_features.extend(cached_features)
-            
-            # Log progress
-            logging.info(f"Processed {i + len(batch_urls)}/{len(urls)} URLs")
+            for future in as_completed(futures):
+                try:
+                    features = future.result()
+                    features_list.append(features)
+                except Exception as e:
+                    logging.error(f"Error extracting features: {str(e)}")
+                    # Add empty features for failed URLs
+                    features_list.append({})
         
-        # Convert to DataFrame efficiently
-        return pd.DataFrame(all_features)
+        return features_list
     
     def extract_features(self, url: str) -> Dict[str, Any]:
         """
@@ -242,14 +234,19 @@ class URLFeatureExtractor:
                 
         return (datetime.now() - creation_date).days
 
-def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=100):
+def extract_domain(url):
+    """Extract the base domain from a URL"""
+    try:
+        ext = tldextract.extract(url)
+        if not ext.domain or not ext.suffix:
+            return None
+        return f"{ext.domain}.{ext.suffix}"
+    except:
+        return None
+
+def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=30000):
     """
     Load and process both phishing and legitimate URL datasets with enhanced preprocessing
-    
-    Parameters:
-    - phishing_file_path: path to phishing URLs file
-    - legitimate_file_path: path to legitimate URLs file
-    - sample_size: number of samples per class (default increased to 50000)
     """
     logging.info("Loading and processing datasets...")
     
@@ -276,6 +273,15 @@ def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=
     phishing_features = extractor.extract_features_batch(phishing_urls.tolist())
     legitimate_features = extractor.extract_features_batch(legitimate_urls.tolist())
     
+    # Add URLs to feature dictionaries
+    for features, url in zip(phishing_features, phishing_urls):
+        if isinstance(features, dict):
+            features['url'] = url
+    
+    for features, url in zip(legitimate_features, legitimate_urls):
+        if isinstance(features, dict):
+            features['url'] = url
+    
     # Convert to DataFrames
     phishing_df = pd.DataFrame(phishing_features)
     legitimate_df = pd.DataFrame(legitimate_features)
@@ -287,48 +293,49 @@ def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=
     # Combine datasets
     features_df = pd.concat([phishing_df, legitimate_df], ignore_index=True)
     
+    # Store URL column separately before preprocessing
+    urls = features_df['url'].copy()
+    
+    # Remove URL column temporarily for preprocessing
+    features_df_prep = features_df.drop('url', axis=1)
+    
     # Preprocessing steps
     # 1. Handle missing values
-    features_df = features_df.fillna(features_df.mean())
+    features_df_prep = features_df_prep.fillna(features_df_prep.mean())
     
     # 2. Remove constant features
-    constant_features = [col for col in features_df.columns if col != 'label' 
-                        and features_df[col].nunique() == 1]
-    features_df = features_df.drop(columns=constant_features)
+    constant_features = [col for col in features_df_prep.columns if col != 'label' 
+                        and features_df_prep[col].nunique() == 1]
+    features_df_prep = features_df_prep.drop(columns=constant_features)
     if constant_features:
         logging.info(f"Removed {len(constant_features)} constant features")
     
     # 3. Remove highly correlated features
-    corr_matrix = features_df.drop('label', axis=1).corr().abs()
+    corr_matrix = features_df_prep.drop('label', axis=1).corr().abs()
     upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
     high_corr_features = [column for column in upper.columns if any(upper[column] > 0.95)]
-    features_df = features_df.drop(columns=high_corr_features)
+    features_df_prep = features_df_prep.drop(columns=high_corr_features)
     if high_corr_features:
         logging.info(f"Removed {len(high_corr_features)} highly correlated features")
     
     # 4. Scale numerical features
     from sklearn.preprocessing import RobustScaler
     scaler = RobustScaler()
-    numerical_cols = features_df.select_dtypes(include=['float64', 'int64']).columns
+    numerical_cols = features_df_prep.select_dtypes(include=['float64', 'int64']).columns
     numerical_cols = numerical_cols.drop('label') if 'label' in numerical_cols else numerical_cols
     
     if len(numerical_cols) > 0:
-        features_df[numerical_cols] = scaler.fit_transform(features_df[numerical_cols])
+        features_df_prep[numerical_cols] = scaler.fit_transform(features_df_prep[numerical_cols])
         logging.info(f"Scaled {len(numerical_cols)} numerical features using RobustScaler")
     
-    # Shuffle the dataset
-    features_df = features_df.sample(frac=1, random_state=42).reset_index(drop=True)
+    # Add URL column back
+    features_df_prep['url'] = urls
     
-    logging.info(f"Final dataset shape: {features_df.shape}")
-    return features_df
-
-def extract_domain(url):
-    """Extract the base domain from a URL"""
-    try:
-        ext = tldextract.extract(url)
-        return f"{ext.domain}.{ext.suffix}"
-    except:
-        return None
+    # Shuffle the dataset
+    features_df_prep = features_df_prep.sample(frac=1, random_state=42).reset_index(drop=True)
+    
+    logging.info(f"Final dataset shape: {features_df_prep.shape}")
+    return features_df_prep
 
 def prepare_data_splits(features_df, test_size=0.2, val_size=0.2):
     """
@@ -401,7 +408,7 @@ def prepare_data_splits(features_df, test_size=0.2, val_size=0.2):
 def tune_random_forest(X_train, y_train):
     """
     Perform hyperparameter tuning for Random Forest using GridSearchCV with enhanced cross-validation
-    and regularization parameters
+    and regularization parameters. Returns both the base model and calibrated model.
     """
     logging.info("Starting hyperparameter tuning for Random Forest...")
     
@@ -448,59 +455,73 @@ def tune_random_forest(X_train, y_train):
     logging.info("\nBest parameters found:")
     logging.info(grid_search.best_params_)
     logging.info("\nBest cross-validation scores:")
-    for metric, score in grid_search.cv_results_['mean_test_' + grid_search.refit].items():
+    
+    # Log all metric scores
+    for metric in ['accuracy', 'precision', 'recall', 'f1', 'roc_auc']:
+        score = grid_search.cv_results_[f'mean_test_{metric}'][grid_search.best_index_]
         logging.info(f"{metric}: {score:.4f}")
     
+    # Get the best base model
+    best_base_model = grid_search.best_estimator_
+    
     # Calibrate probabilities using the best model
-    best_model = grid_search.best_estimator_
     calibrated_model = CalibratedClassifierCV(
-        best_model, 
-        cv='prefit',
-        method='sigmoid'
+        RandomForestClassifier(**grid_search.best_params_, random_state=42), 
+        method='sigmoid',
+        cv=5
     )
     calibrated_model.fit(X_train, y_train)
     
-    return calibrated_model
-
-def evaluate_model(model, X, y, set_name=""):
-    """
-    Comprehensive model evaluation function with threshold optimization
-    """
-    # Get predicted probabilities
-    y_prob = model.predict_proba(X)[:, 1]
-    
-    # Find optimal threshold using ROC curve
-    fpr, tpr, thresholds = roc_curve(y, y_prob)
-    optimal_idx = np.argmax(tpr - fpr)
-    optimal_threshold = thresholds[optimal_idx]
-    
-    # Apply optimal threshold
-    y_pred = (y_prob >= optimal_threshold).astype(int)
-    
-    # Calculate metrics
-    logging.info(f"\n{set_name} Set Performance:")
-    logging.info(classification_report(y, y_pred))
-    
-    logging.info(f"\nDetailed {set_name} Set Metrics:")
-    logging.info(f"Brier Score: {brier_score_loss(y, y_prob):.4f}")
-    logging.info(f"Log Loss: {log_loss(y, y_prob):.4f}")
-    logging.info(f"Optimal Threshold: {optimal_threshold:.4f}")
-    
-    return y_pred, y_prob, optimal_threshold
+    return best_base_model, calibrated_model
 
 class ModelVisualizer:
-    """
-    A class to generate and save various model evaluation plots
-    """
-    def __init__(self, output_dir='plots'):
-        self.output_dir = Path(output_dir)
-        self.output_dir.mkdir(parents=True, exist_ok=True)
-        plt.style.use('default')  # Using default style instead of seaborn
+    """Class for visualizing model performance metrics"""
     
+    def __init__(self, output_dir='plots'):
+        self.output_dir = output_dir
+        os.makedirs(output_dir, exist_ok=True)
+        
+    def plot_learning_curve(self, model, X, y):
+        """
+        Plot learning curve to visualize model's performance with varying training set sizes
+        """
+        logging.info("\nGenerating learning curve plot...")
+        
+        train_sizes = np.linspace(0.1, 1.0, 5)
+        cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+        
+        plt.figure(figsize=(10, 6))
+        train_sizes, train_scores, val_scores = learning_curve(
+            model, X, y,
+            train_sizes=train_sizes,
+            cv=cv,
+            n_jobs=-1,
+            scoring='f1'
+        )
+        
+        train_mean = np.mean(train_scores, axis=1)
+        train_std = np.std(train_scores, axis=1)
+        val_mean = np.mean(val_scores, axis=1)
+        val_std = np.std(val_scores, axis=1)
+        
+        plt.plot(train_sizes, train_mean, label='Training score', color='blue', marker='o')
+        plt.fill_between(train_sizes, train_mean - train_std, train_mean + train_std, alpha=0.15, color='blue')
+        plt.plot(train_sizes, val_mean, label='Cross-validation score', color='green', marker='o')
+        plt.fill_between(train_sizes, val_mean - val_std, val_mean + val_std, alpha=0.15, color='green')
+        
+        plt.xlabel('Training Examples')
+        plt.ylabel('F1 Score')
+        plt.title('Learning Curve')
+        plt.legend(loc='lower right')
+        plt.grid(True)
+        
+        plt.savefig(os.path.join(self.output_dir, 'learning_curve.png'))
+        plt.close()
+
     def save_plot(self, plot_name):
         """Save the current plot to the output directory"""
         plt.tight_layout()
-        plt.savefig(self.output_dir / f"{plot_name}.png", dpi=300, bbox_inches='tight')
+        plt.savefig(os.path.join(self.output_dir, f"{plot_name}.png"), dpi=300, bbox_inches='tight')
         plt.close('all')  # Properly close all figures
 
     def plot_confusion_matrix(self, y_true, y_pred, classes=['Legitimate', 'Phishing']):
@@ -559,37 +580,31 @@ class ModelVisualizer:
         plt.legend(loc="lower left")
         self.save_plot('precision_recall_curve-100')
 
-    def plot_learning_curve(self, estimator, X, y, cv=5):
-        """Generate and save learning curve plot"""
-        train_sizes, train_scores, test_scores = learning_curve(
-            estimator, X, y, cv=cv, n_jobs=-1,
-            train_sizes=np.linspace(0.3, 1.0, 5),
-            scoring='f1'
-        )
-        
-        train_mean = np.mean(train_scores, axis=1)
-        train_std = np.std(train_scores, axis=1)
-        test_mean = np.mean(test_scores, axis=1)
-        test_std = np.std(test_scores, axis=1)
-        
-        plt.figure(figsize=(10, 6))
-        plt.plot(train_sizes, train_mean, label='Training score',
-                color='darkorange', lw=2)
-        plt.fill_between(train_sizes, train_mean - train_std,
-                        train_mean + train_std, alpha=0.1,
-                        color='darkorange')
-        plt.plot(train_sizes, test_mean, label='Cross-validation score',
-                color='navy', lw=2)
-        plt.fill_between(train_sizes, test_mean - test_std,
-                        test_mean + test_std, alpha=0.1,
-                        color='navy')
-        
-        plt.xlabel('Training Examples')
-        plt.ylabel('F1 Score')
-        plt.title('Learning Curve')
-        plt.legend(loc='lower right')
-        plt.grid(True)
-        self.save_plot('learning_curve-100')
+def evaluate_model(model, X, y, set_name=""):
+    """
+    Comprehensive model evaluation function with threshold optimization
+    """
+    # Get predicted probabilities
+    y_prob = model.predict_proba(X)[:, 1]
+    
+    # Find optimal threshold using ROC curve
+    fpr, tpr, thresholds = roc_curve(y, y_prob)
+    optimal_idx = np.argmax(tpr - fpr)
+    optimal_threshold = thresholds[optimal_idx]
+    
+    # Apply optimal threshold
+    y_pred = (y_prob >= optimal_threshold).astype(int)
+    
+    # Calculate metrics
+    logging.info(f"\n{set_name} Set Performance:")
+    logging.info(classification_report(y, y_pred))
+    
+    logging.info(f"\nDetailed {set_name} Set Metrics:")
+    logging.info(f"Brier Score: {brier_score_loss(y, y_prob):.4f}")
+    logging.info(f"Log Loss: {log_loss(y, y_prob):.4f}")
+    logging.info(f"Optimal Threshold: {optimal_threshold:.4f}")
+    
+    return y_pred, y_prob, optimal_threshold
 
 def save_model(model, feature_names, output_dir='models'):
     """
@@ -636,15 +651,15 @@ def main():
         X_train, X_val, X_test, y_train, y_val, y_test, feature_names = prepare_data_splits(features_df)
         
         # Perform hyperparameter tuning with enhanced cross-validation
-        best_model = tune_random_forest(X_train, y_train)
+        best_base_model, best_calibrated_model = tune_random_forest(X_train, y_train)
         
         # Generate learning curve plot
         logging.info("\nGenerating learning curve plot...")
-        visualizer.plot_learning_curve(best_model, X_train, y_train)
+        visualizer.plot_learning_curve(best_base_model, X_train, y_train)
         
         # Evaluate on validation set
         logging.info("\nEvaluating on validation set:")
-        y_val_pred, y_val_prob, _ = evaluate_model(best_model, X_val, y_val, "Validation Set")
+        y_val_pred, y_val_prob, _ = evaluate_model(best_calibrated_model, X_val, y_val, "Validation Set")
         
         # Generate validation set plots
         visualizer.plot_confusion_matrix(y_val, y_val_pred)
@@ -653,7 +668,7 @@ def main():
         
         # Final evaluation on test set
         logging.info("\nEvaluating on test set:")
-        y_test_pred, y_test_prob, _ = evaluate_model(best_model, X_test, y_test, "Test Set")
+        y_test_pred, y_test_prob, _ = evaluate_model(best_calibrated_model, X_test, y_test, "Test Set")
         
         # Generate test set plots
         logging.info("\nGenerating evaluation plots...")
@@ -664,7 +679,7 @@ def main():
         # Feature importance analysis and plot
         feature_importance = pd.DataFrame({
             'feature': feature_names,
-            'importance': best_model.feature_importances_
+            'importance': best_base_model.feature_importances_
         }).sort_values('importance', ascending=False)
         
         logging.info("\nFeature Importance:")
@@ -675,7 +690,7 @@ def main():
         )
         
         # Save the model and feature names
-        model_path, feature_names_path = save_model(best_model, feature_names)
+        model_path, feature_names_path = save_model(best_calibrated_model, feature_names)
 
     finally:
         # Cleanup
