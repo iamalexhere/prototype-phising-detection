@@ -1,0 +1,49 @@
+2025-01-04 00:53:59,576 - INFO - Logging setup complete. Log file: logs\phishing_detection_20250104_005359.log
+2025-01-04 00:53:59,578 - INFO - Starting phishing URL detection model training...
+2025-01-04 00:53:59,578 - INFO - Loading and processing datasets...
+2025-01-04 00:53:59,957 - INFO - Processing 10 phishing and 10 legitimate URLs
+2025-01-04 00:54:00,781 - WARNING - No creation date found for hjsuhdmj83749oslkfmjduhba78394ijshdyena89d04nm1.pages.dev
+2025-01-04 00:54:00,782 - WARNING - No expiration date found for hjsuhdmj83749oslkfmjduhba78394ijshdyena89d04nm1.pages.dev
+2025-01-04 00:54:00,823 - WARNING - No creation date found for qrco.de
+2025-01-04 00:54:00,824 - WARNING - No expiration date found for qrco.de
+2025-01-04 00:54:01,194 - ERROR - WHOIS lookup failed for docs.google.com: [WinError 10054] An existing connection was forcibly closed by the remote host
+2025-01-04 00:54:02,929 - ERROR - SSL Error for mecode.stream: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'mecode.stream'. (_ssl.c:1000)
+2025-01-04 00:54:10,414 - ERROR - Error trying to connect to socket: closing socket - timed out
+2025-01-04 00:54:10,415 - WARNING - No creation date found for pub-332e25ac40fe42d5af737ce9b83b83d2.r2.dev
+2025-01-04 00:54:10,416 - WARNING - No expiration date found for pub-332e25ac40fe42d5af737ce9b83b83d2.r2.dev
+2025-01-04 00:54:10,460 - ERROR - SSL Error for pub-332e25ac40fe42d5af737ce9b83b83d2.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 00:54:10,462 - INFO - Processed 10/10 URLs
+2025-01-04 00:54:10,519 - ERROR - Failed to resolve crowdflower.com using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 00:54:11,500 - WARNING - No creation date found for decemsys.de
+2025-01-04 00:54:11,501 - WARNING - No expiration date found for decemsys.de
+2025-01-04 00:54:11,502 - WARNING - No HTTPS for decemsys.de
+2025-01-04 00:54:11,847 - ERROR - WHOIS lookup failed for yc1000.net: [WinError 10054] An existing connection was forcibly closed by the remote host
+2025-01-04 00:54:11,848 - WARNING - No HTTPS for yc1000.net
+2025-01-04 00:54:12,302 - WARNING - No HTTPS for nassjo.se
+2025-01-04 00:54:12,352 - WARNING - No HTTPS for pokerschoolonline.com
+2025-01-04 00:54:12,591 - WARNING - No HTTPS for devpia.com
+2025-01-04 00:54:12,838 - WARNING - No HTTPS for crowdflower.com
+2025-01-04 00:54:12,966 - WARNING - No HTTPS for slots.com
+2025-01-04 00:54:13,243 - WARNING - No HTTPS for yllas.fi
+2025-01-04 00:54:22,774 - ERROR - Error trying to connect to socket: closing socket - [Errno 11001] getaddrinfo failed
+2025-01-04 00:54:22,775 - WARNING - No creation date found for piticu.ro
+2025-01-04 00:54:22,776 - WARNING - No expiration date found for piticu.ro
+2025-01-04 00:54:22,776 - WARNING - No HTTPS for piticu.ro
+2025-01-04 00:54:23,071 - WARNING - No HTTPS for neilgaiman.com
+2025-01-04 00:54:23,072 - INFO - Processed 10/10 URLs
+2025-01-04 00:54:23,113 - INFO - Removed 6 constant features
+2025-01-04 00:54:23,125 - INFO - Removed 4 highly correlated features
+2025-01-04 00:54:23,151 - INFO - Scaled 12 numerical features using RobustScaler
+2025-01-04 00:54:23,152 - INFO - Final dataset shape: (40, 16)
+2025-01-04 00:54:23,152 - INFO - 
+Splitting data into train, validation, and test sets...
+2025-01-04 00:54:23,154 - INFO - Data split sizes and class distribution:
+2025-01-04 00:54:23,154 - INFO - Total dataset size: 40 samples
+2025-01-04 00:54:23,155 - INFO - Training set: 28 samples (70.0%)
+2025-01-04 00:54:23,155 - INFO -   - Class distribution: [14 14]
+2025-01-04 00:54:23,156 - INFO - Validation set: 6 samples (15.0%)
+2025-01-04 00:54:23,156 - INFO -   - Class distribution: [3 3]
+2025-01-04 00:54:23,157 - INFO - Test set: 6 samples (15.0%)
+2025-01-04 00:54:23,157 - INFO -   - Class distribution: [3 3]
+2025-01-04 00:54:23,158 - INFO - Starting hyperparameter tuning for Random Forest...
+2025-01-04 00:54:23,158 - INFO - Fitting GridSearchCV...

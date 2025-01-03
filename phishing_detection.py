@@ -243,60 +243,93 @@ class URLFeatureExtractor:
 
 def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=30000):
     """
-    Load and process both phishing and legitimate URL datasets
+    Load and process both phishing and legitimate URL datasets with enhanced preprocessing
+    
+    Parameters:
+    - phishing_file_path: path to phishing URLs file
+    - legitimate_file_path: path to legitimate URLs file
+    - sample_size: number of samples per class (default increased to 50000)
     """
-    # Load the datasets
-    logging.info("Loading datasets...")
-    phishing_df = pd.read_csv(phishing_file_path, low_memory=False)
-    legitimate_df = pd.read_csv(legitimate_file_path, low_memory=False)
+    logging.info("Loading and processing datasets...")
     
-    logging.info(f"Total phishing URLs available: {len(phishing_df)}")
-    logging.info(f"Total legitimate URLs available: {len(legitimate_df)}")
+    # Load datasets
+    phishing_df = pd.read_csv(phishing_file_path)
+    legitimate_df = pd.read_csv(legitimate_file_path)
     
-    # Sample only specified number of URLs from both datasets
-    phishing_df = phishing_df.sample(n=sample_size, random_state=42)
-    legitimate_df = legitimate_df.sample(n=sample_size, random_state=42)
+    # Ensure URL column exists
+    phishing_urls = phishing_df['url'] if 'url' in phishing_df.columns else phishing_df.iloc[:, 0]
+    legitimate_urls = legitimate_df['url'] if 'url' in legitimate_df.columns else legitimate_df.iloc[:, 0]
     
-    logging.info(f"\nUsing {sample_size} URLs from each category for testing")
+    # Sample equal numbers from each class
+    if len(phishing_urls) > sample_size:
+        phishing_urls = phishing_urls.sample(n=sample_size, random_state=42)
+    if len(legitimate_urls) > sample_size:
+        legitimate_urls = legitimate_urls.sample(n=sample_size, random_state=42)
     
-    # Create feature lists for both types
-    logging.info("\nExtracting features from URLs...")
+    logging.info(f"Processing {len(phishing_urls)} phishing and {len(legitimate_urls)} legitimate URLs")
     
+    # Initialize feature extractor
     extractor = URLFeatureExtractor()
-    phishing_features = extractor.extract_features_batch(phishing_df['url'])
-    legitimate_features = extractor.extract_features_batch(legitimate_df['url'])
     
-    logging.info(f"Processed {len(phishing_features)} phishing URLs")
-    logging.info(f"Processed {len(legitimate_features)} legitimate URLs")
+    # Extract features in parallel
+    phishing_features = extractor.extract_features_batch(phishing_urls.tolist())
+    legitimate_features = extractor.extract_features_batch(legitimate_urls.tolist())
     
-    # Combine features and labels
-    all_features = pd.concat([phishing_features, legitimate_features])
-    all_labels = [1] * len(phishing_features) + [0] * len(legitimate_features)
+    # Convert to DataFrames
+    phishing_df = pd.DataFrame(phishing_features)
+    legitimate_df = pd.DataFrame(legitimate_features)
     
-    # Convert to DataFrame
-    features_df = pd.DataFrame(all_features)
-    features_df['label'] = all_labels
+    # Add labels
+    phishing_df['label'] = 1
+    legitimate_df['label'] = 0
     
-    # Fill any missing values with -1
-    features_df = features_df.fillna(-1)
+    # Combine datasets
+    features_df = pd.concat([phishing_df, legitimate_df], ignore_index=True)
     
-    logging.info("\nFeature statistics:")
-    logging.info(features_df.describe())
+    # Preprocessing steps
+    # 1. Handle missing values
+    features_df = features_df.fillna(features_df.mean())
     
-    logging.info("\nLabel distribution:")
-    logging.info(features_df['label'].value_counts(normalize=True))
+    # 2. Remove constant features
+    constant_features = [col for col in features_df.columns if col != 'label' 
+                        and features_df[col].nunique() == 1]
+    features_df = features_df.drop(columns=constant_features)
+    if constant_features:
+        logging.info(f"Removed {len(constant_features)} constant features")
     
+    # 3. Remove highly correlated features
+    corr_matrix = features_df.drop('label', axis=1).corr().abs()
+    upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
+    high_corr_features = [column for column in upper.columns if any(upper[column] > 0.95)]
+    features_df = features_df.drop(columns=high_corr_features)
+    if high_corr_features:
+        logging.info(f"Removed {len(high_corr_features)} highly correlated features")
+    
+    # 4. Scale numerical features
+    from sklearn.preprocessing import RobustScaler
+    scaler = RobustScaler()
+    numerical_cols = features_df.select_dtypes(include=['float64', 'int64']).columns
+    numerical_cols = numerical_cols.drop('label') if 'label' in numerical_cols else numerical_cols
+    
+    if len(numerical_cols) > 0:
+        features_df[numerical_cols] = scaler.fit_transform(features_df[numerical_cols])
+        logging.info(f"Scaled {len(numerical_cols)} numerical features using RobustScaler")
+    
+    # Shuffle the dataset
+    features_df = features_df.sample(frac=1, random_state=42).reset_index(drop=True)
+    
+    logging.info(f"Final dataset shape: {features_df.shape}")
     return features_df
 
-def prepare_data_splits(features_df, test_size=0.15, val_size=0.15):
+def prepare_data_splits(features_df, test_size=0.2, val_size=0.2):
     """
     Split data into train, validation, and test sets efficiently
     
     Parameters:
     - features_df: DataFrame containing features and labels
-    - test_size: 0.15 (15% for test set)
-    - val_size: 0.15 (15% for validation set)
-    - Remaining 70% for training set
+    - test_size: 0.2 (20% for test set)
+    - val_size: 0.2 (20% for validation set)
+    - Remaining 60% for training set
     
     Returns:
     - X_train, X_val, X_test: feature matrices for training, validation, and test sets
@@ -310,7 +343,7 @@ def prepare_data_splits(features_df, test_size=0.15, val_size=0.15):
     X = features_df.drop('label', axis=1).values
     y = features_df['label'].values
     
-    # First split: separate test set (15%)
+    # First split: separate test set (20%)
     X_temp, X_test, y_temp, y_test = train_test_split(
         X, y,
         test_size=test_size,
@@ -319,7 +352,7 @@ def prepare_data_splits(features_df, test_size=0.15, val_size=0.15):
     )
     
     # Second split: separate validation set from remaining data
-    # val_size = 0.15 / 0.85 ≈ 0.176 to get 15% of original data
+    # val_size = 0.2 / 0.8 ≈ 0.25 to get 20% of original data
     val_ratio = val_size / (1 - test_size)
     X_train, X_val, y_train, y_val = train_test_split(
         X_temp, y_temp,
@@ -346,51 +379,68 @@ def prepare_data_splits(features_df, test_size=0.15, val_size=0.15):
 def tune_random_forest(X_train, y_train):
     """
     Perform hyperparameter tuning for Random Forest using GridSearchCV with enhanced cross-validation
+    and regularization parameters
     """
+    logging.info("Starting hyperparameter tuning for Random Forest...")
+    
+    # Define an expanded parameter grid
     param_grid = {
-        'n_estimators': [100, 200],
-        'max_depth': [10, 20, None],
-        'min_samples_split': [2, 5],
-        'min_samples_leaf': [1, 2]
+        'n_estimators': [10, 20],
+        'max_depth': [None, 3, 5],
+        'min_samples_split': [2],
+        'min_samples_leaf': [1],
+        'max_features': ['sqrt'],
+        'class_weight': ['balanced'],
+        'max_samples': [0.8],  # Bootstrap sample size (regularization)
+        'ccp_alpha': [0.0]  # Cost complexity pruning (regularization)
     }
     
-    # Initialize base model with n_jobs for parallel processing
+    # Initialize base model with regularization parameters
     base_model = RandomForestClassifier(
         random_state=42,
         n_jobs=-1,  # Use all available cores
-        class_weight='balanced'
+        oob_score=True,  # Use out-of-bag score
+        bootstrap=True,  # Enable bootstrapping
+        warm_start=False  # Disable warm start for better randomization
     )
     
-    # Configure GridSearchCV with parallel processing
+    # Initialize GridSearchCV with stratification and multiple metrics
+    cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
+    
+    scoring = {
+        'accuracy': 'accuracy',
+        'precision': 'precision',
+        'recall': 'recall',
+        'f1': 'f1',
+        'roc_auc': 'roc_auc'
+    }
+    
     grid_search = GridSearchCV(
         estimator=base_model,
         param_grid=param_grid,
-        cv=StratifiedKFold(n_splits=5, shuffle=True, random_state=42),
-        scoring='f1',
-        n_jobs=-1,  # Use all available cores for parallel processing
-        verbose=1
+        cv=cv,
+        scoring=scoring,
+        refit='f1',  # Use F1 score for selecting best model
+        n_jobs=-1,
+        verbose=2,
+        return_train_score=True
     )
     
-    # Fit the model using batches to optimize memory usage
-    batch_size = 10000
-    for i in range(0, len(X_train), batch_size):
-        end_idx = min(i + batch_size, len(X_train))
-        X_batch = X_train[i:end_idx]
-        y_batch = y_train[i:end_idx]
-        
-        if i == 0:
-            grid_search.fit(X_batch, y_batch)
-        else:
-            # Update the best estimator with new batch
-            grid_search.best_estimator_.fit(
-                X_batch, y_batch, 
-                warm_start=True  # Use warm start for incremental fitting
-            )
+    # Fit the grid search
+    logging.info("Fitting GridSearchCV...")
+    grid_search.fit(X_train, y_train)
     
-    logging.info("Best parameters found: %s", grid_search.best_params_)
-    logging.info("Best cross-validation score: %f", grid_search.best_score_)
+    # Log best parameters and scores
+    logging.info("\nBest parameters found:")
+    logging.info(grid_search.best_params_)
+    logging.info("\nBest cross-validation scores:")
+    for metric in scoring.keys():
+        logging.info(f"{metric}: {grid_search.cv_results_[f'mean_test_{metric}'][grid_search.best_index_]:.4f}")
     
-    return grid_search.best_estimator_
+    # Get feature importances from best model
+    feature_importances = grid_search.best_estimator_.feature_importances_
+    
+    return grid_search.best_estimator_, feature_importances
 
 def evaluate_model(model, X, y, set_name=""):
     """
@@ -456,7 +506,7 @@ class ModelVisualizer:
         plt.title('Confusion Matrix')
         plt.ylabel('True Label')
         plt.xlabel('Predicted Label')
-        self.save_plot('confusion_matrix-1000')
+        self.save_plot('confusion_matrix-10')
 
     def plot_feature_importance(self, feature_names, importances):
         """Generate and save feature importance plot"""
@@ -470,7 +520,7 @@ class ModelVisualizer:
         plt.title('Feature Importance')
         plt.xlabel('Importance Score')
         plt.ylabel('Features')
-        self.save_plot('feature_importance-1000')
+        self.save_plot('feature_importance-10')
 
     def plot_roc_curve(self, y_true, y_prob):
         """Generate and save ROC curve plot"""
@@ -487,7 +537,7 @@ class ModelVisualizer:
         plt.ylabel('True Positive Rate')
         plt.title('Receiver Operating Characteristic (ROC) Curve')
         plt.legend(loc="lower right")
-        self.save_plot('roc_curve-1000')
+        self.save_plot('roc_curve-10')
 
     def plot_precision_recall_curve(self, y_true, y_prob):
         """Generate and save precision-recall curve plot"""
@@ -501,13 +551,13 @@ class ModelVisualizer:
         plt.ylabel('Precision')
         plt.title('Precision-Recall Curve')
         plt.legend(loc="lower left")
-        self.save_plot('precision_recall_curve-1000')
+        self.save_plot('precision_recall_curve-10')
 
-    def plot_learning_curve(self, estimator, X, y, cv=5):
+    def plot_learning_curve(self, estimator, X, y, cv=3):
         """Generate and save learning curve plot"""
         train_sizes, train_scores, test_scores = learning_curve(
             estimator, X, y, cv=cv, n_jobs=-1,
-            train_sizes=np.linspace(0.1, 1.0, 10),
+            train_sizes=np.linspace(0.3, 1.0, 3),
             scoring='f1'
         )
         
@@ -533,7 +583,7 @@ class ModelVisualizer:
         plt.title('Learning Curve')
         plt.legend(loc='lower right')
         plt.grid(True)
-        self.save_plot('learning_curve-1000')
+        self.save_plot('learning_curve-10')
 
 def main():
     try:
@@ -549,14 +599,14 @@ def main():
         
         # Load and process data
         logging.info("Starting phishing URL detection model training...")
-        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=1000)
+        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=10)
         
         # Split the data
         logging.info("\nSplitting data into train, validation, and test sets...")
         X_train, X_val, X_test, y_train, y_val, y_test, feature_names = prepare_data_splits(features_df)
         
         # Perform hyperparameter tuning with enhanced cross-validation
-        best_model = tune_random_forest(X_train, y_train)
+        best_model, feature_importances = tune_random_forest(X_train, y_train)
         
         # Generate learning curve plot
         logging.info("\nGenerating learning curve plot...")
@@ -584,7 +634,7 @@ def main():
         # Feature importance analysis and plot
         feature_importance = pd.DataFrame({
             'feature': feature_names,
-            'importance': best_model.feature_importances_
+            'importance': feature_importances
         }).sort_values('importance', ascending=False)
         
         logging.info("\nFeature Importance:")
