@@ -16,7 +16,7 @@ from sklearn.model_selection import GridSearchCV
 import ipaddress
 import joblib
 import tldextract
-from datetime import datetime
+from datetime import datetime, date
 import matplotlib
 matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
@@ -24,6 +24,16 @@ import seaborn as sns
 from pathlib import Path
 import os
 import warnings
+import whois
+import socket
+from bs4 import BeautifulSoup
+import requests
+from googlesearch import search
+import urllib3
+import dns.resolver
+from dns_features import extract_dns_features
+
+urllib3.disable_warnings()
 warnings.filterwarnings('ignore', category=UserWarning)
 
 # Configure matplotlib for non-interactive backend
@@ -47,25 +57,24 @@ class URLFeatureExtractor:
     @staticmethod
     def extract_features(url):
         """
-        Extract features from a given URL
-        
-        Features:
-        - URL length
-        - Domain length
-        - Path length
-        - Number of special characters
-        - Number of digits
-        - Presence of @ symbol
-        - Use of IP address
-        - Additional security features
+        Extract features from a given URL including DNS and domain-based features
         """
         try:
             parsed = urlparse(url)
             extracted = tldextract.extract(url)
+            domain = parsed.netloc
+
+            # Get DNS features
+            dns_features = extract_dns_features(url)
+            if dns_features is not None and not dns_features.empty:
+                dns_features_dict = dns_features.iloc[0].to_dict()
+                dns_features_dict.pop('url', None)  # Remove URL as it's not needed as a feature
+            else:
+                dns_features_dict = {}
             
-            # Length-based features
+            # Basic URL features
             url_length = len(url)
-            domain_length = len(parsed.netloc)
+            domain_length = len(domain)
             path_length = len(parsed.path)
             
             # Character-based features
@@ -89,7 +98,8 @@ class URLFeatureExtractor:
             subdomain_length = len(extracted.subdomain)
             tld_length = len(extracted.suffix) if extracted.suffix else 0
             
-            return {
+            # Combine all features
+            features = {
                 'url_length': url_length,
                 'domain_length': domain_length,
                 'path_length': path_length,
@@ -109,6 +119,12 @@ class URLFeatureExtractor:
                 'subdomain_length': subdomain_length,
                 'tld_length': tld_length
             }
+            
+            # Update with DNS features
+            features.update(dns_features_dict)
+            
+            return features
+            
         except Exception as e:
             print(f"Error processing URL: {url}")
             print(f"Error message: {str(e)}")
