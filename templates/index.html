@@ -93,6 +93,7 @@
 
             <div class="feature-importance">
                 <h3>Feature Importance</h3>
+                <div id="featureImportanceInfo"></div>
                 <div id="featureChart"></div>
             </div>
         </div>
@@ -221,19 +222,37 @@
 
         function updateFeatureImportance(featureImportance) {
             const chartDiv = document.getElementById('featureChart');
+            const infoDiv = document.getElementById('featureImportanceInfo');
+            
+            // Check if any feature has non-zero importance
+            const hasImportance = Object.values(featureImportance).some(v => v > 0);
+            
+            if (!hasImportance) {
+                infoDiv.innerHTML = '<p class="info-message">Feature importance information is not available for this model type.</p>';
+                chartDiv.style.display = 'none';
+                return;
+            }
+            
+            infoDiv.innerHTML = '';
+            chartDiv.style.display = 'block';
+            
             const features = Object.entries(featureImportance)
+                .filter(([_, importance]) => importance > 0)
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 10);
 
-            const chartHtml = features.map(([feature, importance]) => `
-                <div class="feature-bar">
-                    <div class="feature-name">${feature}</div>
-                    <div class="feature-value-bar">
-                        <div class="feature-value" style="width: ${importance * 100}%"></div>
+            const chartHtml = features.map(([feature, importance]) => {
+                const percentage = (importance * 100).toFixed(1);
+                return `
+                    <div class="feature-bar">
+                        <div class="feature-name" title="${feature}">${feature}</div>
+                        <div class="feature-value-bar">
+                            <div class="feature-value" style="width: ${percentage}%"></div>
+                        </div>
+                        <div class="feature-percentage">${percentage}%</div>
                     </div>
-                    <div class="feature-percentage">${(importance * 100).toFixed(1)}%</div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
 
             chartDiv.innerHTML = chartHtml;
         }

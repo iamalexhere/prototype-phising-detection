@@ -39,12 +39,37 @@ setup_app_logging()
 
 # Load the model and feature names
 model_dir = 'models'
-model_files = [f for f in os.listdir(model_dir) if f.startswith('phishing_detector_')]
-feature_files = [f for f in os.listdir(model_dir) if f.startswith('feature_names_')]
+model_files = [f for f in os.listdir(model_dir) if f.startswith('phishing_detector_') and f.endswith('.joblib')]
+feature_files = [f for f in os.listdir(model_dir) if f.startswith('feature_names_') and f.endswith('.joblib')]
 
-# Get the latest model and feature names
-latest_model = sorted(model_files)[-1]
-latest_features = sorted(feature_files)[-1]
+# Get the latest model and feature names based on timestamp
+latest_model = None
+latest_features = None
+latest_time = datetime.min
+
+for file in model_files:
+    try:
+        parts = file.split('_')
+        timestamp_str = parts[-2] + '_' + parts[-1].replace('.joblib', '')
+        timestamp = datetime.strptime(timestamp_str, '%Y%m%d_%H%M%S')
+        
+        if timestamp > latest_time:
+            latest_time = timestamp
+            latest_model = file
+    except Exception as e:
+        logging.error(f"Error parsing timestamp from {file}: {str(e)}")
+        continue
+
+# Find matching feature names file
+if latest_model:
+    timestamp_str = latest_model.split('phishing_detector_')[1].replace('.joblib', '')
+    latest_features = f'feature_names_{timestamp_str}.joblib'
+
+if not latest_model or not latest_features:
+    raise ValueError("Could not find valid model and feature files")
+
+logging.info(f"Loading model from: {latest_model}")
+logging.info(f"Loading features from: {latest_features}")
 
 model = joblib.load(os.path.join(model_dir, latest_model))
 feature_names = joblib.load(os.path.join(model_dir, latest_features))
@@ -102,9 +127,37 @@ def analyze_url(url):
         prediction = 1 if probability > 0.5 else 0
         
         # Get feature importance
-        feature_importance = {
-            name: float(value) for name, value in zip(feature_vector.columns, model.feature_importances_)
-        }
+        try:
+            logging.info(f"Model type: {type(model).__name__}")
+            logging.info(f"Model attributes: {dir(model)}")
+            
+            # For CalibratedClassifierCV, we need to access the base estimator
+            if hasattr(model, 'calibrated_classifiers_'):
+                calibrated = model.calibrated_classifiers_[0]
+                logging.info(f"Calibrated classifier type: {type(calibrated).__name__}")
+                logging.info(f"Calibrated classifier attributes: {dir(calibrated)}")
+                
+                if hasattr(calibrated, 'estimator'):
+                    base_estimator = calibrated.estimator
+                    logging.info(f"Base estimator type: {type(base_estimator).__name__}")
+                    
+                    if hasattr(base_estimator, 'feature_importances_'):
+                        feature_importance = {
+                            name: float(value) for name, value in zip(feature_vector.columns, base_estimator.feature_importances_)
+                        }
+                        logging.info(f"Feature importances extracted from {type(base_estimator).__name__}")
+                    else:
+                        logging.warning(f"Base estimator {type(base_estimator).__name__} does not have feature_importances_")
+                        feature_importance = {name: 0.0 for name in feature_vector.columns}
+                else:
+                    logging.warning("Calibrated classifier does not have estimator attribute")
+                    feature_importance = {name: 0.0 for name in feature_vector.columns}
+            else:
+                logging.warning("Model does not have calibrated_classifiers_ attribute")
+                feature_importance = {name: 0.0 for name in feature_vector.columns}
+        except Exception as e:
+            logging.warning(f"Could not get feature importances: {str(e)}")
+            feature_importance = {name: 0.0 for name in feature_vector.columns}
         
         # Convert numpy values to Python native types
         def convert_to_native(value):

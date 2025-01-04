@@ -244,21 +244,32 @@ body {
     color: var(--gray-800);
 }
 
+.info-message {
+    padding: 1rem;
+    background-color: var(--gray-100);
+    border-radius: 8px;
+    color: var(--gray-600);
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
 .feature-bar {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 200px 1fr 60px;
     gap: 1rem;
+    align-items: center;
     margin-bottom: 0.75rem;
 }
 
 .feature-name {
-    flex: 0 0 200px;
     font-size: 0.9rem;
     color: var(--gray-700);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .feature-value-bar {
-    flex: 1;
     height: 8px;
     background-color: var(--gray-200);
     border-radius: 4px;
@@ -268,11 +279,10 @@ body {
 .feature-value {
     height: 100%;
     background-color: var(--primary-color);
-    border-radius: 4px;
+    transition: width 0.3s ease;
 }
 
 .feature-percentage {
-    flex: 0 0 60px;
     font-size: 0.9rem;
     color: var(--gray-600);
     text-align: right;
