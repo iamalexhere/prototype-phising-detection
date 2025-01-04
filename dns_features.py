@@ -303,45 +303,39 @@ def extract_dns_features(url):
             features['has_registrar'] = 0
             features['has_registrant'] = 0
             
-        # SSL Certificate Check
-        if parsed.scheme == 'https':
-            try:
-                logger.debug(f"Checking SSL certificate for {domain}")
-                context = ssl.create_default_context()
-                with socket.create_connection((domain, 443)) as sock:
-                    with context.wrap_socket(sock, server_hostname=domain) as ssock:
-                        cert = ssock.getpeercert()
-                        
-                        # Get certificate details
-                        not_after = datetime.strptime(cert['notAfter'], '%b %d %H:%M:%S %Y GMT')
-                        not_before = datetime.strptime(cert['notBefore'], '%b %d %H:%M:%S %Y GMT')
-                        
-                        features['ssl_days_valid'] = (not_after - datetime.now()).days
-                        features['ssl_is_valid'] = int(datetime.now() > not_before and datetime.now() < not_after)
-                        features['ssl_is_expired'] = int(datetime.now() > not_after)
-                        
-                        # Check if self-signed by comparing issuer and subject
-                        issuer = cert.get('issuer', [])
-                        subject = cert.get('subject', [])
-                        features['ssl_is_self_signed'] = int(issuer == subject)
-                        
-                        logger.debug(f"SSL certificate valid from {not_before} to {not_after}")
-                        logger.debug(f"SSL self-signed: {features['ssl_is_self_signed']}")
-                
-            except ssl.SSLError as e:
-                logger.error(f"SSL Error for {domain}: {str(e)}")
-                features['ssl_days_valid'] = -1
-                features['ssl_is_valid'] = 0
-                features['ssl_is_expired'] = 1
-                features['ssl_is_self_signed'] = 1
-            except Exception as e:
-                logger.error(f"Error checking SSL for {domain}: {str(e)}")
-                features['ssl_days_valid'] = -1
-                features['ssl_is_valid'] = 0
-                features['ssl_is_expired'] = 1
-                features['ssl_is_self_signed'] = 1
-        else:
-            logger.warning(f"No HTTPS for {domain}")
+        
+        # SSL Certificate Check - Try HTTPS even if not specified
+        try:
+            logger.debug(f"Checking SSL certificate for {domain}")
+            context = ssl.create_default_context()
+            with socket.create_connection((domain, 443), timeout=5) as sock:
+                with context.wrap_socket(sock, server_hostname=domain) as ssock:
+                    cert = ssock.getpeercert()
+                    
+                    # Get certificate details
+                    not_after = datetime.strptime(cert['notAfter'], '%b %d %H:%M:%S %Y GMT')
+                    not_before = datetime.strptime(cert['notBefore'], '%b %d %H:%M:%S %Y GMT')
+                    
+                    features['ssl_days_valid'] = (not_after - datetime.now()).days
+                    features['ssl_is_valid'] = int(datetime.now() > not_before and datetime.now() < not_after)
+                    features['ssl_is_expired'] = int(datetime.now() > not_after)
+                    
+                    # Check if self-signed by comparing issuer and subject
+                    issuer = cert.get('issuer', [])
+                    subject = cert.get('subject', [])
+                    features['ssl_is_self_signed'] = int(issuer == subject)
+                    
+                    logger.debug(f"SSL certificate valid from {not_before} to {not_after}")
+                    logger.debug(f"SSL self-signed: {features['ssl_is_self_signed']}")
+    
+        except (ssl.SSLError, socket.timeout, ConnectionRefusedError) as e:
+            logger.warning(f"HTTPS not available for {domain}: {str(e)}")
+            features['ssl_days_valid'] = -1
+            features['ssl_is_valid'] = 0
+            features['ssl_is_expired'] = 1
+            features['ssl_is_self_signed'] = 1
+        except Exception as e:
+            logger.error(f"Error checking SSL for {domain}: {str(e)}")
             features['ssl_days_valid'] = -1
             features['ssl_is_valid'] = 0
             features['ssl_is_expired'] = 1
