@@ -1,0 +1,28 @@
+2025-01-04 12:39:35,050 - INFO - Logging setup complete. Log file: logs\phishing_detection_20250104_123935.log
+2025-01-04 12:39:35,051 - INFO - Starting phishing detection model training with sample size: 100
+2025-01-04 12:39:35,051 - INFO - Loading and processing datasets...
+2025-01-04 12:39:35,052 - ERROR - Error in main function: [Errno 2] No such file or directory: 'datasets/phishing_urls.csv'
+2025-01-04 12:39:35,060 - ERROR - Traceback (most recent call last):
+  File "d:\2024\code\sem5\kamin\final\prototype-phising-detection\phishing_detection.py", line 1015, in main
+    features_df = load_and_process_data(phishing_file, legitimate_file, sample_size)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\2024\code\sem5\kamin\final\prototype-phising-detection\phishing_detection.py", line 270, in load_and_process_data
+    phishing_df = pd.read_csv(phishing_file_path)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ialex\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\parsers\readers.py", line 948, in read_csv
+    return _read(filepath_or_buffer, kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ialex\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\parsers\readers.py", line 611, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ialex\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\parsers\readers.py", line 1448, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ialex\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\parsers\readers.py", line 1705, in _make_engine
+    self.handles = get_handle(
+                   ^^^^^^^^^^^
+  File "C:\Users\ialex\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\common.py", line 863, in get_handle
+    handle = open(
+             ^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'datasets/phishing_urls.csv'
+

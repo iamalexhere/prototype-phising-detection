@@ -43,6 +43,8 @@ import threading
 from typing import List, Dict, Any
 import time
 import pickle
+from sklearn.model_selection import GroupKFold, GroupShuffleSplit
+import traceback
 
 # Configure logging
 def setup_logging(log_dir='logs'):
@@ -236,14 +238,27 @@ class URLFeatureExtractor:
         return (datetime.now() - creation_date).days
 
 def extract_domain(url):
-    """Extract the base domain from a URL"""
+    """Extract domain from URL, handling None values and invalid URLs."""
     try:
-        ext = tldextract.extract(url)
-        if not ext.domain or not ext.suffix:
-            return None
-        return f"{ext.domain}.{ext.suffix}"
-    except:
-        return None
+        if url is None:
+            return "unknown_domain"
+        
+        # Remove protocol (http://, https://, etc.)
+        domain = re.sub(r'^https?://', '', url)
+        
+        # Remove path, query parameters, and fragment
+        domain = domain.split('/')[0]
+        
+        # Remove port number if present
+        domain = domain.split(':')[0]
+        
+        # Remove username:password if present
+        domain = domain.split('@')[-1]
+        
+        return domain if domain else "unknown_domain"
+    except Exception as e:
+        logging.warning(f"Error extracting domain from URL {url}: {str(e)}")
+        return "unknown_domain"
 
 def load_and_process_data(phishing_file_path: str, legitimate_file_path: str, sample_size: int = 100, batch_size: int = 50) -> pd.DataFrame:
     """
@@ -338,73 +353,67 @@ def load_and_process_data(phishing_file_path: str, legitimate_file_path: str, sa
     logging.info(f"Final dataset shape: {features_df_prep.shape}")
     return features_df_prep
 
-def prepare_data_splits(features_df, test_size=0.2, val_size=0.2):
+def prepare_data_splits(features_df, test_size=0.2, val_size=0.2, n_splits=5):
     """
     Split data into train, validation, and test sets using domain-based splitting
-    to prevent domain leakage between sets
-    
-    Parameters:
-    - features_df: DataFrame containing features and labels
-    - test_size: proportion of data for test set
-    - val_size: proportion of data for validation set
-    
-    Returns:
-    - X_train, X_val, X_test: feature matrices
-    - y_train, y_val, y_test: target vectors
-    - feature_names: list of feature names
+    with multiple cross-validation splits.
     """
+    start_time = time.time()
     logging.info("\nSplitting data into train, validation, and test sets...")
     
-    # Extract domains from URLs
-    domains = features_df['url'].apply(extract_domain)
-    unique_domains = domains.unique()
+    # Extract domains and labels
+    domains = features_df['url'].apply(extract_domain).values
+    labels = features_df['label'].values
     
-    # Split domains into train, validation, and test sets
-    n_domains = len(unique_domains)
-    n_test = int(n_domains * test_size)
-    n_val = int(n_domains * val_size)
+    # Remove domain and URL columns and get feature names
+    features = features_df.drop(['url', 'label'], axis=1)
+    feature_names = features.columns.tolist()
     
-    # Randomly shuffle domains
-    np.random.seed(42)
-    shuffled_domains = np.random.permutation(unique_domains)
+    # Initialize domain-based splitter
+    domain_splitter = GroupKFold(n_splits=n_splits)
     
-    test_domains = set(shuffled_domains[:n_test])
-    val_domains = set(shuffled_domains[n_test:n_test + n_val])
-    train_domains = set(shuffled_domains[n_test + n_val:])
+    # Create multiple splits
+    splits = []
+    for split_idx, (train_val_idx, test_idx) in enumerate(domain_splitter.split(features, labels, groups=domains)):
+        logging.info(f"\nProcessing split {split_idx + 1}/{n_splits}")
+        
+        # Split data into train_val and test
+        X_train_val = features.iloc[train_val_idx]
+        y_train_val = labels[train_val_idx]
+        domains_train_val = domains[train_val_idx]
+        
+        X_test = features.iloc[test_idx]
+        y_test = labels[test_idx]
+        
+        # Further split train_val into train and validation
+        val_splitter = GroupShuffleSplit(n_splits=1, test_size=val_size/(1-test_size), random_state=42)
+        train_idx, val_idx = next(val_splitter.split(X_train_val, y_train_val, groups=domains_train_val))
+        
+        X_train = X_train_val.iloc[train_idx]
+        y_train = y_train_val[train_idx]
+        X_val = X_train_val.iloc[val_idx]
+        y_val = y_train_val[val_idx]
+        
+        # Log split information
+        logging.info(f"Split {split_idx + 1} sizes:")
+        logging.info(f"Training set: {len(X_train)} samples ({len(X_train)/len(features):.1%})")
+        logging.info(f"  - Class distribution: {np.bincount(y_train)}")
+        logging.info(f"  - Number of domains: {len(np.unique(domains[train_idx]))}")
+        
+        logging.info(f"Validation set: {len(X_val)} samples ({len(X_val)/len(features):.1%})")
+        logging.info(f"  - Class distribution: {np.bincount(y_val)}")
+        logging.info(f"  - Number of domains: {len(np.unique(domains[val_idx]))}")
+        
+        logging.info(f"Test set: {len(X_test)} samples ({len(X_test)/len(features):.1%})")
+        logging.info(f"  - Class distribution: {np.bincount(y_test)}")
+        logging.info(f"  - Number of domains: {len(np.unique(domains[test_idx]))}")
+        
+        splits.append((X_train, X_val, X_test, y_train, y_val, y_test, feature_names))
     
-    # Split data based on domains
-    test_mask = domains.isin(test_domains)
-    val_mask = domains.isin(val_domains)
-    train_mask = domains.isin(train_domains)
+    end_time = time.time()
+    logging.info(f"\nData splitting completed in {end_time - start_time:.2f} seconds")
     
-    # Get feature names (excluding 'url' and 'label' columns)
-    feature_names = [col for col in features_df.columns if col not in ['url', 'label']]
-    
-    # Split features and labels
-    X = features_df[feature_names]
-    y = features_df['label']
-    
-    X_train = X[train_mask]
-    y_train = y[train_mask]
-    X_val = X[val_mask]
-    y_val = y[val_mask]
-    X_test = X[test_mask]
-    y_test = y[test_mask]
-    
-    # Log data split information
-    logging.info("Data split sizes and class distribution:")
-    logging.info(f"Total dataset size: {len(features_df)} samples")
-    logging.info(f"Training set: {len(X_train)} samples ({len(X_train)/len(features_df)*100:.1f}%)")
-    logging.info(f"  - Class distribution: {np.bincount(y_train)}")
-    logging.info(f"  - Number of domains: {len(train_domains)}")
-    logging.info(f"Validation set: {len(X_val)} samples ({len(X_val)/len(features_df)*100:.1f}%)")
-    logging.info(f"  - Class distribution: {np.bincount(y_val)}")
-    logging.info(f"  - Number of domains: {len(val_domains)}")
-    logging.info(f"Test set: {len(X_test)} samples ({len(X_test)/len(features_df)*100:.1f}%)")
-    logging.info(f"  - Class distribution: {np.bincount(y_test)}")
-    logging.info(f"  - Number of domains: {len(test_domains)}")
-    
-    return X_train, X_val, X_test, y_train, y_val, y_test, feature_names
+    return splits
 
 def tune_random_forest(X_train, y_train):
     """
@@ -566,29 +575,30 @@ def evaluate_model(model, X, y, set_name=""):
     
     return y_pred, y_prob, optimal_threshold
 
-def save_model(model, feature_names, output_dir='models'):
-    """
-    Save the trained model and feature names
-    """
-    import os
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+def save_model(model, feature_names, output_dir='models', split_idx=None):
+    """Save model and feature names to files with timestamp."""
+    os.makedirs(output_dir, exist_ok=True)
     
-    # Generate timestamp for versioning
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    # Generate timestamp
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
     
-    # Save the model
-    model_path = os.path.join(output_dir, f'phishing_detector_{timestamp}.joblib')
-    joblib.dump(model, model_path)
+    # Save model
+    if split_idx is not None:
+        model_filename = os.path.join(output_dir, f'phishing_detector_split_{split_idx}_{timestamp}.joblib')
+    else:
+        model_filename = os.path.join(output_dir, f'phishing_detector_{timestamp}.joblib')
+    joblib.dump(model, model_filename)
+    logging.info(f"\nModel saved to: {model_filename}")
     
     # Save feature names
-    feature_names_path = os.path.join(output_dir, f'feature_names_{timestamp}.joblib')
-    joblib.dump(feature_names, feature_names_path)
+    if split_idx is not None:
+        feature_names_filename = os.path.join(output_dir, f'feature_names_split_{split_idx}_{timestamp}.joblib')
+    else:
+        feature_names_filename = os.path.join(output_dir, f'feature_names_{timestamp}.joblib')
+    joblib.dump(feature_names, feature_names_filename)
+    logging.info(f"Feature names saved to: {feature_names_filename}")
     
-    logging.info(f"\nModel saved to: {model_path}")
-    logging.info(f"Feature names saved to: {feature_names_path}")
-    
-    return model_path, feature_names_path
+    return model_filename, feature_names_filename
 
 def extract_features_optimized(url):
     """Extract minimal but effective features from a single URL."""
@@ -748,70 +758,87 @@ def train_model(X_train, y_train, X_val, y_val, feature_names):
     
     return model, importance_dict
 
-def process_and_train(phishing_file, legitimate_file, dataset_name, sample_size=None, force_reprocess=False):
+def process_and_train(phishing_file, legitimate_file, dataset_name, sample_size=None):
     """Process data and train model with performance logging and feature analysis."""
-    logging.info(f"Processing data for dataset: {dataset_name}")
-    
     try:
-        # Data Processing Phase
-        start_processing = time.time()
-        logging.info("Starting data processing phase...")
+        # Process data and train model
+        start_time = time.time()
+        logging.info(f"Starting phishing detection model training with sample size: {sample_size}")
         
-        features, feature_names, processing_time = preprocess_file_data_optimized(
-            phishing_file, 
-            legitimate_file, 
-            dataset_name,
-            sample_size,
-            force_reprocess
-        )
+        # Load and process data
+        features_df = load_and_process_data(phishing_file, legitimate_file, sample_size)
         
-        # Normalize features
-        logging.info("Normalizing features...")
-        normalized_features = normalize_features(features)
+        # Prepare multiple data splits
+        splits = prepare_data_splits(features_df, test_size=0.2, val_size=0.2, n_splits=10)
         
-        logging.info(f"Data processing completed in {processing_time:.2f} seconds")
-        logging.info(f"Number of features: {len(feature_names)}")
+        # Train and evaluate models for each split
+        best_models = []
+        best_scores = []
         
-        # Data Splitting Phase
-        start_splitting = time.time()
-        logging.info("Splitting data into train/val/test sets...")
+        for split_idx, (X_train, X_val, X_test, y_train, y_val, y_test, feature_names) in enumerate(splits):
+            split_start_time = time.time()
+            logging.info(f"\nTraining model for split {split_idx + 1}/10")
+            
+            # Train model
+            train_start_time = time.time()
+            best_calibrated_model, best_base_model = tune_random_forest(X_train, y_train)
+            train_end_time = time.time()
+            logging.info(f"Model training completed in {train_end_time - train_start_time:.2f} seconds")
+            
+            # Evaluate model
+            eval_start_time = time.time()
+            val_metrics = evaluate_model(best_calibrated_model, X_val, y_val, set_name="Validation Set")
+            y_test_pred, y_test_prob, optimal_threshold = evaluate_model(best_calibrated_model, X_test, y_test, set_name="Test Set")
+            test_score = accuracy_score(y_test, y_test_pred)
+            eval_end_time = time.time()
+            logging.info(f"Model evaluation completed in {eval_end_time - eval_start_time:.2f} seconds")
+            
+            # Generate plots
+            plot_start_time = time.time()
+            visualizer = ModelVisualizer(output_dir=f'plots/split_{split_idx + 1}')
+            visualizer.plot_learning_curve(best_base_model, X_train, y_train)
+            visualizer.plot_confusion_matrix(y_test, y_test_pred)
+            visualizer.plot_roc_curve(y_test, y_test_prob)
+            visualizer.plot_precision_recall_curve(y_test, y_test_prob)
+            plot_end_time = time.time()
+            logging.info(f"Plot generation completed in {plot_end_time - plot_start_time:.2f} seconds")
+            
+            # Analyze feature importance
+            importance_start_time = time.time()
+            analyze_feature_importance(best_base_model, feature_names)
+            importance_end_time = time.time()
+            logging.info(f"Feature importance analysis completed in {importance_end_time - importance_start_time:.2f} seconds")
+            
+            # Save model and feature names
+            save_start_time = time.time()
+            model_path = save_model(best_calibrated_model, feature_names, output_dir=f'models/split_{split_idx + 1}', split_idx=split_idx)
+            save_end_time = time.time()
+            logging.info(f"Model saving completed in {save_end_time - save_start_time:.2f} seconds")
+            
+            split_end_time = time.time()
+            logging.info(f"Split {split_idx + 1} completed in {split_end_time - split_start_time:.2f} seconds")
+            
+            # Store results
+            best_models.append(best_calibrated_model)
+            best_scores.append(test_score)
         
-        # Convert features to numpy array
-        feature_array = np.array([[feat[name] for name in feature_names] 
-                                for feat in normalized_features])
-        labels = np.array([1] * (len(features)//2) + [0] * (len(features)//2))
+        # Log final results
+        end_time = time.time()
+        total_time = end_time - start_time
+        logging.info("\nFinal Results:")
+        logging.info(f"Sample Size: {sample_size} URLs")
+        logging.info(f"Number of Cross-validation Splits: 10")
+        logging.info(f"Mean Cross-Validation Accuracy: {np.mean(best_scores):.4f} (+/- {np.std(best_scores) * 2:.4f})")
+        logging.info(f"Best Accuracy: {max(best_scores):.4f}")
+        logging.info(f"Worst Accuracy: {min(best_scores):.4f}")
+        logging.info(f"Total execution time: {total_time:.2f} seconds")
+        logging.info(f"Average time per model: {total_time/len(best_scores):.2f} seconds")
         
-        X_train, X_val, X_test, y_train, y_val, y_test = split_data(
-            feature_array, labels
-        )
-        
-        splitting_time = time.time() - start_splitting
-        logging.info(f"Data splitting completed in {splitting_time:.2f} seconds")
-        
-        # Model Training Phase
-        start_training = time.time()
-        logging.info("Starting model training phase...")
-        
-        model, importance_dict = train_model(X_train, y_train, X_val, y_val, feature_names)
-        
-        # Select important features
-        selected_features = select_features(normalized_features, importance_dict)
-        
-        training_time = time.time() - start_training
-        total_time = time.time() - start_processing
-        
-        # Log comprehensive timing information
-        logging.info("\nPerformance Summary:")
-        logging.info(f"Data Processing Time: {processing_time:.2f} seconds")
-        logging.info(f"Data Splitting Time: {splitting_time:.2f} seconds")
-        logging.info(f"Model Training Time: {training_time:.2f} seconds")
-        logging.info(f"Total Time: {total_time:.2f} seconds")
-        logging.info(f"Average time per sample: {total_time/len(features):.4f} seconds")
-        
-        return model
+        return best_models, best_scores
         
     except Exception as e:
         logging.error(f"Error in process_and_train: {str(e)}")
+        logging.error(traceback.format_exc())
         raise
 
 def split_data(features, labels, test_size=0.2, val_size=0.2):
@@ -976,70 +1003,110 @@ class ModelVisualizer:
         self.save_plot('precision_recall_curve')
 
 def main():
+    """Main function to run the phishing detection model."""
     try:
         # Setup logging
-        log_file = setup_logging()
+        setup_logging()
         
-        # File paths
-        phishing_file_path = "verified_online.csv"
-        legitimate_file_path = "URL-categorization-DFE.csv"
+        # Set dataset paths
+        phishing_file = 'verified_online.csv'
+        legitimate_file = 'URL-categorization-DFE.csv'
+        sample_size = 100  # Reduced sample size
         
-        # Initialize visualizer
-        visualizer = ModelVisualizer()
+        # Process data and train model
+        start_time = time.time()
+        logging.info(f"Starting phishing detection model training with sample size: {sample_size}")
         
         # Load and process data
-        logging.info("Starting phishing URL detection model training...")
-        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=500)
+        features_df = load_and_process_data(phishing_file, legitimate_file, sample_size)
         
-        # Split the data
-        logging.info("\nSplitting data into train, validation, and test sets...")
-        X_train, X_val, X_test, y_train, y_val, y_test, feature_names = prepare_data_splits(features_df)
+        # Train models with cross-validation
+        # Increased number of splits for better validation with smaller dataset
+        splits = prepare_data_splits(features_df, test_size=0.2, val_size=0.2, n_splits=10)
+        best_models, best_scores = process_and_train(phishing_file, legitimate_file, "cross_validation", sample_size)
         
-        # Perform hyperparameter tuning with enhanced cross-validation
-        best_calibrated_model, best_base_model = tune_random_forest(X_train, y_train)
+        # Log final results
+        end_time = time.time()
+        total_time = end_time - start_time
+        logging.info("\nFinal Results:")
+        logging.info(f"Sample Size: {sample_size} URLs")
+        logging.info(f"Number of Cross-validation Splits: 10")
+        logging.info(f"Mean Cross-Validation Accuracy: {np.mean(best_scores):.4f} (+/- {np.std(best_scores) * 2:.4f})")
+        logging.info(f"Best Accuracy: {max(best_scores):.4f}")
+        logging.info(f"Worst Accuracy: {min(best_scores):.4f}")
+        logging.info(f"Total execution time: {total_time:.2f} seconds")
+        logging.info(f"Average time per model: {total_time/len(best_scores):.2f} seconds")
         
-        # Generate learning curve plot
-        logging.info("\nGenerating learning curve plot...")
-        visualizer.plot_learning_curve(best_base_model, X_train, y_train)
+        return best_models, best_scores
         
-        # Evaluate on validation set
-        logging.info("\nEvaluating on validation set:")
-        y_val_pred, y_val_prob, _ = evaluate_model(best_calibrated_model, X_val, y_val, "Validation Set")
-        
-        # Generate validation set plots
-        visualizer.plot_confusion_matrix(y_val, y_val_pred)
-        visualizer.plot_roc_curve(y_val, y_val_prob)
-        visualizer.plot_precision_recall_curve(y_val, y_val_prob)
-        
-        # Final evaluation on test set
-        logging.info("\nEvaluating on test set:")
-        y_test_pred, y_test_prob, _ = evaluate_model(best_calibrated_model, X_test, y_test, "Test Set")
-        
-        # Generate test set plots
-        logging.info("\nGenerating evaluation plots...")
-        visualizer.plot_confusion_matrix(y_test, y_test_pred)
-        visualizer.plot_roc_curve(y_test, y_test_prob)
-        visualizer.plot_precision_recall_curve(y_test, y_test_prob)
-        
-        # Feature importance analysis and plot
-        feature_importance = pd.DataFrame({
-            'feature': feature_names,
-            'importance': best_base_model.feature_importances_
-        }).sort_values('importance', ascending=False)
-        
-        logging.info("\nFeature Importance:")
-        logging.info(feature_importance)
-        visualizer.plot_feature_importance(
-            feature_importance['feature'].values,
-            feature_importance['importance'].values
-        )
-        
-        # Save the model and feature names
-        model_path, feature_names_path = save_model(best_calibrated_model, feature_names)
+    except Exception as e:
+        logging.error(f"Error in main function: {str(e)}")
+        logging.error(traceback.format_exc())
+        raise
 
-    finally:
-        # Cleanup
-        plt.close('all')
+def prepare_data_splits(features_df, test_size=0.2, val_size=0.2, n_splits=10):
+    """
+    Split data into train, validation, and test sets using domain-based splitting
+    with multiple cross-validation splits. Optimized for smaller dataset.
+    """
+    start_time = time.time()
+    logging.info("\nSplitting data into train, validation, and test sets...")
+    logging.info(f"Number of splits: {n_splits}")
+    
+    # Extract domains and labels
+    domains = features_df['url'].apply(extract_domain).values
+    labels = features_df['label'].values
+    
+    # Remove domain and URL columns and get feature names
+    features = features_df.drop(['url', 'label'], axis=1)
+    feature_names = features.columns.tolist()
+    
+    # Initialize domain-based splitter with increased splits
+    domain_splitter = GroupKFold(n_splits=n_splits)
+    
+    # Create multiple splits
+    splits = []
+    for split_idx, (train_val_idx, test_idx) in enumerate(domain_splitter.split(features, labels, groups=domains)):
+        logging.info(f"\nProcessing split {split_idx + 1}/{n_splits}")
         
+        # Split data into train_val and test
+        X_train_val = features.iloc[train_val_idx]
+        y_train_val = labels[train_val_idx]
+        domains_train_val = domains[train_val_idx]
+        
+        X_test = features.iloc[test_idx]
+        y_test = labels[test_idx]
+        
+        # Further split train_val into train and validation
+        # Adjusted validation size for smaller dataset
+        val_splitter = GroupShuffleSplit(n_splits=1, test_size=val_size/(1-test_size), random_state=42)
+        train_idx, val_idx = next(val_splitter.split(X_train_val, y_train_val, groups=domains_train_val))
+        
+        X_train = X_train_val.iloc[train_idx]
+        y_train = y_train_val[train_idx]
+        X_val = X_train_val.iloc[val_idx]
+        y_val = y_train_val[val_idx]
+        
+        # Log detailed split information
+        logging.info(f"Split {split_idx + 1} sizes:")
+        logging.info(f"Training set: {len(X_train)} samples ({len(X_train)/len(features):.1%})")
+        logging.info(f"  - Class distribution: {np.bincount(y_train)}")
+        logging.info(f"  - Number of unique domains: {len(np.unique(domains[train_idx]))}")
+        
+        logging.info(f"Validation set: {len(X_val)} samples ({len(X_val)/len(features):.1%})")
+        logging.info(f"  - Class distribution: {np.bincount(y_val)}")
+        logging.info(f"  - Number of unique domains: {len(np.unique(domains[val_idx]))}")
+        
+        logging.info(f"Test set: {len(X_test)} samples ({len(X_test)/len(features):.1%})")
+        logging.info(f"  - Class distribution: {np.bincount(y_test)}")
+        logging.info(f"  - Number of unique domains: {len(np.unique(domains[test_idx]))}")
+        
+        splits.append((X_train, X_val, X_test, y_train, y_val, y_test, feature_names))
+    
+    end_time = time.time()
+    logging.info(f"\nData splitting completed in {end_time - start_time:.2f} seconds")
+    
+    return splits
+
 if __name__ == "__main__":
     main()

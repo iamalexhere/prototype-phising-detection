@@ -1,0 +1,2 @@
+2025-01-04 12:38:51,315 - INFO - Logging setup complete. Log file: logs\phishing_detection_20250104_123851.log
+2025-01-04 12:38:51,316 - ERROR - Error in main function: name 'load_config' is not defined
