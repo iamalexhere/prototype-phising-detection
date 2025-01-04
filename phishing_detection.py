@@ -865,7 +865,7 @@ class ModelVisualizer:
     def __init__(self, output_dir='plots'):
         self.output_dir = output_dir
         os.makedirs(output_dir, exist_ok=True)
-        plt.style.use('seaborn')
+        plt.style.use('default')
     
     def save_plot(self, plot_name):
         """Save the current plot to the output directory."""

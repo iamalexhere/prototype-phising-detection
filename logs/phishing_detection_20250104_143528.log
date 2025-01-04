@@ -1,0 +1,1344 @@
+2025-01-04 14:35:28,825 - INFO - Logging setup complete. Log file: logs\phishing_detection_20250104_143528.log
+2025-01-04 14:35:28,825 - INFO - Starting phishing detection model training with sample size: 100
+2025-01-04 14:35:28,826 - INFO - Loading and processing datasets...
+2025-01-04 14:35:29,368 - INFO - Processing 100 phishing and 100 legitimate URLs
+2025-01-04 14:35:30,445 - WARNING - No creation date found for qrco.de
+2025-01-04 14:35:30,445 - WARNING - No expiration date found for qrco.de
+2025-01-04 14:35:30,630 - WARNING - No creation date found for hjsuhdmj83749oslkfmjduhba78394ijshdyena89d04nm1.pages.dev
+2025-01-04 14:35:30,631 - WARNING - No expiration date found for hjsuhdmj83749oslkfmjduhba78394ijshdyena89d04nm1.pages.dev
+2025-01-04 14:35:30,875 - ERROR - SSL Error for pub-332e25ac40fe42d5af737ce9b83b83d2.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:35:31,030 - ERROR - WHOIS lookup failed for att-104083-102145.weeblysite.com: [WinError 10054] An existing connection was forcibly closed by the remote host
+2025-01-04 14:35:31,748 - ERROR - WHOIS lookup failed for docs.google.com: [WinError 10054] An existing connection was forcibly closed by the remote host
+2025-01-04 14:35:31,764 - ERROR - WHOIS lookup failed for eastlink-103472.weeblysite.com: [WinError 10054] An existing connection was forcibly closed by the remote host
+2025-01-04 14:35:32,493 - ERROR - SSL Error for mecode.stream: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'mecode.stream'. (_ssl.c:1000)
+2025-01-04 14:35:33,523 - ERROR - SSL Error for pub-3118f4a53736409f849a1ec3b0697ecb.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:35:33,958 - WARNING - No creation date found for qrco.de
+2025-01-04 14:35:33,960 - WARNING - No expiration date found for qrco.de
+2025-01-04 14:35:34,263 - ERROR - Failed to resolve es.ingseguridad-acceso.com using socket: [Errno 11002] getaddrinfo failed
+2025-01-04 14:35:34,298 - WARNING - No creation date found for pub-70e69d351fdd47719fff28ce677d9918.r2.dev
+2025-01-04 14:35:34,299 - WARNING - No expiration date found for pub-70e69d351fdd47719fff28ce677d9918.r2.dev
+2025-01-04 14:35:34,344 - ERROR - SSL Error for pub-70e69d351fdd47719fff28ce677d9918.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:35:36,830 - ERROR - WHOIS lookup failed for atto--myygovv.firebaseapp.com: No match for "ATTO--MYYGOVV.FIREBASEAPP.COM".
+>>> Last update of whois database: 2025-01-04T07:35:25Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 14:35:37,118 - WARNING - No creation date found for pub-4850683a857240539460d6f3458b4006.r2.dev
+2025-01-04 14:35:37,121 - WARNING - No expiration date found for pub-4850683a857240539460d6f3458b4006.r2.dev
+2025-01-04 14:35:37,231 - ERROR - SSL Error for pub-4850683a857240539460d6f3458b4006.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:35:37,661 - WARNING - No creation date found for qrco.de
+2025-01-04 14:35:37,661 - WARNING - No expiration date found for qrco.de
+2025-01-04 14:35:38,943 - WARNING - No HTTPS for Shido.market
+2025-01-04 14:35:39,322 - WARNING - No creation date found for ljo1zh.csb.app
+2025-01-04 14:35:39,323 - WARNING - No expiration date found for ljo1zh.csb.app
+2025-01-04 14:35:42,103 - ERROR - Error checking SSL for es.ingseguridad-acceso.com: [Errno 11002] getaddrinfo failed
+2025-01-04 14:35:43,845 - ERROR - Error trying to connect to socket: closing socket - [WinError 10061] No connection could be made because the target machine actively refused it
+2025-01-04 14:35:43,847 - WARNING - No creation date found for q-r.to
+2025-01-04 14:35:43,847 - WARNING - No expiration date found for q-r.to
+2025-01-04 14:35:44,514 - ERROR - Error trying to connect to socket: closing socket - timed out
+2025-01-04 14:35:44,515 - WARNING - No creation date found for q-r.to
+2025-01-04 14:35:44,516 - WARNING - No expiration date found for q-r.to
+2025-01-04 14:35:44,838 - ERROR - SSL Error for pub-51427f5ffccf45a8a223196f7893c181.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:35:45,689 - WARNING - No creation date found for haulagesg.top
+2025-01-04 14:35:45,690 - WARNING - No expiration date found for haulagesg.top
+2025-01-04 14:35:47,159 - ERROR - WHOIS lookup failed for patjimmy323.wixsite.com: No match for "PATJIMMY323.WIXSITE.COM".
+>>> Last update of whois database: 2025-01-04T07:35:40Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 14:35:47,503 - ERROR - SSL Error for wanining.cc: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'wanining.cc'. (_ssl.c:1000)
+2025-01-04 14:35:52,558 - WARNING - No creation date found for bvgftryehdnxju.web.app
+2025-01-04 14:35:52,560 - WARNING - No expiration date found for bvgftryehdnxju.web.app
+2025-01-04 14:35:53,446 - WARNING - No creation date found for orange-star-ac3e.gagap19825.workers.dev
+2025-01-04 14:35:53,447 - WARNING - No expiration date found for orange-star-ac3e.gagap19825.workers.dev
+2025-01-04 14:35:56,796 - ERROR - Error checking SSL for u.infotratvts.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:35:57,467 - WARNING - No creation date found for mikanowoprobuewbestasz.lilia9.workers.dev
+2025-01-04 14:35:57,467 - WARNING - No expiration date found for mikanowoprobuewbestasz.lilia9.workers.dev
+2025-01-04 14:35:58,226 - ERROR - Error checking SSL for uspsvlcno.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:35:59,518 - ERROR - WHOIS lookup failed for www-cred-foz-ilha.blogspot.com: No match for "WWW-CRED-FOZ-ILHA.BLOGSPOT.COM".
+>>> Last update of whois database: 2025-01-04T07:35:40Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 14:35:59,522 - WARNING - No HTTPS for www-cred-foz-ilha.blogspot.com
+2025-01-04 14:36:01,844 - ERROR - SSL Error for lictes.date: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'lictes.date'. (_ssl.c:1000)
+2025-01-04 14:36:02,798 - ERROR - SSL Error for pub-53c03b9b90fe486a82cc03ab66bd7ace.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:36:03,259 - ERROR - Error checking SSL for bradesco.prime-leveldigital.com: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:36:04,522 - ERROR - Error checking SSL for mvsfh-sg.com: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:36:04,528 - ERROR - Failed to resolve xn--d1aqfkf.xn--p1ai:443 using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 14:36:05,008 - WARNING - No creation date found for xn--d1aqfkf.xn--p1ai:443
+2025-01-04 14:36:05,009 - WARNING - No expiration date found for xn--d1aqfkf.xn--p1ai:443
+2025-01-04 14:36:05,028 - ERROR - Error checking SSL for xn--d1aqfkf.xn--p1ai:443: [Errno 11001] getaddrinfo failed
+2025-01-04 14:36:06,445 - ERROR - Error checking SSL for haulagesg.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:36:06,993 - WARNING - No creation date found for qrco.de
+2025-01-04 14:36:06,994 - WARNING - No expiration date found for qrco.de
+2025-01-04 14:36:07,614 - WARNING - No creation date found for meaoee-fc3f.elamzioehr.workers.dev
+2025-01-04 14:36:07,615 - WARNING - No expiration date found for meaoee-fc3f.elamzioehr.workers.dev
+2025-01-04 14:36:08,345 - ERROR - Failed to resolve meinesparkasse.com using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 14:36:08,504 - ERROR - SSL Error for pub-ecea1eb139834ca592be405c2eb7f228.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:36:10,382 - ERROR - Error checking SSL for canada.postcanadaggb.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:36:10,804 - ERROR - Error checking SSL for meinesparkasse.com: [Errno 11001] getaddrinfo failed
+2025-01-04 14:36:11,484 - ERROR - Error checking SSL for posti-fi.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:36:11,593 - ERROR - Error checking SSL for spotify.information-premium.com: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:36:44,993 - ERROR - Error checking SSL for usps.com-trackjbe.live: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:36:44,993 - ERROR - Error checking SSL for olx-pl.gymilos.lol: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:36:44,993 - ERROR - Error checking SSL for pttur-gyv.vip: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:36:45,649 - ERROR - Error checking SSL for vdacom-pts.cyou: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:36:45,650 - WARNING - No creation date found for qrco.de
+2025-01-04 14:36:45,988 - ERROR - Failed to get MX/NS records using DNS API: HTTPSConnectionPool(host='dns.google', port=443): Max retries exceeded with url: /resolve?name=qrco.de&type=MX (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)')))
+2025-01-04 14:36:46,019 - WARNING - No expiration date found for qrco.de
+2025-01-04 14:36:46,406 - WARNING - No creation date found for qrco.de
+2025-01-04 14:36:46,407 - WARNING - No expiration date found for qrco.de
+2025-01-04 14:36:46,776 - ERROR - SSL Error for pub-aca26f7647f545f392afbeecdcb1ff46.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:36:47,495 - ERROR - SSL Error for pub-4bf302a1b3af4892a9d2466a4a693dbd.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:36:47,642 - WARNING - No expiration date found for olive488548.studio.site
+2025-01-04 14:36:48,521 - WARNING - No creation date found for cryptoexodus.online
+2025-01-04 14:36:48,521 - WARNING - No expiration date found for cryptoexodus.online
+2025-01-04 14:36:49,310 - WARNING - No creation date found for vb-ezk.pages.dev
+2025-01-04 14:36:49,312 - WARNING - No expiration date found for vb-ezk.pages.dev
+2025-01-04 14:36:49,416 - ERROR - WHOIS lookup failed for rioapzxoxoz.firebaseapp.com: No match for "RIOAPZXOXOZ.FIREBASEAPP.COM".
+>>> Last update of whois database: 2025-01-04T07:36:40Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 14:36:49,560 - ERROR - WHOIS lookup failed for bretatie.firebaseapp.com: No match for "BRETATIE.FIREBASEAPP.COM".
+>>> Last update of whois database: 2025-01-04T07:36:40Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 14:36:50,309 - WARNING - No creation date found for sistema-ungl-2024.web.app
+2025-01-04 14:36:50,309 - WARNING - No expiration date found for sistema-ungl-2024.web.app
+2025-01-04 14:36:51,090 - ERROR - SSL Error for idolink.com: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:36:52,767 - ERROR - SSL Error for pichinchaing.webcindario.com: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:36:55,281 - WARNING - No creation date found for 43.156.237.181
+2025-01-04 14:36:55,282 - WARNING - No expiration date found for 43.156.237.181
+2025-01-04 14:36:55,283 - WARNING - No HTTPS for 43.156.237.181
+2025-01-04 14:37:08,837 - ERROR - Error checking SSL for correos.ss-kl.sbs: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:37:09,208 - ERROR - Error checking SSL for usps.com-trackzmz.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:37:09,630 - ERROR - Error checking SSL for cryptoexodus.online: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:37:14,645 - ERROR - Error checking SSL for postb-mdb.xyz: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:37:17,546 - ERROR - Error checking SSL for uspskwkmxc.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:37:17,872 - ERROR - Failed to resolve crowdflower.com using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 14:37:18,557 - WARNING - No creation date found for decemsys.de
+2025-01-04 14:37:18,558 - WARNING - No expiration date found for decemsys.de
+2025-01-04 14:37:18,558 - WARNING - No HTTPS for decemsys.de
+2025-01-04 14:37:19,094 - WARNING - No HTTPS for nassjo.se
+2025-01-04 14:37:19,941 - WARNING - No HTTPS for slots.com
+2025-01-04 14:37:19,959 - WARNING - No HTTPS for pokerschoolonline.com
+2025-01-04 14:37:20,077 - ERROR - Failed to resolve ktb.co.th using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 14:37:20,391 - WARNING - No HTTPS for yllas.fi
+2025-01-04 14:37:20,461 - WARNING - No HTTPS for crowdflower.com
+2025-01-04 14:37:20,580 - WARNING - No HTTPS for buscarecetas.com.ar
+2025-01-04 14:37:20,799 - WARNING - No HTTPS for yc1000.net
+2025-01-04 14:37:21,020 - WARNING - No HTTPS for devpia.com
+2025-01-04 14:37:21,617 - WARNING - No creation date found for ktb.co.th
+2025-01-04 14:37:21,618 - WARNING - No expiration date found for ktb.co.th
+2025-01-04 14:37:21,619 - WARNING - No HTTPS for ktb.co.th
+2025-01-04 14:37:21,972 - WARNING - No HTTPS for pplp.org
+2025-01-04 14:37:22,272 - ERROR - Error trying to connect to socket: closing socket - [Errno 11001] getaddrinfo failed
+2025-01-04 14:37:22,272 - WARNING - No creation date found for answers.travian.com.vn
+2025-01-04 14:37:22,273 - WARNING - No expiration date found for answers.travian.com.vn
+2025-01-04 14:37:22,273 - WARNING - No HTTPS for answers.travian.com.vn
+2025-01-04 14:37:22,485 - WARNING - No creation date found for winefront.com.au
+2025-01-04 14:37:22,486 - WARNING - No expiration date found for winefront.com.au
+2025-01-04 14:37:22,487 - WARNING - No HTTPS for winefront.com.au
+2025-01-04 14:37:22,941 - WARNING - No HTTPS for fordbarn.com
+2025-01-04 14:37:22,956 - WARNING - No HTTPS for praise1065.com
+2025-01-04 14:37:23,159 - WARNING - No HTTPS for telkkarista.com
+2025-01-04 14:37:23,180 - WARNING - No HTTPS for biodiversity.ru
+2025-01-04 14:37:23,213 - WARNING - No HTTPS for tmch.org.tw
+2025-01-04 14:37:23,420 - WARNING - No HTTPS for avocatparis.org
+2025-01-04 14:37:24,221 - ERROR - Failed to resolve whgaming.com using socket: [Errno 11002] getaddrinfo failed
+2025-01-04 14:37:24,810 - WARNING - No creation date found for poesieinversi.it
+2025-01-04 14:37:24,811 - WARNING - No expiration date found for poesieinversi.it
+2025-01-04 14:37:24,811 - WARNING - No HTTPS for poesieinversi.it
+2025-01-04 14:37:25,074 - WARNING - No HTTPS for martindalecenter.com
+2025-01-04 14:37:25,364 - WARNING - No HTTPS for crestbook.com
+2025-01-04 14:37:25,365 - WARNING - No creation date found for bicycles.net.au
+2025-01-04 14:37:25,366 - WARNING - No expiration date found for bicycles.net.au
+2025-01-04 14:37:25,367 - WARNING - No HTTPS for bicycles.net.au
+2025-01-04 14:37:26,460 - WARNING - No HTTPS for dsq-sds.org
+2025-01-04 14:37:26,732 - WARNING - No HTTPS for whgaming.com
+2025-01-04 14:37:27,065 - WARNING - No HTTPS for mono-project.com
+2025-01-04 14:37:27,145 - WARNING - No HTTPS for shop.whois.com
+2025-01-04 14:37:27,944 - WARNING - No HTTPS for schoolmusic.co.kr
+2025-01-04 14:37:28,792 - WARNING - No HTTPS for sewing-master.ru
+2025-01-04 14:37:29,474 - WARNING - No HTTPS for boathouserestaurants.ca
+2025-01-04 14:37:29,529 - WARNING - No HTTPS for wearetennis.com
+2025-01-04 14:37:29,890 - ERROR - Error trying to connect to socket: closing socket - [Errno 11001] getaddrinfo failed
+2025-01-04 14:37:29,891 - WARNING - No creation date found for piticu.ro
+2025-01-04 14:37:29,892 - WARNING - No expiration date found for piticu.ro
+2025-01-04 14:37:29,892 - WARNING - No HTTPS for piticu.ro
+2025-01-04 14:37:30,022 - WARNING - No HTTPS for ozarkmountainrailcar.com
+2025-01-04 14:37:30,136 - WARNING - No HTTPS for hdsa.org
+2025-01-04 14:37:30,374 - WARNING - No HTTPS for neilgaiman.com
+2025-01-04 14:37:30,658 - ERROR - WHOIS lookup failed for ria.ee: unsupported operand type(s) for -: 'datetime.datetime' and 'str'
+2025-01-04 14:37:30,658 - WARNING - No HTTPS for ria.ee
+2025-01-04 14:37:30,951 - WARNING - No HTTPS for emeraldqueen.com
+2025-01-04 14:37:31,329 - WARNING - No HTTPS for clevelandchildrensmuseum.org
+2025-01-04 14:37:31,387 - WARNING - No HTTPS for njsp.org
+2025-01-04 14:37:32,046 - WARNING - No HTTPS for bet365.it
+2025-01-04 14:37:32,276 - WARNING - No HTTPS for richbarbellfitness.com
+2025-01-04 14:37:32,308 - WARNING - No HTTPS for e-lites.co.uk
+2025-01-04 14:37:32,341 - WARNING - No HTTPS for g3voip.com
+2025-01-04 14:37:32,546 - WARNING - No HTTPS for triatlonchannel.com
+2025-01-04 14:37:32,865 - ERROR - Failed to resolve qushiyun.com using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 14:37:33,005 - WARNING - No HTTPS for arteshopbilbao.com
+2025-01-04 14:37:33,032 - WARNING - No HTTPS for harrietbeecherstowecenter.org
+2025-01-04 14:37:33,057 - WARNING - No HTTPS for dirtgame.com
+2025-01-04 14:37:33,100 - WARNING - No HTTPS for chevaux-barbes.com
+2025-01-04 14:37:33,306 - ERROR - Failed to resolve rekihaku.ac.jp using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 14:37:33,398 - ERROR - Failed to resolve dine.to using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 14:37:33,880 - WARNING - No creation date found for rekihaku.ac.jp
+2025-01-04 14:37:33,881 - WARNING - No expiration date found for rekihaku.ac.jp
+2025-01-04 14:37:33,881 - WARNING - No HTTPS for rekihaku.ac.jp
+2025-01-04 14:37:33,981 - WARNING - No HTTPS for utahhumane.org
+2025-01-04 14:37:34,271 - WARNING - No HTTPS for grolsch.com
+2025-01-04 14:37:34,607 - WARNING - No HTTPS for carmag.co.za
+2025-01-04 14:37:34,892 - WARNING - No HTTPS for curtisyoungblood.com
+2025-01-04 14:37:34,895 - WARNING - No HTTPS for iphone-bulgaria.com
+2025-01-04 14:37:34,992 - WARNING - No HTTPS for webmineral.com
+2025-01-04 14:37:35,478 - WARNING - No HTTPS for qushiyun.com
+2025-01-04 14:37:36,112 - WARNING - No HTTPS for hirezstudios.com
+2025-01-04 14:37:36,190 - WARNING - No HTTPS for lazoo.org
+2025-01-04 14:37:36,518 - WARNING - No HTTPS for minecraftes.com
+2025-01-04 14:37:36,552 - WARNING - No HTTPS for automotiveforums.com
+2025-01-04 14:37:36,733 - WARNING - No HTTPS for estrellasoap.com
+2025-01-04 14:37:36,889 - WARNING - No HTTPS for speedline.dk
+2025-01-04 14:37:36,971 - WARNING - No HTTPS for fusz.com
+2025-01-04 14:37:37,216 - ERROR - Error trying to connect to socket: closing socket - [Errno 11001] getaddrinfo failed
+2025-01-04 14:37:37,218 - WARNING - No creation date found for socom.mil
+2025-01-04 14:37:37,218 - WARNING - No expiration date found for socom.mil
+2025-01-04 14:37:37,218 - WARNING - No HTTPS for socom.mil
+2025-01-04 14:37:37,611 - ERROR - WHOIS lookup failed for dev-mex.com: No match for "DEV-MEX.COM".
+>>> Last update of whois database: 2025-01-04T07:37:27Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 14:37:37,616 - WARNING - No HTTPS for dev-mex.com
+2025-01-04 14:37:37,921 - WARNING - No HTTPS for aleve.com
+2025-01-04 14:37:38,240 - WARNING - No HTTPS for microscopy-analysis.com
+2025-01-04 14:37:38,261 - WARNING - No HTTPS for oba.org.br
+2025-01-04 14:37:38,381 - ERROR - Error trying to connect to socket: closing socket - [WinError 10061] No connection could be made because the target machine actively refused it
+2025-01-04 14:37:38,383 - WARNING - No creation date found for dine.to
+2025-01-04 14:37:38,383 - WARNING - No expiration date found for dine.to
+2025-01-04 14:37:38,384 - WARNING - No HTTPS for dine.to
+2025-01-04 14:37:38,429 - WARNING - No HTTPS for thebodyshop.co.uk
+2025-01-04 14:37:38,525 - WARNING - No HTTPS for gay-test.com
+2025-01-04 14:37:39,012 - WARNING - No HTTPS for gesundehunde.com
+2025-01-04 14:37:39,127 - WARNING - No HTTPS for robinhoodbingo.com
+2025-01-04 14:37:39,218 - WARNING - No expiration date found for motorhuis.nl
+2025-01-04 14:37:39,219 - WARNING - No HTTPS for motorhuis.nl
+2025-01-04 14:37:39,773 - WARNING - No HTTPS for mitsuoka-motor.com
+2025-01-04 14:37:40,268 - ERROR - WHOIS lookup failed for santafe.edu.ar: El dominio no se encuentra registrado en NIC Argentina
+2025-01-04 14:37:40,269 - WARNING - No HTTPS for santafe.edu.ar
+2025-01-04 14:37:40,374 - WARNING - No creation date found for thermoscientific.es
+2025-01-04 14:37:40,376 - WARNING - No expiration date found for thermoscientific.es
+2025-01-04 14:37:40,380 - WARNING - No HTTPS for thermoscientific.es
+2025-01-04 14:37:40,820 - WARNING - No HTTPS for orkin.com
+2025-01-04 14:37:40,847 - WARNING - No HTTPS for kickinghorseresort.com
+2025-01-04 14:37:40,897 - WARNING - No HTTPS for us-funerals.com
+2025-01-04 14:37:41,156 - WARNING - No HTTPS for thetreatmenthelpline.com
+2025-01-04 14:37:41,379 - WARNING - No expiration date found for gro.gov.uk
+2025-01-04 14:37:41,380 - WARNING - No HTTPS for gro.gov.uk
+2025-01-04 14:37:41,423 - WARNING - No creation date found for wiki-dofus.eu
+2025-01-04 14:37:41,424 - WARNING - No expiration date found for wiki-dofus.eu
+2025-01-04 14:37:41,425 - WARNING - No HTTPS for wiki-dofus.eu
+2025-01-04 14:37:41,896 - WARNING - No HTTPS for elhistoriador.com.ar
+2025-01-04 14:37:41,983 - WARNING - No HTTPS for ncsml.org
+2025-01-04 14:37:42,034 - ERROR - Failed to get MX/NS records using DNS API: HTTPSConnectionPool(host='dns.google', port=443): Read timed out. (read timeout=5)
+2025-01-04 14:37:42,162 - WARNING - No HTTPS for aide-handicap.info
+2025-01-04 14:37:42,413 - WARNING - No HTTPS for orionleathercompany.com
+2025-01-04 14:37:42,598 - WARNING - No HTTPS for tokyo42195.org
+2025-01-04 14:37:43,109 - WARNING - No HTTPS for trafficschoolonline.com
+2025-01-04 14:37:43,195 - WARNING - No HTTPS for neons.org
+2025-01-04 14:37:43,490 - WARNING - No creation date found for dolr.nic.in
+2025-01-04 14:37:43,491 - WARNING - No expiration date found for dolr.nic.in
+2025-01-04 14:37:43,491 - WARNING - No HTTPS for dolr.nic.in
+2025-01-04 14:37:43,663 - WARNING - No HTTPS for whichlotto.com
+2025-01-04 14:37:43,700 - WARNING - No HTTPS for local.amazon.com
+2025-01-04 14:37:43,844 - WARNING - No HTTPS for parsippanylibrary.org
+2025-01-04 14:37:43,885 - WARNING - No HTTPS for microbeworld.org
+2025-01-04 14:37:43,938 - WARNING - No HTTPS for bionetonline.org
+2025-01-04 14:37:43,949 - WARNING - No HTTPS for nctsn.org
+2025-01-04 14:37:44,255 - ERROR - WHOIS lookup failed for klementine.net: No match for "KLEMENTINE.NET".
+>>> Last update of whois database: 2025-01-04T07:37:27Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 14:37:44,259 - WARNING - No HTTPS for klementine.net
+2025-01-04 14:37:44,826 - WARNING - No HTTPS for i-atumen.tumblr.com
+2025-01-04 14:37:45,160 - WARNING - No HTTPS for fbresearch.org
+2025-01-04 14:37:45,254 - INFO - Removed 3 constant features
+2025-01-04 14:37:45,276 - INFO - Removed 3 highly correlated features
+2025-01-04 14:37:45,299 - INFO - Scaled 15 numerical features using RobustScaler
+2025-01-04 14:37:45,301 - INFO - Final dataset shape: (200, 21)
+2025-01-04 14:37:45,301 - INFO - 
+Splitting data into train, validation, and test sets...
+2025-01-04 14:37:45,302 - INFO - Number of splits: 10
+2025-01-04 14:37:45,304 - INFO - 
+Processing split 1/10
+2025-01-04 14:37:45,306 - INFO - Split 1 sizes:
+2025-01-04 14:37:45,306 - INFO - Training set: 132 samples (66.0%)
+2025-01-04 14:37:45,306 - INFO -   - Class distribution: [66 66]
+2025-01-04 14:37:45,307 - INFO -   - Number of unique domains: 127
+2025-01-04 14:37:45,307 - INFO - Validation set: 48 samples (24.0%)
+2025-01-04 14:37:45,308 - INFO -   - Class distribution: [26 22]
+2025-01-04 14:37:45,308 - INFO -   - Number of unique domains: 44
+2025-01-04 14:37:45,308 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:37:45,309 - INFO -   - Class distribution: [ 8 12]
+2025-01-04 14:37:45,309 - INFO -   - Number of unique domains: 15
+2025-01-04 14:37:45,309 - INFO - 
+Processing split 2/10
+2025-01-04 14:37:45,310 - INFO - Split 2 sizes:
+2025-01-04 14:37:45,311 - INFO - Training set: 136 samples (68.0%)
+2025-01-04 14:37:45,312 - INFO -   - Class distribution: [70 66]
+2025-01-04 14:37:45,312 - INFO -   - Number of unique domains: 128
+2025-01-04 14:37:45,312 - INFO - Validation set: 44 samples (22.0%)
+2025-01-04 14:37:45,312 - INFO -   - Class distribution: [23 21]
+2025-01-04 14:37:45,313 - INFO -   - Number of unique domains: 42
+2025-01-04 14:37:45,313 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:37:45,314 - INFO -   - Class distribution: [ 7 13]
+2025-01-04 14:37:45,314 - INFO -   - Number of unique domains: 15
+2025-01-04 14:37:45,315 - INFO - 
+Processing split 3/10
+2025-01-04 14:37:45,316 - INFO - Split 3 sizes:
+2025-01-04 14:37:45,316 - INFO - Training set: 136 samples (68.0%)
+2025-01-04 14:37:45,316 - INFO -   - Class distribution: [66 70]
+2025-01-04 14:37:45,316 - INFO -   - Number of unique domains: 126
+2025-01-04 14:37:45,318 - INFO - Validation set: 44 samples (22.0%)
+2025-01-04 14:37:45,318 - INFO -   - Class distribution: [22 22]
+2025-01-04 14:37:45,318 - INFO -   - Number of unique domains: 44
+2025-01-04 14:37:45,319 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:37:45,319 - INFO -   - Class distribution: [12  8]
+2025-01-04 14:37:45,319 - INFO -   - Number of unique domains: 18
+2025-01-04 14:37:45,320 - INFO - 
+Processing split 4/10
+2025-01-04 14:37:45,322 - INFO - Split 4 sizes:
+2025-01-04 14:37:45,322 - INFO - Training set: 137 samples (68.5%)
+2025-01-04 14:37:45,323 - INFO -   - Class distribution: [70 67]
+2025-01-04 14:37:45,323 - INFO -   - Number of unique domains: 125
+2025-01-04 14:37:45,323 - INFO - Validation set: 43 samples (21.5%)
+2025-01-04 14:37:45,323 - INFO -   - Class distribution: [20 23]
+2025-01-04 14:37:45,323 - INFO -   - Number of unique domains: 43
+2025-01-04 14:37:45,324 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:37:45,324 - INFO -   - Class distribution: [10 10]
+2025-01-04 14:37:45,324 - INFO -   - Number of unique domains: 19
+2025-01-04 14:37:45,325 - INFO - 
+Processing split 5/10
+2025-01-04 14:37:45,326 - INFO - Split 5 sizes:
+2025-01-04 14:37:45,326 - INFO - Training set: 138 samples (69.0%)
+2025-01-04 14:37:45,326 - INFO -   - Class distribution: [69 69]
+2025-01-04 14:37:45,328 - INFO -   - Number of unique domains: 130
+2025-01-04 14:37:45,328 - INFO - Validation set: 42 samples (21.0%)
+2025-01-04 14:37:45,328 - INFO -   - Class distribution: [22 20]
+2025-01-04 14:37:45,329 - INFO -   - Number of unique domains: 40
+2025-01-04 14:37:45,329 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:37:45,329 - INFO -   - Class distribution: [ 9 11]
+2025-01-04 14:37:45,330 - INFO -   - Number of unique domains: 19
+2025-01-04 14:37:45,330 - INFO - 
+Processing split 6/10
+2025-01-04 14:37:45,331 - INFO - Split 6 sizes:
+2025-01-04 14:37:45,332 - INFO - Training set: 134 samples (67.0%)
+2025-01-04 14:37:45,332 - INFO -   - Class distribution: [66 68]
+2025-01-04 14:37:45,332 - INFO -   - Number of unique domains: 123
+2025-01-04 14:37:45,332 - INFO - Validation set: 46 samples (23.0%)
+2025-01-04 14:37:45,334 - INFO -   - Class distribution: [23 23]
+2025-01-04 14:37:45,334 - INFO -   - Number of unique domains: 46
+2025-01-04 14:37:45,334 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:37:45,334 - INFO -   - Class distribution: [11  9]
+2025-01-04 14:37:45,335 - INFO -   - Number of unique domains: 20
+2025-01-04 14:37:45,335 - INFO - 
+Processing split 7/10
+2025-01-04 14:37:45,337 - INFO - Split 7 sizes:
+2025-01-04 14:37:45,337 - INFO - Training set: 136 samples (68.0%)
+2025-01-04 14:37:45,337 - INFO -   - Class distribution: [62 74]
+2025-01-04 14:37:45,338 - INFO -   - Number of unique domains: 128
+2025-01-04 14:37:45,338 - INFO - Validation set: 44 samples (22.0%)
+2025-01-04 14:37:45,339 - INFO -   - Class distribution: [23 21]
+2025-01-04 14:37:45,339 - INFO -   - Number of unique domains: 42
+2025-01-04 14:37:45,340 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:37:45,340 - INFO -   - Class distribution: [15  5]
+2025-01-04 14:37:45,341 - INFO -   - Number of unique domains: 20
+2025-01-04 14:37:45,341 - INFO - 
+Processing split 8/10
+2025-01-04 14:37:45,342 - INFO - Split 8 sizes:
+2025-01-04 14:37:45,342 - INFO - Training set: 136 samples (68.0%)
+2025-01-04 14:37:45,342 - INFO -   - Class distribution: [67 69]
+2025-01-04 14:37:45,342 - INFO -   - Number of unique domains: 125
+2025-01-04 14:37:45,342 - INFO - Validation set: 44 samples (22.0%)
+2025-01-04 14:37:45,344 - INFO -   - Class distribution: [23 21]
+2025-01-04 14:37:45,344 - INFO -   - Number of unique domains: 44
+2025-01-04 14:37:45,344 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:37:45,345 - INFO -   - Class distribution: [10 10]
+2025-01-04 14:37:45,345 - INFO -   - Number of unique domains: 20
+2025-01-04 14:37:45,346 - INFO - 
+Processing split 9/10
+2025-01-04 14:37:45,347 - INFO - Split 9 sizes:
+2025-01-04 14:37:45,347 - INFO - Training set: 132 samples (66.0%)
+2025-01-04 14:37:45,347 - INFO -   - Class distribution: [64 68]
+2025-01-04 14:37:45,347 - INFO -   - Number of unique domains: 125
+2025-01-04 14:37:45,348 - INFO - Validation set: 48 samples (24.0%)
+2025-01-04 14:37:45,349 - INFO -   - Class distribution: [25 23]
+2025-01-04 14:37:45,349 - INFO -   - Number of unique domains: 46
+2025-01-04 14:37:45,349 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:37:45,350 - INFO -   - Class distribution: [11  9]
+2025-01-04 14:37:45,350 - INFO -   - Number of unique domains: 20
+2025-01-04 14:37:45,350 - INFO - 
+Processing split 10/10
+2025-01-04 14:37:45,351 - INFO - Split 10 sizes:
+2025-01-04 14:37:45,352 - INFO - Training set: 136 samples (68.0%)
+2025-01-04 14:37:45,352 - INFO -   - Class distribution: [65 71]
+2025-01-04 14:37:45,352 - INFO -   - Number of unique domains: 127
+2025-01-04 14:37:45,352 - INFO - Validation set: 44 samples (22.0%)
+2025-01-04 14:37:45,353 - INFO -   - Class distribution: [28 16]
+2025-01-04 14:37:45,353 - INFO -   - Number of unique domains: 43
+2025-01-04 14:37:45,354 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:37:45,354 - INFO -   - Class distribution: [ 7 13]
+2025-01-04 14:37:45,355 - INFO -   - Number of unique domains: 20
+2025-01-04 14:37:45,355 - INFO - 
+Data splitting completed in 0.05 seconds
+2025-01-04 14:37:45,355 - INFO - Starting phishing detection model training with sample size: 100
+2025-01-04 14:37:45,356 - INFO - Loading and processing datasets...
+2025-01-04 14:37:45,629 - INFO - Processing 100 phishing and 100 legitimate URLs
+2025-01-04 14:37:46,271 - WARNING - No creation date found for hjsuhdmj83749oslkfmjduhba78394ijshdyena89d04nm1.pages.dev
+2025-01-04 14:37:46,271 - WARNING - No expiration date found for hjsuhdmj83749oslkfmjduhba78394ijshdyena89d04nm1.pages.dev
+2025-01-04 14:37:46,387 - WARNING - No creation date found for qrco.de
+2025-01-04 14:37:46,388 - WARNING - No expiration date found for qrco.de
+2025-01-04 14:37:46,468 - ERROR - SSL Error for pub-332e25ac40fe42d5af737ce9b83b83d2.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:37:46,591 - ERROR - WHOIS lookup failed for att-104083-102145.weeblysite.com: [WinError 10054] An existing connection was forcibly closed by the remote host
+2025-01-04 14:37:47,731 - ERROR - SSL Error for mecode.stream: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'mecode.stream'. (_ssl.c:1000)
+2025-01-04 14:37:48,779 - ERROR - SSL Error for pub-3118f4a53736409f849a1ec3b0697ecb.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:37:48,997 - ERROR - Failed to resolve es.ingseguridad-acceso.com using socket: [Errno 11002] getaddrinfo failed
+2025-01-04 14:37:49,572 - WARNING - No creation date found for qrco.de
+2025-01-04 14:37:49,573 - WARNING - No expiration date found for qrco.de
+2025-01-04 14:37:49,618 - WARNING - No creation date found for pub-70e69d351fdd47719fff28ce677d9918.r2.dev
+2025-01-04 14:37:49,619 - WARNING - No expiration date found for pub-70e69d351fdd47719fff28ce677d9918.r2.dev
+2025-01-04 14:37:49,679 - ERROR - SSL Error for pub-70e69d351fdd47719fff28ce677d9918.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:37:52,121 - ERROR - WHOIS lookup failed for atto--myygovv.firebaseapp.com: No match for "ATTO--MYYGOVV.FIREBASEAPP.COM".
+>>> Last update of whois database: 2025-01-04T07:37:42Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 14:37:53,140 - WARNING - No creation date found for qrco.de
+2025-01-04 14:37:53,140 - WARNING - No expiration date found for qrco.de
+2025-01-04 14:37:53,179 - ERROR - SSL Error for pub-4850683a857240539460d6f3458b4006.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:37:53,256 - ERROR - Error trying to connect to socket: closing socket - [WinError 10061] No connection could be made because the target machine actively refused it
+2025-01-04 14:37:53,257 - WARNING - No creation date found for q-r.to
+2025-01-04 14:37:53,257 - WARNING - No expiration date found for q-r.to
+2025-01-04 14:37:54,652 - ERROR - Error trying to connect to socket: closing socket - [WinError 10061] No connection could be made because the target machine actively refused it
+2025-01-04 14:37:54,656 - WARNING - No creation date found for q-r.to
+2025-01-04 14:37:54,657 - WARNING - No expiration date found for q-r.to
+2025-01-04 14:37:54,962 - WARNING - No HTTPS for Shido.market
+2025-01-04 14:37:56,354 - ERROR - Error checking SSL for es.ingseguridad-acceso.com: [Errno 11002] getaddrinfo failed
+2025-01-04 14:37:57,441 - ERROR - SSL Error for pub-51427f5ffccf45a8a223196f7893c181.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:37:58,665 - WARNING - No creation date found for haulagesg.top
+2025-01-04 14:37:58,666 - WARNING - No expiration date found for haulagesg.top
+2025-01-04 14:38:01,566 - ERROR - SSL Error for wanining.cc: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'wanining.cc'. (_ssl.c:1000)
+2025-01-04 14:38:03,196 - ERROR - WHOIS lookup failed for patjimmy323.wixsite.com: No match for "PATJIMMY323.WIXSITE.COM".
+>>> Last update of whois database: 2025-01-04T07:37:56Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 14:38:08,159 - WARNING - No creation date found for bvgftryehdnxju.web.app
+2025-01-04 14:38:08,161 - WARNING - No expiration date found for bvgftryehdnxju.web.app
+2025-01-04 14:38:08,747 - WARNING - No creation date found for orange-star-ac3e.gagap19825.workers.dev
+2025-01-04 14:38:08,747 - WARNING - No expiration date found for orange-star-ac3e.gagap19825.workers.dev
+2025-01-04 14:38:11,497 - ERROR - Error checking SSL for u.infotratvts.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:38:12,026 - WARNING - No creation date found for mikanowoprobuewbestasz.lilia9.workers.dev
+2025-01-04 14:38:12,027 - WARNING - No expiration date found for mikanowoprobuewbestasz.lilia9.workers.dev
+2025-01-04 14:38:13,615 - ERROR - WHOIS lookup failed for www-cred-foz-ilha.blogspot.com: No match for "WWW-CRED-FOZ-ILHA.BLOGSPOT.COM".
+>>> Last update of whois database: 2025-01-04T07:37:56Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 14:38:13,622 - WARNING - No HTTPS for www-cred-foz-ilha.blogspot.com
+2025-01-04 14:38:17,713 - ERROR - Error checking SSL for mvsfh-sg.com: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:38:19,707 - ERROR - Error checking SSL for haulagesg.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:38:19,773 - ERROR - SSL Error for lictes.date: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'lictes.date'. (_ssl.c:1000)
+2025-01-04 14:38:20,379 - ERROR - SSL Error for pub-53c03b9b90fe486a82cc03ab66bd7ace.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:38:22,233 - ERROR - Error checking SSL for uspsvlcno.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:38:22,242 - ERROR - Failed to resolve xn--d1aqfkf.xn--p1ai:443 using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 14:38:22,404 - WARNING - No creation date found for xn--d1aqfkf.xn--p1ai:443
+2025-01-04 14:38:22,406 - WARNING - No expiration date found for xn--d1aqfkf.xn--p1ai:443
+2025-01-04 14:38:22,423 - ERROR - Error checking SSL for xn--d1aqfkf.xn--p1ai:443: [Errno 11001] getaddrinfo failed
+2025-01-04 14:38:24,092 - WARNING - No creation date found for qrco.de
+2025-01-04 14:38:24,092 - WARNING - No expiration date found for qrco.de
+2025-01-04 14:38:24,820 - WARNING - No creation date found for meaoee-fc3f.elamzioehr.workers.dev
+2025-01-04 14:38:24,821 - WARNING - No expiration date found for meaoee-fc3f.elamzioehr.workers.dev
+2025-01-04 14:38:25,373 - ERROR - Error checking SSL for posti-fi.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:38:25,466 - ERROR - Error checking SSL for canada.postcanadaggb.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:38:25,881 - ERROR - Failed to resolve meinesparkasse.com using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 14:38:26,323 - ERROR - SSL Error for pub-ecea1eb139834ca592be405c2eb7f228.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:38:27,302 - ERROR - Error checking SSL for bradesco.prime-leveldigital.com: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:38:27,659 - ERROR - Error checking SSL for spotify.information-premium.com: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:38:28,240 - ERROR - Error checking SSL for meinesparkasse.com: [Errno 11001] getaddrinfo failed
+2025-01-04 14:39:01,277 - ERROR - Error checking SSL for usps.com-trackjbe.live: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:39:02,433 - ERROR - Error checking SSL for pttur-gyv.vip: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:39:02,433 - ERROR - Error checking SSL for vdacom-pts.cyou: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:39:02,450 - ERROR - Failed to get MX/NS records using DNS API: HTTPSConnectionPool(host='dns.google', port=443): Max retries exceeded with url: /resolve?name=attgjeoklmail.weeblysite.com&type=MX (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)')))
+2025-01-04 14:39:03,297 - WARNING - No creation date found for qrco.de
+2025-01-04 14:39:03,297 - WARNING - No creation date found for qrco.de
+2025-01-04 14:39:03,298 - WARNING - No expiration date found for qrco.de
+2025-01-04 14:39:03,299 - WARNING - No expiration date found for qrco.de
+2025-01-04 14:39:03,492 - ERROR - SSL Error for pub-aca26f7647f545f392afbeecdcb1ff46.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:39:05,467 - WARNING - No expiration date found for olive488548.studio.site
+2025-01-04 14:39:05,813 - ERROR - SSL Error for pub-4bf302a1b3af4892a9d2466a4a693dbd.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:39:06,196 - WARNING - No creation date found for cryptoexodus.online
+2025-01-04 14:39:06,196 - WARNING - No expiration date found for cryptoexodus.online
+2025-01-04 14:39:07,267 - WARNING - No creation date found for vb-ezk.pages.dev
+2025-01-04 14:39:07,267 - WARNING - No expiration date found for vb-ezk.pages.dev
+2025-01-04 14:39:07,382 - ERROR - WHOIS lookup failed for bretatie.firebaseapp.com: No match for "BRETATIE.FIREBASEAPP.COM".
+>>> Last update of whois database: 2025-01-04T07:38:56Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 14:39:07,412 - ERROR - WHOIS lookup failed for rioapzxoxoz.firebaseapp.com: No match for "RIOAPZXOXOZ.FIREBASEAPP.COM".
+>>> Last update of whois database: 2025-01-04T07:38:56Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 14:39:08,399 - WARNING - No creation date found for sistema-ungl-2024.web.app
+2025-01-04 14:39:08,400 - WARNING - No expiration date found for sistema-ungl-2024.web.app
+2025-01-04 14:39:08,900 - WARNING - No creation date found for 43.156.237.181
+2025-01-04 14:39:08,900 - WARNING - No expiration date found for 43.156.237.181
+2025-01-04 14:39:08,902 - WARNING - No HTTPS for 43.156.237.181
+2025-01-04 14:39:09,226 - ERROR - SSL Error for idolink.com: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:39:11,217 - ERROR - SSL Error for pichinchaing.webcindario.com: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 14:39:23,483 - ERROR - Error checking SSL for olx-pl.gymilos.lol: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:39:25,456 - ERROR - Error checking SSL for usps.com-trackzmz.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:39:27,258 - ERROR - Error checking SSL for cryptoexodus.online: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:39:35,013 - ERROR - Error checking SSL for correos.ss-kl.sbs: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:39:35,014 - ERROR - Error checking SSL for uspskwkmxc.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:39:41,965 - ERROR - Error checking SSL for postb-mdb.xyz: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 14:39:42,179 - ERROR - Failed to resolve crowdflower.com using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 14:39:43,244 - WARNING - No HTTPS for nassjo.se
+2025-01-04 14:39:43,367 - WARNING - No creation date found for decemsys.de
+2025-01-04 14:39:43,368 - WARNING - No expiration date found for decemsys.de
+2025-01-04 14:39:43,369 - WARNING - No HTTPS for decemsys.de
+2025-01-04 14:39:44,109 - WARNING - No HTTPS for slots.com
+2025-01-04 14:39:44,160 - WARNING - No HTTPS for pokerschoolonline.com
+2025-01-04 14:39:44,407 - WARNING - No HTTPS for devpia.com
+2025-01-04 14:39:44,420 - ERROR - Failed to resolve ktb.co.th using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 14:39:44,440 - WARNING - No HTTPS for buscarecetas.com.ar
+2025-01-04 14:39:44,510 - WARNING - No HTTPS for yc1000.net
+2025-01-04 14:39:44,527 - WARNING - No HTTPS for crowdflower.com
+2025-01-04 14:39:44,869 - WARNING - No HTTPS for yllas.fi
+2025-01-04 14:39:45,558 - WARNING - No creation date found for ktb.co.th
+2025-01-04 14:39:45,559 - WARNING - No expiration date found for ktb.co.th
+2025-01-04 14:39:45,559 - WARNING - No HTTPS for ktb.co.th
+2025-01-04 14:39:46,048 - WARNING - No HTTPS for pplp.org
+2025-01-04 14:39:46,050 - WARNING - No creation date found for winefront.com.au
+2025-01-04 14:39:46,052 - WARNING - No expiration date found for winefront.com.au
+2025-01-04 14:39:46,052 - WARNING - No HTTPS for winefront.com.au
+2025-01-04 14:39:46,157 - WARNING - No HTTPS for telkkarista.com
+2025-01-04 14:39:46,470 - WARNING - No HTTPS for fordbarn.com
+2025-01-04 14:39:46,775 - WARNING - No HTTPS for tmch.org.tw
+2025-01-04 14:39:46,777 - WARNING - No HTTPS for praise1065.com
+2025-01-04 14:39:47,013 - WARNING - No HTTPS for biodiversity.ru
+2025-01-04 14:39:48,126 - WARNING - No HTTPS for crestbook.com
+2025-01-04 14:39:48,423 - WARNING - No HTTPS for martindalecenter.com
+2025-01-04 14:39:48,492 - ERROR - Failed to resolve whgaming.com using socket: [Errno 11002] getaddrinfo failed
+2025-01-04 14:39:48,608 - WARNING - No creation date found for poesieinversi.it
+2025-01-04 14:39:48,608 - WARNING - No expiration date found for poesieinversi.it
+2025-01-04 14:39:48,609 - WARNING - No HTTPS for poesieinversi.it
+2025-01-04 14:39:49,235 - WARNING - No creation date found for bicycles.net.au
+2025-01-04 14:39:49,235 - WARNING - No expiration date found for bicycles.net.au
+2025-01-04 14:39:49,236 - WARNING - No HTTPS for bicycles.net.au
+2025-01-04 14:39:49,697 - ERROR - Error trying to connect to socket: closing socket - [Errno 11001] getaddrinfo failed
+2025-01-04 14:39:49,698 - WARNING - No creation date found for answers.travian.com.vn
+2025-01-04 14:39:49,698 - WARNING - No expiration date found for answers.travian.com.vn
+2025-01-04 14:39:49,699 - WARNING - No HTTPS for answers.travian.com.vn
+2025-01-04 14:39:50,248 - WARNING - No HTTPS for whgaming.com
+2025-01-04 14:39:50,435 - WARNING - No HTTPS for shop.whois.com
+2025-01-04 14:39:51,276 - WARNING - No HTTPS for mono-project.com
+2025-01-04 14:39:51,457 - WARNING - No HTTPS for schoolmusic.co.kr
+2025-01-04 14:39:51,719 - WARNING - No HTTPS for sewing-master.ru
+2025-01-04 14:39:52,038 - WARNING - No HTTPS for dsq-sds.org
+2025-01-04 14:39:52,561 - WARNING - No HTTPS for avocatparis.org
+2025-01-04 14:39:54,096 - ERROR - Error trying to connect to socket: closing socket - [Errno 11001] getaddrinfo failed
+2025-01-04 14:39:54,096 - WARNING - No creation date found for piticu.ro
+2025-01-04 14:39:54,098 - WARNING - No expiration date found for piticu.ro
+2025-01-04 14:39:54,098 - WARNING - No HTTPS for piticu.ro
+2025-01-04 14:39:54,300 - WARNING - No HTTPS for neilgaiman.com
+2025-01-04 14:39:54,512 - WARNING - No HTTPS for wearetennis.com
+2025-01-04 14:39:55,301 - WARNING - No HTTPS for emeraldqueen.com
+2025-01-04 14:39:55,485 - WARNING - No HTTPS for boathouserestaurants.ca
+2025-01-04 14:39:55,490 - WARNING - No HTTPS for hdsa.org
+2025-01-04 14:39:55,991 - WARNING - No HTTPS for njsp.org
+2025-01-04 14:39:56,289 - WARNING - No HTTPS for g3voip.com
+2025-01-04 14:39:56,674 - WARNING - No HTTPS for richbarbellfitness.com
+2025-01-04 14:39:57,257 - WARNING - No HTTPS for clevelandchildrensmuseum.org
+2025-01-04 14:39:57,259 - WARNING - No HTTPS for bet365.it
+2025-01-04 14:39:57,262 - WARNING - No HTTPS for arteshopbilbao.com
+2025-01-04 14:39:57,668 - ERROR - WHOIS lookup failed for ria.ee: unsupported operand type(s) for -: 'datetime.datetime' and 'str'
+2025-01-04 14:39:57,669 - WARNING - No HTTPS for ria.ee
+2025-01-04 14:39:57,823 - WARNING - No HTTPS for e-lites.co.uk
+2025-01-04 14:39:57,842 - ERROR - Failed to resolve qushiyun.com using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 14:39:58,364 - WARNING - No HTTPS for chevaux-barbes.com
+2025-01-04 14:39:58,830 - WARNING - No HTTPS for dirtgame.com
+2025-01-04 14:39:58,965 - WARNING - No HTTPS for harrietbeecherstowecenter.org
+2025-01-04 14:39:59,106 - ERROR - Failed to resolve dine.to using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 14:39:59,117 - WARNING - No HTTPS for carmag.co.za
+2025-01-04 14:39:59,253 - ERROR - Failed to resolve rekihaku.ac.jp using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 14:39:59,567 - WARNING - No HTTPS for webmineral.com
+2025-01-04 14:39:59,612 - WARNING - No HTTPS for grolsch.com
+2025-01-04 14:39:59,662 - WARNING - No HTTPS for utahhumane.org
+2025-01-04 14:39:59,700 - WARNING - No HTTPS for triatlonchannel.com
+2025-01-04 14:39:59,832 - WARNING - No creation date found for rekihaku.ac.jp
+2025-01-04 14:39:59,833 - WARNING - No expiration date found for rekihaku.ac.jp
+2025-01-04 14:39:59,833 - WARNING - No HTTPS for rekihaku.ac.jp
+2025-01-04 14:40:00,456 - WARNING - No HTTPS for ozarkmountainrailcar.com
+2025-01-04 14:40:01,109 - WARNING - No HTTPS for estrellasoap.com
+2025-01-04 14:40:01,350 - WARNING - No HTTPS for qushiyun.com
+2025-01-04 14:40:01,619 - WARNING - No HTTPS for curtisyoungblood.com
+2025-01-04 14:40:01,662 - WARNING - No HTTPS for hirezstudios.com
+2025-01-04 14:40:01,800 - WARNING - No HTTPS for lazoo.org
+2025-01-04 14:40:01,901 - WARNING - No HTTPS for minecraftes.com
+2025-01-04 14:40:02,480 - WARNING - No HTTPS for automotiveforums.com
+2025-01-04 14:40:02,874 - ERROR - WHOIS lookup failed for dev-mex.com: No match for "DEV-MEX.COM".
+>>> Last update of whois database: 2025-01-04T07:39:41Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 14:40:02,878 - WARNING - No HTTPS for dev-mex.com
+2025-01-04 14:40:02,886 - WARNING - No HTTPS for speedline.dk
+2025-01-04 14:40:03,423 - WARNING - No HTTPS for aleve.com
+2025-01-04 14:40:03,424 - WARNING - No HTTPS for fusz.com
+2025-01-04 14:40:03,548 - ERROR - Error trying to connect to socket: closing socket - [Errno 11001] getaddrinfo failed
+2025-01-04 14:40:03,549 - WARNING - No creation date found for socom.mil
+2025-01-04 14:40:03,550 - WARNING - No expiration date found for socom.mil
+2025-01-04 14:40:03,550 - WARNING - No HTTPS for socom.mil
+2025-01-04 14:40:03,989 - ERROR - Error trying to connect to socket: closing socket - [WinError 10061] No connection could be made because the target machine actively refused it
+2025-01-04 14:40:03,990 - WARNING - No creation date found for dine.to
+2025-01-04 14:40:03,992 - WARNING - No expiration date found for dine.to
+2025-01-04 14:40:03,993 - WARNING - No HTTPS for dine.to
+2025-01-04 14:40:04,146 - WARNING - No HTTPS for microscopy-analysis.com
+2025-01-04 14:40:04,308 - WARNING - No HTTPS for oba.org.br
+2025-01-04 14:40:04,494 - WARNING - No HTTPS for gay-test.com
+2025-01-04 14:40:05,009 - WARNING - No HTTPS for thebodyshop.co.uk
+2025-01-04 14:40:05,012 - WARNING - No HTTPS for robinhoodbingo.com
+2025-01-04 14:40:05,269 - WARNING - No expiration date found for motorhuis.nl
+2025-01-04 14:40:05,270 - WARNING - No HTTPS for motorhuis.nl
+2025-01-04 14:40:05,325 - WARNING - No HTTPS for gesundehunde.com
+2025-01-04 14:40:06,039 - WARNING - No HTTPS for mitsuoka-motor.com
+2025-01-04 14:40:06,374 - WARNING - No HTTPS for orkin.com
+2025-01-04 14:40:06,606 - ERROR - WHOIS lookup failed for santafe.edu.ar: El dominio no se encuentra registrado en NIC Argentina
+2025-01-04 14:40:06,607 - WARNING - No HTTPS for santafe.edu.ar
+2025-01-04 14:40:07,107 - WARNING - No HTTPS for thetreatmenthelpline.com
+2025-01-04 14:40:07,109 - WARNING - No HTTPS for kickinghorseresort.com
+2025-01-04 14:40:07,285 - WARNING - No expiration date found for gro.gov.uk
+2025-01-04 14:40:07,285 - WARNING - No HTTPS for gro.gov.uk
+2025-01-04 14:40:07,397 - WARNING - No creation date found for thermoscientific.es
+2025-01-04 14:40:07,397 - WARNING - No expiration date found for thermoscientific.es
+2025-01-04 14:40:07,398 - WARNING - No HTTPS for thermoscientific.es
+2025-01-04 14:40:07,451 - WARNING - No HTTPS for aide-handicap.info
+2025-01-04 14:40:07,539 - WARNING - No HTTPS for us-funerals.com
+2025-01-04 14:40:08,075 - WARNING - No HTTPS for elhistoriador.com.ar
+2025-01-04 14:40:08,229 - WARNING - No creation date found for wiki-dofus.eu
+2025-01-04 14:40:08,233 - WARNING - No expiration date found for wiki-dofus.eu
+2025-01-04 14:40:08,233 - WARNING - No HTTPS for wiki-dofus.eu
+2025-01-04 14:40:08,342 - WARNING - No HTTPS for ncsml.org
+2025-01-04 14:40:08,498 - ERROR - Failed to get MX/NS records using DNS API: HTTPSConnectionPool(host='dns.google', port=443): Read timed out. (read timeout=5)
+2025-01-04 14:40:08,649 - WARNING - No HTTPS for tokyo42195.org
+2025-01-04 14:40:09,131 - WARNING - No HTTPS for orionleathercompany.com
+2025-01-04 14:40:09,271 - WARNING - No HTTPS for neons.org
+2025-01-04 14:40:09,765 - WARNING - No HTTPS for microbeworld.org
+2025-01-04 14:40:09,768 - WARNING - No HTTPS for trafficschoolonline.com
+2025-01-04 14:40:09,878 - WARNING - No creation date found for dolr.nic.in
+2025-01-04 14:40:09,879 - WARNING - No expiration date found for dolr.nic.in
+2025-01-04 14:40:09,879 - WARNING - No HTTPS for dolr.nic.in
+2025-01-04 14:40:10,199 - WARNING - No HTTPS for bionetonline.org
+2025-01-04 14:40:10,390 - WARNING - No HTTPS for nctsn.org
+2025-01-04 14:40:10,394 - WARNING - No HTTPS for whichlotto.com
+2025-01-04 14:40:10,484 - WARNING - No HTTPS for parsippanylibrary.org
+2025-01-04 14:40:10,532 - ERROR - WHOIS lookup failed for klementine.net: No match for "KLEMENTINE.NET".
+>>> Last update of whois database: 2025-01-04T07:39:57Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 14:40:10,540 - WARNING - No HTTPS for klementine.net
+2025-01-04 14:40:10,648 - WARNING - No HTTPS for iphone-bulgaria.com
+2025-01-04 14:40:10,774 - WARNING - No HTTPS for local.amazon.com
+2025-01-04 14:40:11,671 - WARNING - No HTTPS for i-atumen.tumblr.com
+2025-01-04 14:40:12,022 - WARNING - No HTTPS for fbresearch.org
+2025-01-04 14:40:12,038 - INFO - Removed 3 constant features
+2025-01-04 14:40:12,041 - INFO - Removed 3 highly correlated features
+2025-01-04 14:40:12,045 - INFO - Scaled 15 numerical features using RobustScaler
+2025-01-04 14:40:12,047 - INFO - Final dataset shape: (200, 21)
+2025-01-04 14:40:12,047 - INFO - 
+Splitting data into train, validation, and test sets...
+2025-01-04 14:40:12,048 - INFO - Number of splits: 10
+2025-01-04 14:40:12,050 - INFO - 
+Processing split 1/10
+2025-01-04 14:40:12,051 - INFO - Split 1 sizes:
+2025-01-04 14:40:12,051 - INFO - Training set: 132 samples (66.0%)
+2025-01-04 14:40:12,052 - INFO -   - Class distribution: [66 66]
+2025-01-04 14:40:12,052 - INFO -   - Number of unique domains: 127
+2025-01-04 14:40:12,052 - INFO - Validation set: 48 samples (24.0%)
+2025-01-04 14:40:12,053 - INFO -   - Class distribution: [26 22]
+2025-01-04 14:40:12,053 - INFO -   - Number of unique domains: 44
+2025-01-04 14:40:12,053 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:40:12,054 - INFO -   - Class distribution: [ 8 12]
+2025-01-04 14:40:12,055 - INFO -   - Number of unique domains: 15
+2025-01-04 14:40:12,056 - INFO - 
+Processing split 2/10
+2025-01-04 14:40:12,057 - INFO - Split 2 sizes:
+2025-01-04 14:40:12,058 - INFO - Training set: 136 samples (68.0%)
+2025-01-04 14:40:12,058 - INFO -   - Class distribution: [70 66]
+2025-01-04 14:40:12,058 - INFO -   - Number of unique domains: 128
+2025-01-04 14:40:12,059 - INFO - Validation set: 44 samples (22.0%)
+2025-01-04 14:40:12,059 - INFO -   - Class distribution: [23 21]
+2025-01-04 14:40:12,060 - INFO -   - Number of unique domains: 42
+2025-01-04 14:40:12,060 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:40:12,061 - INFO -   - Class distribution: [ 7 13]
+2025-01-04 14:40:12,061 - INFO -   - Number of unique domains: 15
+2025-01-04 14:40:12,061 - INFO - 
+Processing split 3/10
+2025-01-04 14:40:12,062 - INFO - Split 3 sizes:
+2025-01-04 14:40:12,062 - INFO - Training set: 136 samples (68.0%)
+2025-01-04 14:40:12,063 - INFO -   - Class distribution: [66 70]
+2025-01-04 14:40:12,064 - INFO -   - Number of unique domains: 126
+2025-01-04 14:40:12,064 - INFO - Validation set: 44 samples (22.0%)
+2025-01-04 14:40:12,064 - INFO -   - Class distribution: [22 22]
+2025-01-04 14:40:12,065 - INFO -   - Number of unique domains: 44
+2025-01-04 14:40:12,065 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:40:12,065 - INFO -   - Class distribution: [12  8]
+2025-01-04 14:40:12,066 - INFO -   - Number of unique domains: 18
+2025-01-04 14:40:12,066 - INFO - 
+Processing split 4/10
+2025-01-04 14:40:12,067 - INFO - Split 4 sizes:
+2025-01-04 14:40:12,067 - INFO - Training set: 137 samples (68.5%)
+2025-01-04 14:40:12,068 - INFO -   - Class distribution: [70 67]
+2025-01-04 14:40:12,068 - INFO -   - Number of unique domains: 125
+2025-01-04 14:40:12,068 - INFO - Validation set: 43 samples (21.5%)
+2025-01-04 14:40:12,069 - INFO -   - Class distribution: [20 23]
+2025-01-04 14:40:12,069 - INFO -   - Number of unique domains: 43
+2025-01-04 14:40:12,070 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:40:12,071 - INFO -   - Class distribution: [10 10]
+2025-01-04 14:40:12,071 - INFO -   - Number of unique domains: 19
+2025-01-04 14:40:12,072 - INFO - 
+Processing split 5/10
+2025-01-04 14:40:12,075 - INFO - Split 5 sizes:
+2025-01-04 14:40:12,075 - INFO - Training set: 138 samples (69.0%)
+2025-01-04 14:40:12,075 - INFO -   - Class distribution: [69 69]
+2025-01-04 14:40:12,075 - INFO -   - Number of unique domains: 130
+2025-01-04 14:40:12,076 - INFO - Validation set: 42 samples (21.0%)
+2025-01-04 14:40:12,077 - INFO -   - Class distribution: [22 20]
+2025-01-04 14:40:12,077 - INFO -   - Number of unique domains: 40
+2025-01-04 14:40:12,077 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:40:12,078 - INFO -   - Class distribution: [ 9 11]
+2025-01-04 14:40:12,078 - INFO -   - Number of unique domains: 19
+2025-01-04 14:40:12,079 - INFO - 
+Processing split 6/10
+2025-01-04 14:40:12,079 - INFO - Split 6 sizes:
+2025-01-04 14:40:12,080 - INFO - Training set: 134 samples (67.0%)
+2025-01-04 14:40:12,080 - INFO -   - Class distribution: [66 68]
+2025-01-04 14:40:12,081 - INFO -   - Number of unique domains: 123
+2025-01-04 14:40:12,081 - INFO - Validation set: 46 samples (23.0%)
+2025-01-04 14:40:12,082 - INFO -   - Class distribution: [23 23]
+2025-01-04 14:40:12,082 - INFO -   - Number of unique domains: 46
+2025-01-04 14:40:12,082 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:40:12,083 - INFO -   - Class distribution: [11  9]
+2025-01-04 14:40:12,083 - INFO -   - Number of unique domains: 20
+2025-01-04 14:40:12,083 - INFO - 
+Processing split 7/10
+2025-01-04 14:40:12,084 - INFO - Split 7 sizes:
+2025-01-04 14:40:12,085 - INFO - Training set: 136 samples (68.0%)
+2025-01-04 14:40:12,085 - INFO -   - Class distribution: [62 74]
+2025-01-04 14:40:12,086 - INFO -   - Number of unique domains: 128
+2025-01-04 14:40:12,086 - INFO - Validation set: 44 samples (22.0%)
+2025-01-04 14:40:12,086 - INFO -   - Class distribution: [23 21]
+2025-01-04 14:40:12,087 - INFO -   - Number of unique domains: 42
+2025-01-04 14:40:12,087 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:40:12,088 - INFO -   - Class distribution: [15  5]
+2025-01-04 14:40:12,088 - INFO -   - Number of unique domains: 20
+2025-01-04 14:40:12,089 - INFO - 
+Processing split 8/10
+2025-01-04 14:40:12,090 - INFO - Split 8 sizes:
+2025-01-04 14:40:12,090 - INFO - Training set: 136 samples (68.0%)
+2025-01-04 14:40:12,091 - INFO -   - Class distribution: [67 69]
+2025-01-04 14:40:12,091 - INFO -   - Number of unique domains: 125
+2025-01-04 14:40:12,092 - INFO - Validation set: 44 samples (22.0%)
+2025-01-04 14:40:12,092 - INFO -   - Class distribution: [23 21]
+2025-01-04 14:40:12,092 - INFO -   - Number of unique domains: 44
+2025-01-04 14:40:12,093 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:40:12,093 - INFO -   - Class distribution: [10 10]
+2025-01-04 14:40:12,094 - INFO -   - Number of unique domains: 20
+2025-01-04 14:40:12,095 - INFO - 
+Processing split 9/10
+2025-01-04 14:40:12,096 - INFO - Split 9 sizes:
+2025-01-04 14:40:12,096 - INFO - Training set: 132 samples (66.0%)
+2025-01-04 14:40:12,096 - INFO -   - Class distribution: [64 68]
+2025-01-04 14:40:12,096 - INFO -   - Number of unique domains: 125
+2025-01-04 14:40:12,096 - INFO - Validation set: 48 samples (24.0%)
+2025-01-04 14:40:12,096 - INFO -   - Class distribution: [25 23]
+2025-01-04 14:40:12,098 - INFO -   - Number of unique domains: 46
+2025-01-04 14:40:12,098 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:40:12,098 - INFO -   - Class distribution: [11  9]
+2025-01-04 14:40:12,098 - INFO -   - Number of unique domains: 20
+2025-01-04 14:40:12,098 - INFO - 
+Processing split 10/10
+2025-01-04 14:40:12,100 - INFO - Split 10 sizes:
+2025-01-04 14:40:12,100 - INFO - Training set: 136 samples (68.0%)
+2025-01-04 14:40:12,100 - INFO -   - Class distribution: [65 71]
+2025-01-04 14:40:12,101 - INFO -   - Number of unique domains: 127
+2025-01-04 14:40:12,101 - INFO - Validation set: 44 samples (22.0%)
+2025-01-04 14:40:12,102 - INFO -   - Class distribution: [28 16]
+2025-01-04 14:40:12,102 - INFO -   - Number of unique domains: 43
+2025-01-04 14:40:12,102 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 14:40:12,102 - INFO -   - Class distribution: [ 7 13]
+2025-01-04 14:40:12,104 - INFO -   - Number of unique domains: 20
+2025-01-04 14:40:12,104 - INFO - 
+Data splitting completed in 0.06 seconds
+2025-01-04 14:40:12,105 - INFO - 
+Training model for split 1/10
+2025-01-04 14:44:09,711 - INFO - 
+Best parameters found:
+2025-01-04 14:44:09,712 - INFO - {'ccp_alpha': 0.001, 'class_weight': 'balanced', 'max_depth': 6, 'max_features': 'sqrt', 'max_samples': 0.7, 'min_samples_leaf': 3, 'min_samples_split': 8, 'n_estimators': 200}
+2025-01-04 14:44:09,713 - INFO - 
+Best cross-validation scores:
+2025-01-04 14:44:09,713 - INFO - accuracy: 0.9926
+2025-01-04 14:44:09,714 - INFO - precision: 1.0000
+2025-01-04 14:44:09,714 - INFO - recall: 0.9846
+2025-01-04 14:44:09,715 - INFO - f1: 0.9920
+2025-01-04 14:44:09,715 - INFO - roc_auc: 1.0000
+2025-01-04 14:44:11,048 - INFO - Model training completed in 238.94 seconds
+2025-01-04 14:44:11,173 - INFO - 
+Validation Set Set Performance:
+2025-01-04 14:44:11,177 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        26
+           1       1.00      1.00      1.00        22
+
+    accuracy                           1.00        48
+   macro avg       1.00      1.00      1.00        48
+weighted avg       1.00      1.00      1.00        48
+
+2025-01-04 14:44:11,178 - INFO - 
+Detailed Validation Set Set Metrics:
+2025-01-04 14:44:11,178 - INFO - Brier Score: 0.0073
+2025-01-04 14:44:11,208 - INFO - Log Loss: 0.0811
+2025-01-04 14:44:11,208 - INFO - Optimal Threshold: 0.7399
+2025-01-04 14:44:11,348 - INFO - 
+Test Set Set Performance:
+2025-01-04 14:44:11,351 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00         8
+           1       1.00      1.00      1.00        12
+
+    accuracy                           1.00        20
+   macro avg       1.00      1.00      1.00        20
+weighted avg       1.00      1.00      1.00        20
+
+2025-01-04 14:44:11,352 - INFO - 
+Detailed Test Set Set Metrics:
+2025-01-04 14:44:11,353 - INFO - Brier Score: 0.0053
+2025-01-04 14:44:11,355 - INFO - Log Loss: 0.0736
+2025-01-04 14:44:11,355 - INFO - Optimal Threshold: 0.8869
+2025-01-04 14:44:11,356 - INFO - Model evaluation completed in 0.31 seconds
+2025-01-04 14:44:11,356 - ERROR - Error in process_and_train: 'seaborn' is not a valid package style, path of style file, URL of style file, or library style name (library styles are listed in `style.available`)
+2025-01-04 14:44:11,418 - ERROR - Traceback (most recent call last):
+  File "D:\2024\code\sem5\kamin\final\prototype-phising-detection\venv\Lib\site-packages\matplotlib\style\core.py", line 129, in use
+    style = _rc_params_in_file(style)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\2024\code\sem5\kamin\final\prototype-phising-detection\venv\Lib\site-packages\matplotlib\__init__.py", line 903, in _rc_params_in_file
+    with _open_file_or_url(fname) as fd:
+  File "C:\Users\ialex\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "D:\2024\code\sem5\kamin\final\prototype-phising-detection\venv\Lib\site-packages\matplotlib\__init__.py", line 880, in _open_file_or_url
+    with open(fname, encoding='utf-8') as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'seaborn'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\2024\code\sem5\kamin\final\prototype-phising-detection\phishing_detection.py", line 783, in process_and_train
+    visualizer = ModelVisualizer(output_dir=f'plots/split_{split_idx + 1}')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\2024\code\sem5\kamin\final\prototype-phising-detection\phishing_detection.py", line 868, in __init__
+    plt.style.use('seaborn')
+  File "D:\2024\code\sem5\kamin\final\prototype-phising-detection\venv\Lib\site-packages\matplotlib\style\core.py", line 131, in use
+    raise OSError(
+OSError: 'seaborn' is not a valid package style, path of style file, URL of style file, or library style name (library styles are listed in `style.available`)
+
+2025-01-04 14:44:11,421 - ERROR - Error in main function: 'seaborn' is not a valid package style, path of style file, URL of style file, or library style name (library styles are listed in `style.available`)
+2025-01-04 14:44:11,422 - ERROR - Traceback (most recent call last):
+  File "D:\2024\code\sem5\kamin\final\prototype-phising-detection\venv\Lib\site-packages\matplotlib\style\core.py", line 129, in use
+    style = _rc_params_in_file(style)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\2024\code\sem5\kamin\final\prototype-phising-detection\venv\Lib\site-packages\matplotlib\__init__.py", line 903, in _rc_params_in_file
+    with _open_file_or_url(fname) as fd:
+  File "C:\Users\ialex\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "D:\2024\code\sem5\kamin\final\prototype-phising-detection\venv\Lib\site-packages\matplotlib\__init__.py", line 880, in _open_file_or_url
+    with open(fname, encoding='utf-8') as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'seaborn'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\2024\code\sem5\kamin\final\prototype-phising-detection\phishing_detection.py", line 991, in main
+    best_models, best_scores = process_and_train(phishing_file, legitimate_file, "cross_validation", sample_size)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\2024\code\sem5\kamin\final\prototype-phising-detection\phishing_detection.py", line 783, in process_and_train
+    visualizer = ModelVisualizer(output_dir=f'plots/split_{split_idx + 1}')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\2024\code\sem5\kamin\final\prototype-phising-detection\phishing_detection.py", line 868, in __init__
+    plt.style.use('seaborn')
+  File "D:\2024\code\sem5\kamin\final\prototype-phising-detection\venv\Lib\site-packages\matplotlib\style\core.py", line 131, in use
+    raise OSError(
+OSError: 'seaborn' is not a valid package style, path of style file, URL of style file, or library style name (library styles are listed in `style.available`)
+
