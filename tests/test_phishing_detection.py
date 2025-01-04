@@ -11,6 +11,7 @@ from sklearn.model_selection import learning_curve, train_test_split
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 import time
+import logging
 
 # Add parent directory to path to import phishing_detection
 sys.path.append(str(Path(__file__).parent.parent))
@@ -325,11 +326,74 @@ class TestPhishingDetection(unittest.TestCase):
         prediction_time = time.time() - start_time
         
         # Check prediction time is reasonable
-        self.assertLess(prediction_time, 5)  # Should complete within 5 seconds
+        self.assertLess(prediction_time, 5)  # Should predict within 5 seconds
         
         # Verify accuracy is reasonable
         accuracy = accuracy_score(y_test, predictions)
         self.assertGreater(accuracy, 0.5)  # Should be better than random guessing
+
+    def test_performance_100_samples(self):
+        """Test performance with exactly 100 samples for both processing and training"""
+        # Generate 100 test URLs (50 each for phishing and legitimate) with different domains
+        phishing_urls = [f'http://test-phishing{i}.com/page?id={i}' for i in range(50)]
+        legitimate_urls = [f'http://test-legitimate{i}.org/home?user={i}' for i in range(50)]
+        
+        # Create test files
+        phishing_path = self.test_dir / 'perf_test_phishing_100.txt'
+        legitimate_path = self.test_dir / 'perf_test_legitimate_100.txt'
+        
+        phishing_path.write_text('\n'.join(phishing_urls))
+        legitimate_path.write_text('\n'.join(legitimate_urls))
+        
+        # Test data processing performance
+        processing_start = time.time()
+        features_df = load_and_process_data(
+            str(phishing_path),
+            str(legitimate_path),
+            sample_size=100,
+            batch_size=25  # Process in smaller batches
+        )
+        processing_time = time.time() - processing_start
+        
+        # Log data processing metrics
+        logging.info("\nData Processing Performance (100 samples):")
+        logging.info(f"Total processing time: {processing_time:.2f} seconds")
+        logging.info(f"Average time per URL: {processing_time/100:.4f} seconds")
+        logging.info(f"Number of features: {len(features_df.columns) - 2}")  # Excluding label and url columns
+        
+        # Prepare data for model training
+        X_train, X_val, X_test, y_train, y_val, y_test, feature_names = prepare_data_splits(features_df)
+        
+        # Test model training performance
+        training_start = time.time()
+        base_model, calibrated_model = tune_random_forest(X_train, y_train)
+        training_time = time.time() - training_start
+        
+        # Make predictions for timing
+        prediction_start = time.time()
+        y_train_pred = calibrated_model.predict(X_train)  # Use training set for prediction test
+        prediction_time = time.time() - prediction_start
+        
+        # Calculate model performance metrics
+        train_accuracy = accuracy_score(y_train, y_train_pred)
+        
+        # Log model training metrics
+        logging.info("\nModel Training Performance (100 samples):")
+        logging.info(f"Total training time: {training_time:.2f} seconds")
+        logging.info(f"Prediction time: {prediction_time:.4f} seconds")
+        logging.info(f"Training accuracy: {train_accuracy:.4f}")
+        
+        # Performance assertions
+        self.assertLess(processing_time, 30)  # Should process 100 URLs within 30 seconds
+        self.assertLess(training_time, 60)    # Should train model within 60 seconds
+        self.assertLess(prediction_time, 1)   # Should predict within 1 second
+        self.assertGreater(train_accuracy, 0.5) # Should be better than random guessing
+        
+        # Data quality assertions
+        self.assertGreaterEqual(len(features_df), 90)  # Allow for some failed feature extractions
+        self.assertLess(len(features_df), 101)  # But shouldn't have more than input
+        self.assertGreater(len(feature_names), 0)
+        self.assertTrue(all(col in features_df.columns for col in ['url', 'label']))
 
     @classmethod
     def tearDownClass(cls):

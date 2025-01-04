@@ -244,7 +244,7 @@ def extract_domain(url):
     except:
         return None
 
-def load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=30000):
+def load_and_process_data(phishing_file_path: str, legitimate_file_path: str, sample_size: int = 100, batch_size: int = 50) -> pd.DataFrame:
     """
     Load and process both phishing and legitimate URL datasets with enhanced preprocessing
     """
@@ -414,12 +414,12 @@ def tune_random_forest(X_train, y_train):
     
     # Define parameter grid with regularization parameters
     param_grid = {
-        'n_estimators': [100, 200],  # Increased for larger dataset
-        'max_depth': [None, 20, 30],  # Increased depth options
-        'min_samples_split': [2, 5, 10],
-        'min_samples_leaf': [1, 2, 4],
-        'max_features': ['sqrt', 'log2'],
-        'max_samples': [0.8, 1.0],  # Bootstrap sample size
+        'n_estimators': [50, 100],
+        'max_depth': [None, 5, 10],
+        'min_samples_split': [2, 3],
+        'min_samples_leaf': [1, 2],
+        'max_features': ['sqrt'],
+        'max_samples': [0.8],  # Bootstrap sample size
         'class_weight': ['balanced'],
         'ccp_alpha': [0.0, 0.01]  # Pruning parameter
     }
@@ -428,7 +428,7 @@ def tune_random_forest(X_train, y_train):
     base_clf = RandomForestClassifier(random_state=42, n_jobs=-1)
     
     # Use StratifiedKFold with shuffling for better cross-validation
-    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
     
     # Initialize GridSearchCV with multiple scoring metrics
     grid_search = GridSearchCV(
@@ -466,10 +466,9 @@ def tune_random_forest(X_train, y_train):
     
     # Calibrate probabilities using the best model
     calibrated_model = CalibratedClassifierCV(
-        RandomForestClassifier(**grid_search.best_params_, random_state=42, n_jobs=-1), 
+        RandomForestClassifier(**grid_search.best_params_, random_state=42), 
         method='sigmoid',
-        cv=5,
-        n_jobs=-1
+        cv=3  # Reduced CV folds for smaller dataset
     )
     calibrated_model.fit(X_train, y_train)
     
@@ -489,8 +488,8 @@ class ModelVisualizer:
         logging.info("\nGenerating learning curve plot...")
         
         # Adjust train sizes for larger dataset
-        train_sizes = np.linspace(0.1, 1.0, 10)  # More points for smoother curve
-        cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+        train_sizes = np.linspace(0.2, 1.0, 3)  # Fewer points for learning curve
+        cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
         
         plt.figure(figsize=(12, 8))  # Larger figure for better visibility
         train_sizes, train_scores, val_scores = learning_curve(
@@ -646,7 +645,7 @@ def main():
         
         # Load and process data
         logging.info("Starting phishing URL detection model training...")
-        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=30000)
+        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=100)
         
         # Split the data
         logging.info("\nSplitting data into train, validation, and test sets...")
