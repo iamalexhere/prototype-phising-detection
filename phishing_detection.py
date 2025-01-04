@@ -411,176 +411,134 @@ def tune_random_forest(X_train, y_train):
     Perform hyperparameter tuning for Random Forest using GridSearchCV with enhanced cross-validation
     and regularization parameters. Returns both the base model and calibrated model.
     """
-    logging.info("Starting hyperparameter tuning for Random Forest...")
-    
-    # Define parameter grid with regularization parameters
-    param_grid = {
-        'n_estimators': [50, 100],
-        'max_depth': [None, 5, 10],
-        'min_samples_split': [2, 3],
-        'min_samples_leaf': [1, 2],
-        'max_features': ['sqrt'],
-        'max_samples': [0.8],  # Bootstrap sample size
-        'class_weight': ['balanced'],
-        'ccp_alpha': [0.0, 0.01]  # Pruning parameter
+    # Define feature groups and their weights
+    feature_groups = {
+        'url': ['url_length', 'domain_length', 'has_ip', 'has_at_symbol', 'has_dash', 'has_multiple_subdomains'],
+        'dns': ['has_a_record', 'num_a_records', 'has_mx_record', 'num_mx_records', 'has_ns_record', 'num_ns_records'],
+        'ssl': ['is_https', 'ssl_days_valid', 'ssl_is_valid']
     }
     
-    # Initialize base classifier with n_jobs for parallel processing
-    base_clf = RandomForestClassifier(random_state=42, n_jobs=-1)
+    feature_weights = {
+        'url': 0.5,    # Reduce URL feature dominance
+        'dns': 2.0,    # Increase DNS feature importance
+        'ssl': 1.5     # Moderate increase for SSL features
+    }
     
-    # Use StratifiedKFold with shuffling for better cross-validation
+    # Apply feature weights to the training data
+    X_train_weighted = X_train.copy()
+    for group, features in feature_groups.items():
+        weight = feature_weights[group]
+        for feature in features:
+            if feature in X_train.columns:
+                X_train_weighted[feature] *= weight
+
+    # Define parameter grid with enhanced regularization
+    param_grid = {
+        'n_estimators': [200],  # Increased from 50
+        'max_depth': [8, 10, None],  # Added specific depth limits
+        'min_samples_split': [10],  # Increased from 2
+        'min_samples_leaf': [4],  # Increased from 1
+        'max_features': ['sqrt', 'log2'],
+        'max_samples': [0.7],  # Use 70% of samples for each tree
+        'class_weight': ['balanced'],
+        'ccp_alpha': [0.001, 0.01]  # Add cost-complexity pruning
+    }
+
+    # Initialize base model
+    base_model = RandomForestClassifier(
+        random_state=42,
+        n_jobs=-1,
+        oob_score=True,  # Enable out-of-bag score
+        bootstrap=True
+    )
+
+    # Initialize cross-validation
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-    
+
     # Initialize GridSearchCV with multiple scoring metrics
+    scoring = {
+        'accuracy': 'accuracy',
+        'precision': 'precision_weighted',
+        'recall': 'recall_weighted',
+        'f1': 'f1_weighted',
+        'roc_auc': 'roc_auc'
+    }
+
     grid_search = GridSearchCV(
-        estimator=base_clf,
+        estimator=base_model,
         param_grid=param_grid,
         cv=cv,
-        scoring={
-            'accuracy': 'accuracy',
-            'precision': 'precision',
-            'recall': 'recall',
-            'f1': 'f1',
-            'roc_auc': 'roc_auc'
-        },
+        scoring=scoring,
         refit='f1',  # Use F1 score for selecting best model
         n_jobs=-1,
         verbose=1
     )
-    
+
     # Fit GridSearchCV
     logging.info("Fitting GridSearchCV...")
-    grid_search.fit(X_train, y_train)
-    
-    # Get best parameters and scores
+    grid_search.fit(X_train_weighted, y_train)
+
+    # Log best parameters and scores
     logging.info("\nBest parameters found:")
     logging.info(grid_search.best_params_)
-    logging.info("\nBest cross-validation scores:")
     
-    # Log all metric scores
-    for metric in ['accuracy', 'precision', 'recall', 'f1', 'roc_auc']:
+    logging.info("\nBest cross-validation scores:")
+    for metric in scoring.keys():
         score = grid_search.cv_results_[f'mean_test_{metric}'][grid_search.best_index_]
         logging.info(f"{metric}: {score:.4f}")
-    
-    # Get the best base model
-    best_base_model = grid_search.best_estimator_
-    
-    # Calibrate probabilities using the best model
+
+    # Get best model
+    best_model = grid_search.best_estimator_
+
+    # Calibrate probabilities using isotonic regression
     calibrated_model = CalibratedClassifierCV(
-        RandomForestClassifier(**grid_search.best_params_, random_state=42), 
-        method='sigmoid',
-        cv=5  # Reduced CV folds for smaller dataset
+        best_model,
+        cv='prefit',
+        method='isotonic'
     )
-    calibrated_model.fit(X_train, y_train)
-    
-    return best_base_model, calibrated_model
+    calibrated_model.fit(X_train_weighted, y_train)
 
-class ModelVisualizer:
-    """Class for visualizing model performance metrics"""
-    
-    def __init__(self, output_dir='plots'):
-        self.output_dir = output_dir
-        os.makedirs(output_dir, exist_ok=True)
-        
-    def plot_learning_curve(self, model, X, y):
-        """
-        Plot learning curve to visualize model's performance with varying training set sizes
-        """
-        logging.info("\nGenerating learning curve plot...")
-        
-        # Adjust train sizes for larger dataset
-        train_sizes = np.linspace(0.2, 1.0, 3)  # Fewer points for learning curve
-        cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-        
-        plt.figure(figsize=(12, 8))  # Larger figure for better visibility
-        train_sizes, train_scores, val_scores = learning_curve(
-            model, X, y,
-            train_sizes=train_sizes,
-            cv=cv,
-            n_jobs=-1,
-            scoring='f1'
-        )
-        
-        train_mean = np.mean(train_scores, axis=1)
-        train_std = np.std(train_scores, axis=1)
-        val_mean = np.mean(val_scores, axis=1)
-        val_std = np.std(val_scores, axis=1)
-        
-        plt.plot(train_sizes, train_mean, label='Training score', color='blue', marker='o')
-        plt.fill_between(train_sizes, train_mean - train_std, train_mean + train_std, alpha=0.15, color='blue')
-        plt.plot(train_sizes, val_mean, label='Cross-validation score', color='green', marker='o')
-        plt.fill_between(train_sizes, val_mean - val_std, val_mean + val_std, alpha=0.15, color='green')
-        
-        plt.xlabel('Training Examples')
-        plt.ylabel('F1 Score')
-        plt.title('Learning Curve (500 Samples)')
-        plt.legend(loc='lower right')
-        plt.grid(True)
-        
-        plt.savefig(os.path.join(self.output_dir, 'learning_curve-500.png'))
-        plt.close()
+    return calibrated_model, best_model
 
-    def save_plot(self, plot_name):
-        """Save the current plot to the output directory"""
-        plt.tight_layout()
-        plt.savefig(os.path.join(self.output_dir, f"{plot_name}.png"), dpi=300, bbox_inches='tight')
-        plt.close('all')  # Properly close all figures
+def analyze_feature_importance(model, feature_names):
+    """
+    Analyze and log feature importance with group-level analysis.
+    """
+    # Get feature importances
+    importances = model.feature_importances_
+    indices = np.argsort(importances)[::-1]
 
-    def plot_confusion_matrix(self, y_true, y_pred, classes=['Legitimate', 'Phishing']):
-        """Generate and save confusion matrix plot"""
-        plt.figure(figsize=(8, 6))
-        cm = confusion_matrix(y_true, y_pred)
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
-                   xticklabels=classes, yticklabels=classes)
-        plt.title('Confusion Matrix (500 Samples)')
-        plt.ylabel('True Label')
-        plt.xlabel('Predicted Label')
-        self.save_plot('confusion_matrix-500')
+    # Create DataFrame for feature importance
+    importance_df = pd.DataFrame({
+        'feature': feature_names,
+        'importance': importances
+    })
+    importance_df = importance_df.sort_values('importance', ascending=False)
 
-    def plot_feature_importance(self, feature_names, importances):
-        """Generate and save feature importance plot"""
-        plt.figure(figsize=(12, 6))
-        importance_df = pd.DataFrame({
-            'feature': feature_names,
-            'importance': importances
-        }).sort_values('importance', ascending=True)
-        
-        sns.barplot(data=importance_df, y='feature', x='importance')
-        plt.title('Feature Importance (500 Samples)')
-        plt.xlabel('Importance Score')
-        plt.ylabel('Features')
-        self.save_plot('feature_importance-500')
+    # Define feature groups
+    feature_groups = {
+        'URL': ['url_length', 'domain_length', 'has_ip', 'has_at_symbol', 'has_dash', 'has_multiple_subdomains'],
+        'DNS': ['has_a_record', 'num_a_records', 'has_mx_record', 'num_mx_records', 'has_ns_record', 'num_ns_records'],
+        'SSL': ['is_https', 'ssl_days_valid', 'ssl_is_valid']
+    }
 
-    def plot_roc_curve(self, y_true, y_prob):
-        """Generate and save ROC curve plot"""
-        fpr, tpr, _ = roc_curve(y_true, y_prob)
-        roc_auc = auc(fpr, tpr)
-        
-        plt.figure(figsize=(8, 6))
-        plt.plot(fpr, tpr, color='darkorange', lw=2,
-                label=f'ROC curve (AUC = {roc_auc:.2f})')
-        plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
-        plt.xlim([0.0, 1.0])
-        plt.ylim([0.0, 1.05])
-        plt.xlabel('False Positive Rate')
-        plt.ylabel('True Positive Rate')
-        plt.title('Receiver Operating Characteristic (ROC) Curve (500 Samples)')
-        plt.legend(loc="lower right")
-        self.save_plot('roc_curve-500')
+    # Calculate group importance
+    group_importance = {}
+    for group, features in feature_groups.items():
+        group_importance[group] = importance_df[
+            importance_df['feature'].isin(features)
+        ]['importance'].sum()
 
-    def plot_precision_recall_curve(self, y_true, y_prob):
-        """Generate and save precision-recall curve plot"""
-        precision, recall, _ = precision_recall_curve(y_true, y_prob)
-        avg_precision = average_precision_score(y_true, y_prob)
-        
-        plt.figure(figsize=(8, 6))
-        plt.plot(recall, precision, color='darkorange', lw=2,
-                label=f'PR curve (AP = {avg_precision:.2f})')
-        plt.xlabel('Recall')
-        plt.ylabel('Precision')
-        plt.title('Precision-Recall Curve (500 Samples)')
-        plt.legend(loc="lower left")
-        self.save_plot('precision_recall_curve-500')
+    # Log feature importance by group
+    logging.info("\nFeature Importance by Group:")
+    for group, importance in sorted(group_importance.items(), key=lambda x: x[1], reverse=True):
+        logging.info(f"{group}: {importance:.4f}")
+
+    # Log individual feature importance
+    logging.info("\nFeature Importance:")
+    logging.info(importance_df.to_string(index=False))
+
+    return importance_df
 
 def evaluate_model(model, X, y, set_name=""):
     """
@@ -747,17 +705,6 @@ def normalize_features(features_list):
     
     return normalized_features
 
-def analyze_feature_importance(model, feature_names):
-    """Analyze and log feature importance."""
-    importances = model.feature_importances_
-    indices = np.argsort(importances)[::-1]
-    
-    logging.info("\nFeature Importance Analysis:")
-    for f in range(len(feature_names)):
-        logging.info(f"{feature_names[indices[f]]}: {importances[indices[f]]:.4f}")
-    
-    return dict(zip(feature_names, importances))
-
 def select_features(features_list, importance_dict, threshold=0.01):
     """Select features based on importance threshold."""
     selected_features = [name for name, importance in importance_dict.items() 
@@ -900,6 +847,134 @@ def train_model(X_train, y_train, X_val, y_val):
     
     return model
 
+class ModelVisualizer:
+    """Class for visualizing model performance metrics"""
+    
+    def __init__(self, output_dir='plots'):
+        self.output_dir = output_dir
+        os.makedirs(output_dir, exist_ok=True)
+        
+    def plot_learning_curve(self, model, X, y):
+        """
+        Plot learning curve to visualize model's performance with varying training set sizes
+        """
+        logging.info("\nGenerating learning curve plot...")
+        
+        # Adjust train sizes for larger dataset
+        train_sizes = np.linspace(0.2, 1.0, 5)  # More points for smoother curve
+        cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+        
+        plt.figure(figsize=(12, 8))
+        train_sizes, train_scores, val_scores = learning_curve(
+            model, X, y,
+            train_sizes=train_sizes,
+            cv=cv,
+            n_jobs=-1,
+            scoring='f1'
+        )
+        
+        train_mean = np.mean(train_scores, axis=1)
+        train_std = np.std(train_scores, axis=1)
+        val_mean = np.mean(val_scores, axis=1)
+        val_std = np.std(val_scores, axis=1)
+        
+        plt.plot(train_sizes, train_mean, label='Training score', color='blue', marker='o')
+        plt.fill_between(train_sizes, train_mean - train_std, train_mean + train_std, alpha=0.15, color='blue')
+        plt.plot(train_sizes, val_mean, label='Cross-validation score', color='green', marker='o')
+        plt.fill_between(train_sizes, val_mean - val_std, val_mean + val_std, alpha=0.15, color='green')
+        
+        plt.xlabel('Training Examples')
+        plt.ylabel('F1 Score')
+        plt.title('Learning Curve')
+        plt.legend(loc='lower right')
+        plt.grid(True)
+        
+        self.save_plot('learning_curve')
+        
+    def save_plot(self, plot_name):
+        """Save the current plot to the output directory"""
+        plt.tight_layout()
+        plt.savefig(os.path.join(self.output_dir, f"{plot_name}.png"), dpi=300, bbox_inches='tight')
+        plt.close('all')
+        
+    def plot_confusion_matrix(self, y_true, y_pred, classes=['Legitimate', 'Phishing']):
+        """Generate and save confusion matrix plot"""
+        plt.figure(figsize=(10, 8))
+        cm = confusion_matrix(y_true, y_pred)
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                   xticklabels=classes, yticklabels=classes)
+        plt.title('Confusion Matrix')
+        plt.ylabel('True Label')
+        plt.xlabel('Predicted Label')
+        self.save_plot('confusion_matrix')
+        
+    def plot_feature_importance(self, feature_names, importances, feature_groups=None):
+        """Generate and save feature importance plot with optional group coloring"""
+        plt.figure(figsize=(12, 8))
+        
+        # Create DataFrame for plotting
+        importance_df = pd.DataFrame({
+            'feature': feature_names,
+            'importance': importances
+        }).sort_values('importance', ascending=True)
+        
+        # Add group information if provided
+        if feature_groups:
+            group_colors = {'URL': 'skyblue', 'DNS': 'lightgreen', 'SSL': 'salmon'}
+            colors = []
+            for feature in importance_df['feature']:
+                for group, features in feature_groups.items():
+                    if feature in features:
+                        colors.append(group_colors[group])
+                        break
+                else:
+                    colors.append('gray')
+            
+            # Create bar plot with group colors
+            plt.barh(range(len(importance_df)), importance_df['importance'], color=colors)
+            
+            # Add legend
+            handles = [plt.Rectangle((0,0),1,1, color=color) for color in group_colors.values()]
+            plt.legend(handles, group_colors.keys(), loc='lower right')
+        else:
+            sns.barplot(data=importance_df, y='feature', x='importance')
+        
+        plt.title('Feature Importance')
+        plt.xlabel('Importance Score')
+        plt.ylabel('Features')
+        self.save_plot('feature_importance')
+        
+    def plot_roc_curve(self, y_true, y_prob):
+        """Generate and save ROC curve plot"""
+        fpr, tpr, _ = roc_curve(y_true, y_prob)
+        roc_auc = auc(fpr, tpr)
+        
+        plt.figure(figsize=(10, 8))
+        plt.plot(fpr, tpr, color='darkorange', lw=2,
+                label=f'ROC curve (AUC = {roc_auc:.3f})')
+        plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('Receiver Operating Characteristic (ROC) Curve')
+        plt.legend(loc="lower right")
+        self.save_plot('roc_curve')
+        
+    def plot_precision_recall_curve(self, y_true, y_prob):
+        """Generate and save precision-recall curve plot"""
+        precision, recall, _ = precision_recall_curve(y_true, y_prob)
+        avg_precision = average_precision_score(y_true, y_prob)
+        
+        plt.figure(figsize=(10, 8))
+        plt.plot(recall, precision, color='darkorange', lw=2,
+                label=f'PR curve (AP = {avg_precision:.3f})')
+        plt.xlabel('Recall')
+        plt.ylabel('Precision')
+        plt.title('Precision-Recall Curve')
+        plt.legend(loc="lower left")
+        self.save_plot('precision_recall_curve')
+
 def main():
     try:
         # Setup logging
@@ -921,7 +996,7 @@ def main():
         X_train, X_val, X_test, y_train, y_val, y_test, feature_names = prepare_data_splits(features_df)
         
         # Perform hyperparameter tuning with enhanced cross-validation
-        best_base_model, best_calibrated_model = tune_random_forest(X_train, y_train)
+        best_calibrated_model, best_base_model = tune_random_forest(X_train, y_train)
         
         # Generate learning curve plot
         logging.info("\nGenerating learning curve plot...")
