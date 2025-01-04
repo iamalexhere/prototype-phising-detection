@@ -1,0 +1,2084 @@
+2025-01-04 12:55:21,498 - INFO - Logging setup complete. Log file: logs\phishing_detection_20250104_125521.log
+2025-01-04 12:55:21,498 - INFO - Starting phishing detection model training with sample size: 100
+2025-01-04 12:55:21,498 - INFO - Loading and processing datasets...
+2025-01-04 12:55:21,816 - INFO - Processing 100 phishing and 100 legitimate URLs
+2025-01-04 12:55:22,830 - WARNING - No creation date found for hjsuhdmj83749oslkfmjduhba78394ijshdyena89d04nm1.pages.dev
+2025-01-04 12:55:22,831 - WARNING - No expiration date found for hjsuhdmj83749oslkfmjduhba78394ijshdyena89d04nm1.pages.dev
+2025-01-04 12:55:22,900 - WARNING - No creation date found for qrco.de
+2025-01-04 12:55:22,901 - WARNING - No expiration date found for qrco.de
+2025-01-04 12:55:23,091 - ERROR - SSL Error for pub-332e25ac40fe42d5af737ce9b83b83d2.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:55:24,612 - ERROR - SSL Error for mecode.stream: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'mecode.stream'. (_ssl.c:1000)
+2025-01-04 12:55:25,401 - ERROR - SSL Error for pub-3118f4a53736409f849a1ec3b0697ecb.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:55:26,166 - ERROR - Failed to resolve es.ingseguridad-acceso.com using socket: [Errno 11002] getaddrinfo failed
+2025-01-04 12:55:27,081 - WARNING - No creation date found for pub-70e69d351fdd47719fff28ce677d9918.r2.dev
+2025-01-04 12:55:27,081 - WARNING - No expiration date found for pub-70e69d351fdd47719fff28ce677d9918.r2.dev
+2025-01-04 12:55:27,097 - WARNING - No creation date found for qrco.de
+2025-01-04 12:55:27,098 - WARNING - No expiration date found for qrco.de
+2025-01-04 12:55:27,187 - ERROR - SSL Error for pub-70e69d351fdd47719fff28ce677d9918.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:55:29,791 - ERROR - WHOIS lookup failed for atto--myygovv.firebaseapp.com: No match for "ATTO--MYYGOVV.FIREBASEAPP.COM".
+>>> Last update of whois database: 2025-01-04T05:55:11Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 12:55:30,266 - WARNING - No creation date found for pub-4850683a857240539460d6f3458b4006.r2.dev
+2025-01-04 12:55:30,267 - WARNING - No expiration date found for pub-4850683a857240539460d6f3458b4006.r2.dev
+2025-01-04 12:55:30,322 - ERROR - SSL Error for pub-4850683a857240539460d6f3458b4006.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:55:31,075 - WARNING - No creation date found for qrco.de
+2025-01-04 12:55:31,075 - WARNING - No expiration date found for qrco.de
+2025-01-04 12:55:31,381 - ERROR - Error trying to connect to socket: closing socket - [WinError 10061] No connection could be made because the target machine actively refused it
+2025-01-04 12:55:31,381 - WARNING - No creation date found for q-r.to
+2025-01-04 12:55:31,382 - WARNING - No expiration date found for q-r.to
+2025-01-04 12:55:32,230 - WARNING - No HTTPS for Shido.market
+2025-01-04 12:55:34,733 - ERROR - Error checking SSL for es.ingseguridad-acceso.com: [Errno 11002] getaddrinfo failed
+2025-01-04 12:55:37,831 - ERROR - SSL Error for pub-51427f5ffccf45a8a223196f7893c181.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:55:39,545 - WARNING - No creation date found for haulagesg.top
+2025-01-04 12:55:39,545 - WARNING - No expiration date found for haulagesg.top
+2025-01-04 12:55:40,475 - ERROR - Error trying to connect to socket: closing socket - timed out
+2025-01-04 12:55:40,477 - WARNING - No creation date found for q-r.to
+2025-01-04 12:55:40,477 - WARNING - No expiration date found for q-r.to
+2025-01-04 12:55:43,033 - ERROR - SSL Error for wanining.cc: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'wanining.cc'. (_ssl.c:1000)
+2025-01-04 12:55:44,694 - ERROR - WHOIS lookup failed for patjimmy323.wixsite.com: No match for "PATJIMMY323.WIXSITE.COM".
+>>> Last update of whois database: 2025-01-04T05:55:27Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 12:55:48,214 - WARNING - No creation date found for bvgftryehdnxju.web.app
+2025-01-04 12:55:48,215 - WARNING - No expiration date found for bvgftryehdnxju.web.app
+2025-01-04 12:55:48,674 - ERROR - Error checking SSL for u.infotratvts.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:55:48,836 - WARNING - No creation date found for orange-star-ac3e.gagap19825.workers.dev
+2025-01-04 12:55:48,837 - WARNING - No expiration date found for orange-star-ac3e.gagap19825.workers.dev
+2025-01-04 12:55:49,828 - WARNING - No creation date found for mikanowoprobuewbestasz.lilia9.workers.dev
+2025-01-04 12:55:49,830 - ERROR - Error checking SSL for uspsvlcno.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:55:49,831 - WARNING - No expiration date found for mikanowoprobuewbestasz.lilia9.workers.dev
+2025-01-04 12:55:51,353 - ERROR - WHOIS lookup failed for www-cred-foz-ilha.blogspot.com: No match for "WWW-CRED-FOZ-ILHA.BLOGSPOT.COM".
+>>> Last update of whois database: 2025-01-04T05:55:41Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 12:55:51,354 - WARNING - No HTTPS for www-cred-foz-ilha.blogspot.com
+2025-01-04 12:55:53,943 - ERROR - SSL Error for lictes.date: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'lictes.date'. (_ssl.c:1000)
+2025-01-04 12:55:54,600 - ERROR - SSL Error for pub-53c03b9b90fe486a82cc03ab66bd7ace.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:55:57,105 - ERROR - Error checking SSL for mvsfh-sg.com: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:55:57,111 - ERROR - Failed to resolve xn--d1aqfkf.xn--p1ai:443 using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 12:55:57,594 - WARNING - No creation date found for xn--d1aqfkf.xn--p1ai:443
+2025-01-04 12:55:57,595 - WARNING - No expiration date found for xn--d1aqfkf.xn--p1ai:443
+2025-01-04 12:55:57,608 - ERROR - Error checking SSL for xn--d1aqfkf.xn--p1ai:443: [Errno 11001] getaddrinfo failed
+2025-01-04 12:55:58,097 - ERROR - Error checking SSL for bradesco.prime-leveldigital.com: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:56:00,133 - ERROR - Error checking SSL for haulagesg.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:56:00,740 - WARNING - No creation date found for qrco.de
+2025-01-04 12:56:00,741 - WARNING - No expiration date found for qrco.de
+2025-01-04 12:56:00,763 - WARNING - No creation date found for meaoee-fc3f.elamzioehr.workers.dev
+2025-01-04 12:56:00,764 - WARNING - No expiration date found for meaoee-fc3f.elamzioehr.workers.dev
+2025-01-04 12:56:01,426 - ERROR - Failed to resolve meinesparkasse.com using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 12:56:01,574 - ERROR - SSL Error for pub-ecea1eb139834ca592be405c2eb7f228.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:56:03,803 - ERROR - Error checking SSL for meinesparkasse.com: [Errno 11001] getaddrinfo failed
+2025-01-04 12:56:03,830 - ERROR - Error checking SSL for canada.postcanadaggb.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:56:04,705 - ERROR - Error checking SSL for posti-fi.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:56:38,252 - ERROR - Error checking SSL for olx-pl.gymilos.lol: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:56:38,601 - ERROR - WHOIS lookup failed for attgjeoklmail.weeblysite.com: [WinError 10054] An existing connection was forcibly closed by the remote host
+2025-01-04 12:56:38,601 - ERROR - Error checking SSL for pttur-gyv.vip: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:56:38,601 - ERROR - Error checking SSL for usps.com-trackjbe.live: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:56:38,606 - ERROR - Error checking SSL for spotify.information-premium.com: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:56:38,606 - ERROR - Error checking SSL for vdacom-pts.cyou: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:56:38,638 - ERROR - Failed to get MX/NS records using DNS API: HTTPSConnectionPool(host='dns.google', port=443): Max retries exceeded with url: /resolve?name=qrco.de&type=MX (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:2406)')))
+2025-01-04 12:56:39,113 - WARNING - No creation date found for qrco.de
+2025-01-04 12:56:39,114 - WARNING - No expiration date found for qrco.de
+2025-01-04 12:56:39,291 - WARNING - No creation date found for qrco.de
+2025-01-04 12:56:39,292 - WARNING - No expiration date found for qrco.de
+2025-01-04 12:56:39,339 - ERROR - SSL Error for pub-aca26f7647f545f392afbeecdcb1ff46.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:56:39,990 - ERROR - SSL Error for pub-4bf302a1b3af4892a9d2466a4a693dbd.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:56:40,132 - WARNING - No expiration date found for olive488548.studio.site
+2025-01-04 12:56:41,270 - WARNING - No creation date found for cryptoexodus.online
+2025-01-04 12:56:41,271 - WARNING - No expiration date found for cryptoexodus.online
+2025-01-04 12:56:41,700 - WARNING - No creation date found for vb-ezk.pages.dev
+2025-01-04 12:56:41,701 - WARNING - No expiration date found for vb-ezk.pages.dev
+2025-01-04 12:56:42,018 - ERROR - WHOIS lookup failed for bretatie.firebaseapp.com: No match for "BRETATIE.FIREBASEAPP.COM".
+>>> Last update of whois database: 2025-01-04T05:56:26Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 12:56:42,033 - ERROR - WHOIS lookup failed for rioapzxoxoz.firebaseapp.com: No match for "RIOAPZXOXOZ.FIREBASEAPP.COM".
+>>> Last update of whois database: 2025-01-04T05:56:26Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 12:56:42,371 - WARNING - No creation date found for sistema-ungl-2024.web.app
+2025-01-04 12:56:42,372 - WARNING - No expiration date found for sistema-ungl-2024.web.app
+2025-01-04 12:56:43,214 - ERROR - SSL Error for idolink.com: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:56:44,644 - ERROR - SSL Error for pichinchaing.webcindario.com: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:56:47,984 - WARNING - No creation date found for 43.156.237.181
+2025-01-04 12:56:47,984 - WARNING - No expiration date found for 43.156.237.181
+2025-01-04 12:56:47,985 - WARNING - No HTTPS for 43.156.237.181
+2025-01-04 12:56:59,748 - ERROR - Error checking SSL for uspskwkmxc.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:57:00,112 - ERROR - Error checking SSL for usps.com-trackzmz.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:57:00,957 - ERROR - Error checking SSL for correos.ss-kl.sbs: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:57:02,371 - ERROR - Error checking SSL for cryptoexodus.online: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:57:06,138 - ERROR - Error checking SSL for postb-mdb.xyz: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:57:06,373 - ERROR - Failed to resolve crowdflower.com using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 12:57:06,847 - WARNING - No creation date found for decemsys.de
+2025-01-04 12:57:06,847 - WARNING - No expiration date found for decemsys.de
+2025-01-04 12:57:06,848 - WARNING - No HTTPS for decemsys.de
+2025-01-04 12:57:07,382 - ERROR - WHOIS lookup failed for pokerschoolonline.com: [WinError 10054] An existing connection was forcibly closed by the remote host
+2025-01-04 12:57:07,383 - WARNING - No HTTPS for pokerschoolonline.com
+2025-01-04 12:57:07,428 - ERROR - WHOIS lookup failed for nassjo.se: [WinError 10054] An existing connection was forcibly closed by the remote host
+2025-01-04 12:57:07,429 - WARNING - No HTTPS for nassjo.se
+2025-01-04 12:57:07,728 - ERROR - Failed to resolve ktb.co.th using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 12:57:08,089 - WARNING - No HTTPS for buscarecetas.com.ar
+2025-01-04 12:57:08,450 - WARNING - No HTTPS for devpia.com
+2025-01-04 12:57:08,463 - WARNING - No HTTPS for slots.com
+2025-01-04 12:57:08,599 - WARNING - No HTTPS for crowdflower.com
+2025-01-04 12:57:08,734 - WARNING - No HTTPS for yllas.fi
+2025-01-04 12:57:09,189 - WARNING - No HTTPS for yc1000.net
+2025-01-04 12:57:09,395 - WARNING - No creation date found for ktb.co.th
+2025-01-04 12:57:09,396 - WARNING - No expiration date found for ktb.co.th
+2025-01-04 12:57:09,396 - WARNING - No HTTPS for ktb.co.th
+2025-01-04 12:57:10,138 - WARNING - No creation date found for winefront.com.au
+2025-01-04 12:57:10,138 - WARNING - No expiration date found for winefront.com.au
+2025-01-04 12:57:10,138 - WARNING - No HTTPS for winefront.com.au
+2025-01-04 12:57:10,196 - WARNING - No HTTPS for praise1065.com
+2025-01-04 12:57:10,365 - WARNING - No HTTPS for telkkarista.com
+2025-01-04 12:57:10,366 - ERROR - Error trying to connect to socket: closing socket - [Errno 11001] getaddrinfo failed
+2025-01-04 12:57:10,367 - WARNING - No creation date found for answers.travian.com.vn
+2025-01-04 12:57:10,368 - WARNING - No expiration date found for answers.travian.com.vn
+2025-01-04 12:57:10,368 - WARNING - No HTTPS for answers.travian.com.vn
+2025-01-04 12:57:10,504 - WARNING - No HTTPS for pplp.org
+2025-01-04 12:57:10,550 - WARNING - No HTTPS for tmch.org.tw
+2025-01-04 12:57:10,939 - WARNING - No HTTPS for fordbarn.com
+2025-01-04 12:57:11,385 - WARNING - No HTTPS for avocatparis.org
+2025-01-04 12:57:11,485 - WARNING - No HTTPS for biodiversity.ru
+2025-01-04 12:57:11,617 - ERROR - Failed to resolve whgaming.com using socket: [Errno 11002] getaddrinfo failed
+2025-01-04 12:57:11,923 - WARNING - No creation date found for poesieinversi.it
+2025-01-04 12:57:11,924 - WARNING - No expiration date found for poesieinversi.it
+2025-01-04 12:57:11,924 - WARNING - No HTTPS for poesieinversi.it
+2025-01-04 12:57:12,464 - WARNING - No HTTPS for martindalecenter.com
+2025-01-04 12:57:12,693 - WARNING - No creation date found for bicycles.net.au
+2025-01-04 12:57:12,693 - WARNING - No expiration date found for bicycles.net.au
+2025-01-04 12:57:12,693 - WARNING - No HTTPS for bicycles.net.au
+2025-01-04 12:57:12,972 - WARNING - No HTTPS for crestbook.com
+2025-01-04 12:57:14,042 - WARNING - No HTTPS for whgaming.com
+2025-01-04 12:57:14,332 - WARNING - No HTTPS for mono-project.com
+2025-01-04 12:57:14,599 - WARNING - No HTTPS for dsq-sds.org
+2025-01-04 12:57:14,969 - WARNING - No HTTPS for schoolmusic.co.kr
+2025-01-04 12:57:15,310 - WARNING - No HTTPS for sewing-master.ru
+2025-01-04 12:57:15,681 - WARNING - No HTTPS for boathouserestaurants.ca
+2025-01-04 12:57:16,970 - WARNING - No HTTPS for shop.whois.com
+2025-01-04 12:57:17,438 - WARNING - No HTTPS for wearetennis.com
+2025-01-04 12:57:17,709 - ERROR - Error trying to connect to socket: closing socket - [Errno 11002] getaddrinfo failed
+2025-01-04 12:57:17,709 - WARNING - No creation date found for piticu.ro
+2025-01-04 12:57:17,710 - WARNING - No expiration date found for piticu.ro
+2025-01-04 12:57:17,710 - WARNING - No HTTPS for piticu.ro
+2025-01-04 12:57:17,884 - WARNING - No HTTPS for emeraldqueen.com
+2025-01-04 12:57:17,920 - WARNING - No HTTPS for hdsa.org
+2025-01-04 12:57:19,081 - WARNING - No HTTPS for clevelandchildrensmuseum.org
+2025-01-04 12:57:19,330 - ERROR - WHOIS lookup failed for ria.ee: unsupported operand type(s) for -: 'datetime.datetime' and 'str'
+2025-01-04 12:57:19,331 - WARNING - No HTTPS for ria.ee
+2025-01-04 12:57:19,773 - WARNING - No HTTPS for njsp.org
+2025-01-04 12:57:19,900 - WARNING - No HTTPS for richbarbellfitness.com
+2025-01-04 12:57:20,165 - WARNING - No HTTPS for neilgaiman.com
+2025-01-04 12:57:20,299 - WARNING - No HTTPS for chevaux-barbes.com
+2025-01-04 12:57:20,397 - WARNING - No HTTPS for bet365.it
+2025-01-04 12:57:20,865 - WARNING - No HTTPS for arteshopbilbao.com
+2025-01-04 12:57:20,950 - ERROR - Failed to resolve qushiyun.com using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 12:57:20,983 - WARNING - No HTTPS for e-lites.co.uk
+2025-01-04 12:57:21,313 - WARNING - No HTTPS for harrietbeecherstowecenter.org
+2025-01-04 12:57:21,718 - WARNING - No HTTPS for dirtgame.com
+2025-01-04 12:57:22,121 - ERROR - Failed to resolve dine.to using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 12:57:22,267 - WARNING - No HTTPS for grolsch.com
+2025-01-04 12:57:22,430 - ERROR - Failed to resolve rekihaku.ac.jp using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 12:57:22,757 - WARNING - No HTTPS for utahhumane.org
+2025-01-04 12:57:22,769 - WARNING - No creation date found for rekihaku.ac.jp
+2025-01-04 12:57:22,769 - WARNING - No expiration date found for rekihaku.ac.jp
+2025-01-04 12:57:22,769 - WARNING - No HTTPS for rekihaku.ac.jp
+2025-01-04 12:57:22,899 - WARNING - No HTTPS for ozarkmountainrailcar.com
+2025-01-04 12:57:23,521 - WARNING - No HTTPS for webmineral.com
+2025-01-04 12:57:23,904 - WARNING - No HTTPS for qushiyun.com
+2025-01-04 12:57:24,108 - WARNING - No HTTPS for triatlonchannel.com
+2025-01-04 12:57:24,380 - WARNING - No HTTPS for iphone-bulgaria.com
+2025-01-04 12:57:24,383 - WARNING - No HTTPS for curtisyoungblood.com
+2025-01-04 12:57:24,582 - WARNING - No HTTPS for carmag.co.za
+2025-01-04 12:57:24,946 - WARNING - No HTTPS for g3voip.com
+2025-01-04 12:57:25,051 - WARNING - No HTTPS for hirezstudios.com
+2025-01-04 12:57:25,576 - WARNING - No HTTPS for automotiveforums.com
+2025-01-04 12:57:25,631 - WARNING - No HTTPS for lazoo.org
+2025-01-04 12:57:26,312 - WARNING - No HTTPS for minecraftes.com
+2025-01-04 12:57:26,315 - WARNING - No HTTPS for fusz.com
+2025-01-04 12:57:26,399 - ERROR - Error trying to connect to socket: closing socket - [WinError 10061] No connection could be made because the target machine actively refused it
+2025-01-04 12:57:26,401 - WARNING - No creation date found for dine.to
+2025-01-04 12:57:26,401 - WARNING - No expiration date found for dine.to
+2025-01-04 12:57:26,401 - WARNING - No HTTPS for dine.to
+2025-01-04 12:57:26,491 - ERROR - WHOIS lookup failed for dev-mex.com: No match for "DEV-MEX.COM".
+>>> Last update of whois database: 2025-01-04T05:57:11Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 12:57:26,491 - WARNING - No HTTPS for dev-mex.com
+2025-01-04 12:57:26,567 - ERROR - Error trying to connect to socket: closing socket - [Errno 11001] getaddrinfo failed
+2025-01-04 12:57:26,568 - WARNING - No creation date found for socom.mil
+2025-01-04 12:57:26,568 - WARNING - No expiration date found for socom.mil
+2025-01-04 12:57:26,568 - WARNING - No HTTPS for socom.mil
+2025-01-04 12:57:26,801 - WARNING - No HTTPS for speedline.dk
+2025-01-04 12:57:27,147 - WARNING - No HTTPS for aleve.com
+2025-01-04 12:57:27,742 - WARNING - No HTTPS for thebodyshop.co.uk
+2025-01-04 12:57:27,918 - WARNING - No HTTPS for microscopy-analysis.com
+2025-01-04 12:57:28,150 - WARNING - No HTTPS for oba.org.br
+2025-01-04 12:57:28,328 - WARNING - No HTTPS for gay-test.com
+2025-01-04 12:57:28,395 - WARNING - No HTTPS for gesundehunde.com
+2025-01-04 12:57:28,569 - WARNING - No expiration date found for motorhuis.nl
+2025-01-04 12:57:28,570 - WARNING - No HTTPS for motorhuis.nl
+2025-01-04 12:57:28,740 - WARNING - No HTTPS for robinhoodbingo.com
+2025-01-04 12:57:28,796 - WARNING - No HTTPS for mitsuoka-motor.com
+2025-01-04 12:57:29,994 - ERROR - WHOIS lookup failed for santafe.edu.ar: El dominio no se encuentra registrado en NIC Argentina
+2025-01-04 12:57:29,995 - WARNING - No HTTPS for santafe.edu.ar
+2025-01-04 12:57:30,105 - WARNING - No HTTPS for orkin.com
+2025-01-04 12:57:30,226 - WARNING - No HTTPS for us-funerals.com
+2025-01-04 12:57:30,252 - WARNING - No creation date found for thermoscientific.es
+2025-01-04 12:57:30,253 - WARNING - No expiration date found for thermoscientific.es
+2025-01-04 12:57:30,254 - WARNING - No HTTPS for thermoscientific.es
+2025-01-04 12:57:30,277 - WARNING - No HTTPS for estrellasoap.com
+2025-01-04 12:57:30,713 - WARNING - No HTTPS for kickinghorseresort.com
+2025-01-04 12:57:30,718 - WARNING - No HTTPS for thetreatmenthelpline.com
+2025-01-04 12:57:30,833 - WARNING - No HTTPS for aide-handicap.info
+2025-01-04 12:57:30,889 - WARNING - No expiration date found for gro.gov.uk
+2025-01-04 12:57:30,891 - WARNING - No HTTPS for gro.gov.uk
+2025-01-04 12:57:31,197 - WARNING - No HTTPS for elhistoriador.com.ar
+2025-01-04 12:57:31,464 - WARNING - No creation date found for wiki-dofus.eu
+2025-01-04 12:57:31,465 - WARNING - No expiration date found for wiki-dofus.eu
+2025-01-04 12:57:31,465 - WARNING - No HTTPS for wiki-dofus.eu
+2025-01-04 12:57:31,550 - WARNING - No HTTPS for ncsml.org
+2025-01-04 12:57:31,572 - WARNING - No HTTPS for tokyo42195.org
+2025-01-04 12:57:31,578 - ERROR - Failed to get MX/NS records using DNS API: HTTPSConnectionPool(host='dns.google', port=443): Read timed out. (read timeout=5)
+2025-01-04 12:57:32,266 - WARNING - No HTTPS for orionleathercompany.com
+2025-01-04 12:57:32,373 - ERROR - WHOIS lookup failed for parsippanylibrary.org: [WinError 10054] An existing connection was forcibly closed by the remote host
+2025-01-04 12:57:32,373 - WARNING - No HTTPS for parsippanylibrary.org
+2025-01-04 12:57:32,878 - WARNING - No HTTPS for nctsn.org
+2025-01-04 12:57:32,982 - WARNING - No HTTPS for whichlotto.com
+2025-01-04 12:57:33,035 - WARNING - No HTTPS for bionetonline.org
+2025-01-04 12:57:33,051 - WARNING - No creation date found for dolr.nic.in
+2025-01-04 12:57:33,052 - WARNING - No expiration date found for dolr.nic.in
+2025-01-04 12:57:33,052 - WARNING - No HTTPS for dolr.nic.in
+2025-01-04 12:57:33,085 - WARNING - No HTTPS for local.amazon.com
+2025-01-04 12:57:33,107 - WARNING - No HTTPS for neons.org
+2025-01-04 12:57:33,159 - WARNING - No HTTPS for microbeworld.org
+2025-01-04 12:57:33,174 - WARNING - No HTTPS for trafficschoolonline.com
+2025-01-04 12:57:33,784 - ERROR - WHOIS lookup failed for klementine.net: No match for "KLEMENTINE.NET".
+>>> Last update of whois database: 2025-01-04T05:57:28Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 12:57:33,785 - WARNING - No HTTPS for klementine.net
+2025-01-04 12:57:34,307 - WARNING - No HTTPS for i-atumen.tumblr.com
+2025-01-04 12:57:35,031 - WARNING - No HTTPS for fbresearch.org
+2025-01-04 12:57:35,053 - INFO - Removed 3 constant features
+2025-01-04 12:57:35,056 - INFO - Removed 3 highly correlated features
+2025-01-04 12:57:35,060 - INFO - Scaled 15 numerical features using RobustScaler
+2025-01-04 12:57:35,061 - INFO - Final dataset shape: (200, 21)
+2025-01-04 12:57:35,062 - INFO - 
+Splitting data into train, validation, and test sets...
+2025-01-04 12:57:35,062 - INFO - Number of splits: 10
+2025-01-04 12:57:35,064 - INFO - 
+Processing split 1/10
+2025-01-04 12:57:35,065 - INFO - Split 1 sizes:
+2025-01-04 12:57:35,065 - INFO - Training set: 135 samples (67.5%)
+2025-01-04 12:57:35,066 - INFO -   - Class distribution: [73 62]
+2025-01-04 12:57:35,066 - INFO -   - Number of unique domains: 126
+2025-01-04 12:57:35,066 - INFO - Validation set: 45 samples (22.5%)
+2025-01-04 12:57:35,066 - INFO -   - Class distribution: [20 25]
+2025-01-04 12:57:35,067 - INFO -   - Number of unique domains: 44
+2025-01-04 12:57:35,067 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:57:35,067 - INFO -   - Class distribution: [ 7 13]
+2025-01-04 12:57:35,068 - INFO -   - Number of unique domains: 15
+2025-01-04 12:57:35,068 - INFO - 
+Processing split 2/10
+2025-01-04 12:57:35,069 - INFO - Split 2 sizes:
+2025-01-04 12:57:35,069 - INFO - Training set: 131 samples (65.5%)
+2025-01-04 12:57:35,070 - INFO -   - Class distribution: [71 60]
+2025-01-04 12:57:35,070 - INFO -   - Number of unique domains: 123
+2025-01-04 12:57:35,070 - INFO - Validation set: 49 samples (24.5%)
+2025-01-04 12:57:35,071 - INFO -   - Class distribution: [21 28]
+2025-01-04 12:57:35,071 - INFO -   - Number of unique domains: 48
+2025-01-04 12:57:35,071 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:57:35,071 - INFO -   - Class distribution: [ 8 12]
+2025-01-04 12:57:35,071 - INFO -   - Number of unique domains: 15
+2025-01-04 12:57:35,072 - INFO - 
+Processing split 3/10
+2025-01-04 12:57:35,073 - INFO - Split 3 sizes:
+2025-01-04 12:57:35,073 - INFO - Training set: 137 samples (68.5%)
+2025-01-04 12:57:35,074 - INFO -   - Class distribution: [67 70]
+2025-01-04 12:57:35,074 - INFO -   - Number of unique domains: 127
+2025-01-04 12:57:35,074 - INFO - Validation set: 43 samples (21.5%)
+2025-01-04 12:57:35,074 - INFO -   - Class distribution: [24 19]
+2025-01-04 12:57:35,075 - INFO -   - Number of unique domains: 43
+2025-01-04 12:57:35,075 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:57:35,076 - INFO -   - Class distribution: [ 9 11]
+2025-01-04 12:57:35,076 - INFO -   - Number of unique domains: 18
+2025-01-04 12:57:35,076 - INFO - 
+Processing split 4/10
+2025-01-04 12:57:35,077 - INFO - Split 4 sizes:
+2025-01-04 12:57:35,077 - INFO - Training set: 138 samples (69.0%)
+2025-01-04 12:57:35,077 - INFO -   - Class distribution: [71 67]
+2025-01-04 12:57:35,078 - INFO -   - Number of unique domains: 129
+2025-01-04 12:57:35,078 - INFO - Validation set: 42 samples (21.0%)
+2025-01-04 12:57:35,078 - INFO -   - Class distribution: [20 22]
+2025-01-04 12:57:35,078 - INFO -   - Number of unique domains: 40
+2025-01-04 12:57:35,078 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:57:35,078 - INFO -   - Class distribution: [ 9 11]
+2025-01-04 12:57:35,079 - INFO -   - Number of unique domains: 19
+2025-01-04 12:57:35,079 - INFO - 
+Processing split 5/10
+2025-01-04 12:57:35,080 - INFO - Split 5 sizes:
+2025-01-04 12:57:35,080 - INFO - Training set: 138 samples (69.0%)
+2025-01-04 12:57:35,080 - INFO -   - Class distribution: [68 70]
+2025-01-04 12:57:35,081 - INFO -   - Number of unique domains: 129
+2025-01-04 12:57:35,081 - INFO - Validation set: 42 samples (21.0%)
+2025-01-04 12:57:35,081 - INFO -   - Class distribution: [23 19]
+2025-01-04 12:57:35,081 - INFO -   - Number of unique domains: 41
+2025-01-04 12:57:35,081 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:57:35,082 - INFO -   - Class distribution: [ 9 11]
+2025-01-04 12:57:35,082 - INFO -   - Number of unique domains: 19
+2025-01-04 12:57:35,082 - INFO - 
+Processing split 6/10
+2025-01-04 12:57:35,083 - INFO - Split 6 sizes:
+2025-01-04 12:57:35,084 - INFO - Training set: 138 samples (69.0%)
+2025-01-04 12:57:35,084 - INFO -   - Class distribution: [66 72]
+2025-01-04 12:57:35,084 - INFO -   - Number of unique domains: 129
+2025-01-04 12:57:35,084 - INFO - Validation set: 42 samples (21.0%)
+2025-01-04 12:57:35,085 - INFO -   - Class distribution: [23 19]
+2025-01-04 12:57:35,085 - INFO -   - Number of unique domains: 40
+2025-01-04 12:57:35,085 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:57:35,085 - INFO -   - Class distribution: [11  9]
+2025-01-04 12:57:35,086 - INFO -   - Number of unique domains: 20
+2025-01-04 12:57:35,086 - INFO - 
+Processing split 7/10
+2025-01-04 12:57:35,087 - INFO - Split 7 sizes:
+2025-01-04 12:57:35,087 - INFO - Training set: 138 samples (69.0%)
+2025-01-04 12:57:35,088 - INFO -   - Class distribution: [64 74]
+2025-01-04 12:57:35,088 - INFO -   - Number of unique domains: 126
+2025-01-04 12:57:35,088 - INFO - Validation set: 42 samples (21.0%)
+2025-01-04 12:57:35,088 - INFO -   - Class distribution: [26 16]
+2025-01-04 12:57:35,088 - INFO -   - Number of unique domains: 42
+2025-01-04 12:57:35,088 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:57:35,088 - INFO -   - Class distribution: [10 10]
+2025-01-04 12:57:35,089 - INFO -   - Number of unique domains: 20
+2025-01-04 12:57:35,089 - INFO - 
+Processing split 8/10
+2025-01-04 12:57:35,090 - INFO - Split 8 sizes:
+2025-01-04 12:57:35,090 - INFO - Training set: 137 samples (68.5%)
+2025-01-04 12:57:35,091 - INFO -   - Class distribution: [61 76]
+2025-01-04 12:57:35,091 - INFO -   - Number of unique domains: 129
+2025-01-04 12:57:35,091 - INFO - Validation set: 43 samples (21.5%)
+2025-01-04 12:57:35,092 - INFO -   - Class distribution: [26 17]
+2025-01-04 12:57:35,092 - INFO -   - Number of unique domains: 42
+2025-01-04 12:57:35,092 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:57:35,092 - INFO -   - Class distribution: [13  7]
+2025-01-04 12:57:35,092 - INFO -   - Number of unique domains: 20
+2025-01-04 12:57:35,093 - INFO - 
+Processing split 9/10
+2025-01-04 12:57:35,094 - INFO - Split 9 sizes:
+2025-01-04 12:57:35,094 - INFO - Training set: 137 samples (68.5%)
+2025-01-04 12:57:35,095 - INFO -   - Class distribution: [65 72]
+2025-01-04 12:57:35,095 - INFO -   - Number of unique domains: 126
+2025-01-04 12:57:35,095 - INFO - Validation set: 43 samples (21.5%)
+2025-01-04 12:57:35,095 - INFO -   - Class distribution: [21 22]
+2025-01-04 12:57:35,096 - INFO -   - Number of unique domains: 43
+2025-01-04 12:57:35,096 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:57:35,096 - INFO -   - Class distribution: [14  6]
+2025-01-04 12:57:35,096 - INFO -   - Number of unique domains: 20
+2025-01-04 12:57:35,097 - INFO - 
+Processing split 10/10
+2025-01-04 12:57:35,098 - INFO - Split 10 sizes:
+2025-01-04 12:57:35,098 - INFO - Training set: 137 samples (68.5%)
+2025-01-04 12:57:35,098 - INFO -   - Class distribution: [63 74]
+2025-01-04 12:57:35,099 - INFO -   - Number of unique domains: 130
+2025-01-04 12:57:35,099 - INFO - Validation set: 43 samples (21.5%)
+2025-01-04 12:57:35,099 - INFO -   - Class distribution: [27 16]
+2025-01-04 12:57:35,099 - INFO -   - Number of unique domains: 40
+2025-01-04 12:57:35,100 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:57:35,100 - INFO -   - Class distribution: [10 10]
+2025-01-04 12:57:35,100 - INFO -   - Number of unique domains: 20
+2025-01-04 12:57:35,100 - INFO - 
+Data splitting completed in 0.04 seconds
+2025-01-04 12:57:35,101 - INFO - Starting phishing detection model training with sample size: 100
+2025-01-04 12:57:35,101 - INFO - Loading and processing datasets...
+2025-01-04 12:57:35,400 - INFO - Processing 100 phishing and 100 legitimate URLs
+2025-01-04 12:57:35,912 - WARNING - No creation date found for hjsuhdmj83749oslkfmjduhba78394ijshdyena89d04nm1.pages.dev
+2025-01-04 12:57:35,912 - WARNING - No expiration date found for hjsuhdmj83749oslkfmjduhba78394ijshdyena89d04nm1.pages.dev
+2025-01-04 12:57:36,108 - WARNING - No creation date found for qrco.de
+2025-01-04 12:57:36,110 - WARNING - No expiration date found for qrco.de
+2025-01-04 12:57:36,177 - ERROR - SSL Error for pub-332e25ac40fe42d5af737ce9b83b83d2.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:57:36,186 - ERROR - WHOIS lookup failed for rzs-line.cc: [WinError 10054] An existing connection was forcibly closed by the remote host
+2025-01-04 12:57:37,341 - ERROR - SSL Error for mecode.stream: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'mecode.stream'. (_ssl.c:1000)
+2025-01-04 12:57:38,127 - ERROR - SSL Error for pub-3118f4a53736409f849a1ec3b0697ecb.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:57:38,920 - WARNING - No creation date found for qrco.de
+2025-01-04 12:57:38,920 - WARNING - No expiration date found for qrco.de
+2025-01-04 12:57:39,328 - ERROR - Failed to resolve es.ingseguridad-acceso.com using socket: [Errno 11002] getaddrinfo failed
+2025-01-04 12:57:39,560 - WARNING - No creation date found for pub-70e69d351fdd47719fff28ce677d9918.r2.dev
+2025-01-04 12:57:39,560 - WARNING - No expiration date found for pub-70e69d351fdd47719fff28ce677d9918.r2.dev
+2025-01-04 12:57:39,600 - ERROR - SSL Error for pub-70e69d351fdd47719fff28ce677d9918.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:57:41,263 - ERROR - WHOIS lookup failed for atto--myygovv.firebaseapp.com: No match for "ATTO--MYYGOVV.FIREBASEAPP.COM".
+>>> Last update of whois database: 2025-01-04T05:57:28Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 12:57:41,604 - WARNING - No creation date found for pub-4850683a857240539460d6f3458b4006.r2.dev
+2025-01-04 12:57:41,605 - WARNING - No expiration date found for pub-4850683a857240539460d6f3458b4006.r2.dev
+2025-01-04 12:57:41,658 - ERROR - SSL Error for pub-4850683a857240539460d6f3458b4006.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:57:42,343 - WARNING - No creation date found for qrco.de
+2025-01-04 12:57:42,344 - WARNING - No expiration date found for qrco.de
+2025-01-04 12:57:42,955 - ERROR - Error trying to connect to socket: closing socket - [WinError 10061] No connection could be made because the target machine actively refused it
+2025-01-04 12:57:42,956 - WARNING - No creation date found for q-r.to
+2025-01-04 12:57:42,957 - WARNING - No expiration date found for q-r.to
+2025-01-04 12:57:43,509 - WARNING - No HTTPS for Shido.market
+2025-01-04 12:57:44,872 - ERROR - Error trying to connect to socket: closing socket - [WinError 10061] No connection could be made because the target machine actively refused it
+2025-01-04 12:57:44,874 - WARNING - No creation date found for q-r.to
+2025-01-04 12:57:44,874 - WARNING - No expiration date found for q-r.to
+2025-01-04 12:57:46,734 - ERROR - Error checking SSL for es.ingseguridad-acceso.com: [Errno 11002] getaddrinfo failed
+2025-01-04 12:57:47,389 - ERROR - SSL Error for pub-51427f5ffccf45a8a223196f7893c181.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:57:48,494 - WARNING - No creation date found for haulagesg.top
+2025-01-04 12:57:48,496 - WARNING - No expiration date found for haulagesg.top
+2025-01-04 12:57:55,347 - ERROR - SSL Error for wanining.cc: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'wanining.cc'. (_ssl.c:1000)
+2025-01-04 12:57:56,655 - ERROR - WHOIS lookup failed for patjimmy323.wixsite.com: No match for "PATJIMMY323.WIXSITE.COM".
+>>> Last update of whois database: 2025-01-04T05:57:42Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 12:58:01,012 - WARNING - No creation date found for bvgftryehdnxju.web.app
+2025-01-04 12:58:01,013 - WARNING - No expiration date found for bvgftryehdnxju.web.app
+2025-01-04 12:58:01,033 - ERROR - Error checking SSL for u.infotratvts.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:58:01,546 - WARNING - No creation date found for orange-star-ac3e.gagap19825.workers.dev
+2025-01-04 12:58:01,547 - WARNING - No expiration date found for orange-star-ac3e.gagap19825.workers.dev
+2025-01-04 12:58:02,459 - WARNING - No creation date found for mikanowoprobuewbestasz.lilia9.workers.dev
+2025-01-04 12:58:02,459 - WARNING - No expiration date found for mikanowoprobuewbestasz.lilia9.workers.dev
+2025-01-04 12:58:04,373 - ERROR - WHOIS lookup failed for www-cred-foz-ilha.blogspot.com: No match for "WWW-CRED-FOZ-ILHA.BLOGSPOT.COM".
+>>> Last update of whois database: 2025-01-04T05:57:56Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 12:58:04,375 - WARNING - No HTTPS for www-cred-foz-ilha.blogspot.com
+2025-01-04 12:58:07,755 - ERROR - Error checking SSL for mvsfh-sg.com: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:58:09,562 - ERROR - Error checking SSL for haulagesg.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:58:09,914 - ERROR - SSL Error for lictes.date: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'lictes.date'. (_ssl.c:1000)
+2025-01-04 12:58:10,241 - ERROR - SSL Error for pub-53c03b9b90fe486a82cc03ab66bd7ace.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:58:11,665 - ERROR - Error checking SSL for uspsvlcno.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:58:11,666 - ERROR - Failed to resolve xn--d1aqfkf.xn--p1ai:443 using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 12:58:11,812 - WARNING - No creation date found for xn--d1aqfkf.xn--p1ai:443
+2025-01-04 12:58:11,813 - WARNING - No expiration date found for xn--d1aqfkf.xn--p1ai:443
+2025-01-04 12:58:11,828 - ERROR - Error checking SSL for xn--d1aqfkf.xn--p1ai:443: [Errno 11001] getaddrinfo failed
+2025-01-04 12:58:13,512 - WARNING - No creation date found for qrco.de
+2025-01-04 12:58:13,512 - WARNING - No expiration date found for qrco.de
+2025-01-04 12:58:14,121 - WARNING - No creation date found for meaoee-fc3f.elamzioehr.workers.dev
+2025-01-04 12:58:14,122 - WARNING - No expiration date found for meaoee-fc3f.elamzioehr.workers.dev
+2025-01-04 12:58:14,374 - ERROR - Error checking SSL for canada.postcanadaggb.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:58:14,375 - ERROR - Error checking SSL for posti-fi.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:58:14,412 - ERROR - Failed to resolve meinesparkasse.com using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 12:58:14,887 - ERROR - SSL Error for pub-ecea1eb139834ca592be405c2eb7f228.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:58:15,961 - ERROR - Error checking SSL for bradesco.prime-leveldigital.com: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:58:16,952 - ERROR - Error checking SSL for meinesparkasse.com: [Errno 11001] getaddrinfo failed
+2025-01-04 12:58:48,963 - ERROR - Error checking SSL for usps.com-trackjbe.live: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:58:48,963 - ERROR - Error checking SSL for pttur-gyv.vip: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:58:49,601 - ERROR - Failed to get MX/NS records using DNS API: HTTPSConnectionPool(host='dns.google', port=443): Read timed out. (read timeout=5)
+2025-01-04 12:58:49,603 - ERROR - Error checking SSL for spotify.information-premium.com: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:58:49,603 - ERROR - Error checking SSL for vdacom-pts.cyou: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:58:50,560 - WARNING - No creation date found for qrco.de
+2025-01-04 12:58:50,560 - WARNING - No expiration date found for qrco.de
+2025-01-04 12:58:50,576 - WARNING - No creation date found for qrco.de
+2025-01-04 12:58:50,576 - WARNING - No expiration date found for qrco.de
+2025-01-04 12:58:50,850 - ERROR - SSL Error for pub-aca26f7647f545f392afbeecdcb1ff46.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:58:52,190 - WARNING - No expiration date found for olive488548.studio.site
+2025-01-04 12:58:52,693 - ERROR - SSL Error for pub-4bf302a1b3af4892a9d2466a4a693dbd.r2.dev: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:58:53,130 - WARNING - No creation date found for cryptoexodus.online
+2025-01-04 12:58:53,131 - WARNING - No expiration date found for cryptoexodus.online
+2025-01-04 12:58:53,395 - WARNING - No creation date found for vb-ezk.pages.dev
+2025-01-04 12:58:53,397 - WARNING - No expiration date found for vb-ezk.pages.dev
+2025-01-04 12:58:53,717 - ERROR - WHOIS lookup failed for rioapzxoxoz.firebaseapp.com: No match for "RIOAPZXOXOZ.FIREBASEAPP.COM".
+>>> Last update of whois database: 2025-01-04T05:58:42Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 12:58:54,034 - ERROR - WHOIS lookup failed for bretatie.firebaseapp.com: No match for "BRETATIE.FIREBASEAPP.COM".
+>>> Last update of whois database: 2025-01-04T05:58:42Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 12:58:55,181 - WARNING - No creation date found for 43.156.237.181
+2025-01-04 12:58:55,184 - WARNING - No expiration date found for 43.156.237.181
+2025-01-04 12:58:55,184 - WARNING - No HTTPS for 43.156.237.181
+2025-01-04 12:58:55,507 - ERROR - SSL Error for idolink.com: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:58:55,685 - WARNING - No creation date found for sistema-ungl-2024.web.app
+2025-01-04 12:58:55,685 - WARNING - No expiration date found for sistema-ungl-2024.web.app
+2025-01-04 12:58:57,321 - ERROR - SSL Error for pichinchaing.webcindario.com: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)
+2025-01-04 12:59:11,017 - ERROR - Error checking SSL for olx-pl.gymilos.lol: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:59:11,033 - ERROR - Error checking SSL for usps.com-trackzmz.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:59:14,199 - ERROR - Error checking SSL for cryptoexodus.online: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:59:22,226 - ERROR - Error checking SSL for correos.ss-kl.sbs: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:59:22,335 - ERROR - Error checking SSL for uspskwkmxc.top: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:59:28,897 - ERROR - Error checking SSL for postb-mdb.xyz: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+2025-01-04 12:59:29,116 - ERROR - Failed to resolve crowdflower.com using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 12:59:29,702 - WARNING - No creation date found for decemsys.de
+2025-01-04 12:59:29,703 - WARNING - No expiration date found for decemsys.de
+2025-01-04 12:59:29,703 - WARNING - No HTTPS for decemsys.de
+2025-01-04 12:59:29,903 - ERROR - WHOIS lookup failed for crowdflower.com: [WinError 10054] An existing connection was forcibly closed by the remote host
+2025-01-04 12:59:29,904 - WARNING - No HTTPS for crowdflower.com
+2025-01-04 12:59:29,922 - ERROR - WHOIS lookup failed for yllas.fi: [WinError 10054] An existing connection was forcibly closed by the remote host
+2025-01-04 12:59:29,922 - WARNING - No HTTPS for yllas.fi
+2025-01-04 12:59:29,925 - ERROR - WHOIS lookup failed for neilgaiman.com: [WinError 10054] An existing connection was forcibly closed by the remote host
+2025-01-04 12:59:29,926 - WARNING - No HTTPS for neilgaiman.com
+2025-01-04 12:59:30,216 - ERROR - Failed to resolve ktb.co.th using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 12:59:30,762 - WARNING - No HTTPS for nassjo.se
+2025-01-04 12:59:30,868 - WARNING - No HTTPS for buscarecetas.com.ar
+2025-01-04 12:59:30,949 - WARNING - No HTTPS for pokerschoolonline.com
+2025-01-04 12:59:30,993 - WARNING - No HTTPS for slots.com
+2025-01-04 12:59:31,165 - WARNING - No HTTPS for devpia.com
+2025-01-04 12:59:31,231 - WARNING - No creation date found for ktb.co.th
+2025-01-04 12:59:31,232 - WARNING - No expiration date found for ktb.co.th
+2025-01-04 12:59:31,232 - WARNING - No HTTPS for ktb.co.th
+2025-01-04 12:59:31,332 - WARNING - No HTTPS for yc1000.net
+2025-01-04 12:59:32,080 - WARNING - No creation date found for winefront.com.au
+2025-01-04 12:59:32,080 - WARNING - No expiration date found for winefront.com.au
+2025-01-04 12:59:32,081 - WARNING - No HTTPS for winefront.com.au
+2025-01-04 12:59:32,097 - ERROR - Error trying to connect to socket: closing socket - [Errno 11001] getaddrinfo failed
+2025-01-04 12:59:32,098 - WARNING - No creation date found for answers.travian.com.vn
+2025-01-04 12:59:32,098 - WARNING - No expiration date found for answers.travian.com.vn
+2025-01-04 12:59:32,099 - WARNING - No HTTPS for answers.travian.com.vn
+2025-01-04 12:59:32,112 - WARNING - No HTTPS for telkkarista.com
+2025-01-04 12:59:32,649 - WARNING - No HTTPS for pplp.org
+2025-01-04 12:59:32,654 - WARNING - No HTTPS for praise1065.com
+2025-01-04 12:59:32,660 - WARNING - No HTTPS for tmch.org.tw
+2025-01-04 12:59:33,190 - WARNING - No HTTPS for avocatparis.org
+2025-01-04 12:59:33,335 - WARNING - No HTTPS for biodiversity.ru
+2025-01-04 12:59:33,728 - WARNING - No creation date found for poesieinversi.it
+2025-01-04 12:59:33,730 - WARNING - No expiration date found for poesieinversi.it
+2025-01-04 12:59:33,730 - WARNING - No HTTPS for poesieinversi.it
+2025-01-04 12:59:33,788 - ERROR - Failed to resolve whgaming.com using socket: [Errno 11002] getaddrinfo failed
+2025-01-04 12:59:34,040 - WARNING - No HTTPS for martindalecenter.com
+2025-01-04 12:59:34,085 - WARNING - No HTTPS for crestbook.com
+2025-01-04 12:59:34,245 - WARNING - No creation date found for bicycles.net.au
+2025-01-04 12:59:34,246 - WARNING - No expiration date found for bicycles.net.au
+2025-01-04 12:59:34,246 - WARNING - No HTTPS for bicycles.net.au
+2025-01-04 12:59:35,923 - WARNING - No HTTPS for mono-project.com
+2025-01-04 12:59:35,991 - WARNING - No HTTPS for shop.whois.com
+2025-01-04 12:59:36,029 - WARNING - No HTTPS for whgaming.com
+2025-01-04 12:59:36,097 - WARNING - No HTTPS for dsq-sds.org
+2025-01-04 12:59:36,211 - WARNING - No HTTPS for schoolmusic.co.kr
+2025-01-04 12:59:36,523 - WARNING - No HTTPS for sewing-master.ru
+2025-01-04 12:59:37,094 - WARNING - No HTTPS for boathouserestaurants.ca
+2025-01-04 12:59:38,050 - WARNING - No HTTPS for wearetennis.com
+2025-01-04 12:59:38,107 - WARNING - No HTTPS for hdsa.org
+2025-01-04 12:59:38,185 - ERROR - WHOIS lookup failed for ria.ee: unsupported operand type(s) for -: 'datetime.datetime' and 'str'
+2025-01-04 12:59:38,186 - WARNING - No HTTPS for ria.ee
+2025-01-04 12:59:38,941 - WARNING - No HTTPS for emeraldqueen.com
+2025-01-04 12:59:39,764 - WARNING - No HTTPS for clevelandchildrensmuseum.org
+2025-01-04 12:59:40,015 - WARNING - No HTTPS for njsp.org
+2025-01-04 12:59:40,184 - WARNING - No HTTPS for richbarbellfitness.com
+2025-01-04 12:59:41,166 - WARNING - No HTTPS for arteshopbilbao.com
+2025-01-04 12:59:41,175 - ERROR - Error trying to connect to socket: closing socket - [Errno 11001] getaddrinfo failed
+2025-01-04 12:59:41,175 - WARNING - No creation date found for piticu.ro
+2025-01-04 12:59:41,176 - WARNING - No expiration date found for piticu.ro
+2025-01-04 12:59:41,176 - WARNING - No HTTPS for piticu.ro
+2025-01-04 12:59:41,435 - WARNING - No HTTPS for e-lites.co.uk
+2025-01-04 12:59:41,476 - WARNING - No HTTPS for bet365.it
+2025-01-04 12:59:41,528 - WARNING - No HTTPS for g3voip.com
+2025-01-04 12:59:41,593 - WARNING - No HTTPS for chevaux-barbes.com
+2025-01-04 12:59:41,956 - WARNING - No HTTPS for triatlonchannel.com
+2025-01-04 12:59:42,411 - ERROR - Failed to resolve qushiyun.com using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 12:59:42,474 - WARNING - No HTTPS for fordbarn.com
+2025-01-04 12:59:42,512 - WARNING - No HTTPS for carmag.co.za
+2025-01-04 12:59:42,705 - ERROR - Failed to resolve dine.to using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 12:59:42,711 - WARNING - No HTTPS for harrietbeecherstowecenter.org
+2025-01-04 12:59:42,726 - ERROR - Failed to resolve rekihaku.ac.jp using socket: [Errno 11001] getaddrinfo failed
+2025-01-04 12:59:43,145 - WARNING - No creation date found for rekihaku.ac.jp
+2025-01-04 12:59:43,146 - WARNING - No expiration date found for rekihaku.ac.jp
+2025-01-04 12:59:43,146 - WARNING - No HTTPS for rekihaku.ac.jp
+2025-01-04 12:59:43,326 - WARNING - No HTTPS for dirtgame.com
+2025-01-04 12:59:43,334 - WARNING - No HTTPS for grolsch.com
+2025-01-04 12:59:43,429 - WARNING - No HTTPS for utahhumane.org
+2025-01-04 12:59:44,217 - WARNING - No HTTPS for webmineral.com
+2025-01-04 12:59:44,415 - WARNING - No HTTPS for ozarkmountainrailcar.com
+2025-01-04 12:59:44,795 - WARNING - No HTTPS for iphone-bulgaria.com
+2025-01-04 12:59:44,985 - WARNING - No HTTPS for estrellasoap.com
+2025-01-04 12:59:45,004 - WARNING - No HTTPS for curtisyoungblood.com
+2025-01-04 12:59:45,035 - WARNING - No HTTPS for hirezstudios.com
+2025-01-04 12:59:45,085 - WARNING - No HTTPS for qushiyun.com
+2025-01-04 12:59:45,146 - WARNING - No HTTPS for lazoo.org
+2025-01-04 12:59:45,250 - WARNING - No HTTPS for automotiveforums.com
+2025-01-04 12:59:46,302 - ERROR - WHOIS lookup failed for dev-mex.com: No match for "DEV-MEX.COM".
+>>> Last update of whois database: 2025-01-04T05:59:25Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 12:59:46,302 - WARNING - No HTTPS for dev-mex.com
+2025-01-04 12:59:46,341 - WARNING - No HTTPS for minecraftes.com
+2025-01-04 12:59:46,528 - WARNING - No HTTPS for fusz.com
+2025-01-04 12:59:46,558 - WARNING - No HTTPS for speedline.dk
+2025-01-04 12:59:46,715 - WARNING - No HTTPS for aleve.com
+2025-01-04 12:59:46,787 - WARNING - No HTTPS for gay-test.com
+2025-01-04 12:59:47,163 - ERROR - Error trying to connect to socket: closing socket - [Errno 11001] getaddrinfo failed
+2025-01-04 12:59:47,163 - WARNING - No creation date found for socom.mil
+2025-01-04 12:59:47,163 - WARNING - No expiration date found for socom.mil
+2025-01-04 12:59:47,164 - WARNING - No HTTPS for socom.mil
+2025-01-04 12:59:47,207 - WARNING - No HTTPS for microscopy-analysis.com
+2025-01-04 12:59:47,310 - ERROR - Error trying to connect to socket: closing socket - [WinError 10061] No connection could be made because the target machine actively refused it
+2025-01-04 12:59:47,310 - WARNING - No creation date found for dine.to
+2025-01-04 12:59:47,311 - WARNING - No expiration date found for dine.to
+2025-01-04 12:59:47,311 - WARNING - No HTTPS for dine.to
+2025-01-04 12:59:47,530 - WARNING - No HTTPS for oba.org.br
+2025-01-04 12:59:47,891 - WARNING - No expiration date found for motorhuis.nl
+2025-01-04 12:59:47,892 - WARNING - No HTTPS for motorhuis.nl
+2025-01-04 12:59:47,910 - WARNING - No HTTPS for thebodyshop.co.uk
+2025-01-04 12:59:48,180 - WARNING - No HTTPS for gesundehunde.com
+2025-01-04 12:59:48,277 - WARNING - No HTTPS for mitsuoka-motor.com
+2025-01-04 12:59:48,306 - WARNING - No HTTPS for robinhoodbingo.com
+2025-01-04 12:59:48,826 - ERROR - WHOIS lookup failed for santafe.edu.ar: El dominio no se encuentra registrado en NIC Argentina
+2025-01-04 12:59:48,827 - WARNING - No HTTPS for santafe.edu.ar
+2025-01-04 12:59:49,535 - WARNING - No HTTPS for orkin.com
+2025-01-04 12:59:49,545 - WARNING - No creation date found for wiki-dofus.eu
+2025-01-04 12:59:49,545 - WARNING - No expiration date found for wiki-dofus.eu
+2025-01-04 12:59:49,546 - WARNING - No HTTPS for wiki-dofus.eu
+2025-01-04 12:59:49,550 - WARNING - No expiration date found for gro.gov.uk
+2025-01-04 12:59:49,551 - WARNING - No HTTPS for gro.gov.uk
+2025-01-04 12:59:49,840 - WARNING - No HTTPS for kickinghorseresort.com
+2025-01-04 12:59:49,846 - WARNING - No HTTPS for us-funerals.com
+2025-01-04 12:59:50,038 - WARNING - No HTTPS for thetreatmenthelpline.com
+2025-01-04 12:59:50,365 - WARNING - No HTTPS for ncsml.org
+2025-01-04 12:59:50,524 - WARNING - No HTTPS for elhistoriador.com.ar
+2025-01-04 12:59:51,414 - WARNING - No HTTPS for tokyo42195.org
+2025-01-04 12:59:51,593 - ERROR - Failed to get MX/NS records using DNS API: HTTPSConnectionPool(host='dns.google', port=443): Read timed out. (read timeout=5)
+2025-01-04 12:59:51,965 - WARNING - No HTTPS for neons.org
+2025-01-04 12:59:52,034 - WARNING - No HTTPS for microbeworld.org
+2025-01-04 12:59:52,100 - WARNING - No HTTPS for trafficschoolonline.com
+2025-01-04 12:59:52,315 - WARNING - No HTTPS for local.amazon.com
+2025-01-04 12:59:52,368 - WARNING - No HTTPS for orionleathercompany.com
+2025-01-04 12:59:52,375 - WARNING - No HTTPS for whichlotto.com
+2025-01-04 12:59:52,402 - ERROR - Error trying to connect to socket: closing socket - [WinError 10061] No connection could be made because the target machine actively refused it
+2025-01-04 12:59:52,403 - WARNING - No creation date found for thermoscientific.es
+2025-01-04 12:59:52,404 - WARNING - No expiration date found for thermoscientific.es
+2025-01-04 12:59:52,404 - WARNING - No HTTPS for thermoscientific.es
+2025-01-04 12:59:52,769 - WARNING - No creation date found for dolr.nic.in
+2025-01-04 12:59:52,771 - WARNING - No expiration date found for dolr.nic.in
+2025-01-04 12:59:52,771 - WARNING - No HTTPS for dolr.nic.in
+2025-01-04 12:59:52,820 - WARNING - No HTTPS for aide-handicap.info
+2025-01-04 12:59:53,414 - WARNING - No HTTPS for parsippanylibrary.org
+2025-01-04 12:59:53,484 - ERROR - WHOIS lookup failed for klementine.net: No match for "KLEMENTINE.NET".
+>>> Last update of whois database: 2025-01-04T05:59:42Z <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.  VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+
+2025-01-04 12:59:53,484 - WARNING - No HTTPS for klementine.net
+2025-01-04 12:59:53,494 - WARNING - No HTTPS for bionetonline.org
+2025-01-04 12:59:53,506 - WARNING - No HTTPS for nctsn.org
+2025-01-04 12:59:54,190 - WARNING - No HTTPS for fbresearch.org
+2025-01-04 12:59:54,273 - WARNING - No HTTPS for i-atumen.tumblr.com
+2025-01-04 12:59:54,300 - INFO - Removed 3 constant features
+2025-01-04 12:59:54,303 - INFO - Removed 3 highly correlated features
+2025-01-04 12:59:54,307 - INFO - Scaled 15 numerical features using RobustScaler
+2025-01-04 12:59:54,309 - INFO - Final dataset shape: (200, 21)
+2025-01-04 12:59:54,309 - INFO - 
+Splitting data into train, validation, and test sets...
+2025-01-04 12:59:54,309 - INFO - Number of splits: 10
+2025-01-04 12:59:54,310 - INFO - 
+Processing split 1/10
+2025-01-04 12:59:54,311 - INFO - Split 1 sizes:
+2025-01-04 12:59:54,312 - INFO - Training set: 135 samples (67.5%)
+2025-01-04 12:59:54,312 - INFO -   - Class distribution: [73 62]
+2025-01-04 12:59:54,312 - INFO -   - Number of unique domains: 126
+2025-01-04 12:59:54,312 - INFO - Validation set: 45 samples (22.5%)
+2025-01-04 12:59:54,313 - INFO -   - Class distribution: [20 25]
+2025-01-04 12:59:54,313 - INFO -   - Number of unique domains: 44
+2025-01-04 12:59:54,313 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:59:54,313 - INFO -   - Class distribution: [ 7 13]
+2025-01-04 12:59:54,313 - INFO -   - Number of unique domains: 15
+2025-01-04 12:59:54,314 - INFO - 
+Processing split 2/10
+2025-01-04 12:59:54,315 - INFO - Split 2 sizes:
+2025-01-04 12:59:54,316 - INFO - Training set: 131 samples (65.5%)
+2025-01-04 12:59:54,316 - INFO -   - Class distribution: [71 60]
+2025-01-04 12:59:54,316 - INFO -   - Number of unique domains: 123
+2025-01-04 12:59:54,316 - INFO - Validation set: 49 samples (24.5%)
+2025-01-04 12:59:54,317 - INFO -   - Class distribution: [21 28]
+2025-01-04 12:59:54,317 - INFO -   - Number of unique domains: 48
+2025-01-04 12:59:54,317 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:59:54,317 - INFO -   - Class distribution: [ 8 12]
+2025-01-04 12:59:54,317 - INFO -   - Number of unique domains: 15
+2025-01-04 12:59:54,318 - INFO - 
+Processing split 3/10
+2025-01-04 12:59:54,319 - INFO - Split 3 sizes:
+2025-01-04 12:59:54,319 - INFO - Training set: 137 samples (68.5%)
+2025-01-04 12:59:54,319 - INFO -   - Class distribution: [67 70]
+2025-01-04 12:59:54,319 - INFO -   - Number of unique domains: 127
+2025-01-04 12:59:54,320 - INFO - Validation set: 43 samples (21.5%)
+2025-01-04 12:59:54,320 - INFO -   - Class distribution: [24 19]
+2025-01-04 12:59:54,320 - INFO -   - Number of unique domains: 43
+2025-01-04 12:59:54,320 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:59:54,320 - INFO -   - Class distribution: [ 9 11]
+2025-01-04 12:59:54,321 - INFO -   - Number of unique domains: 18
+2025-01-04 12:59:54,321 - INFO - 
+Processing split 4/10
+2025-01-04 12:59:54,323 - INFO - Split 4 sizes:
+2025-01-04 12:59:54,323 - INFO - Training set: 138 samples (69.0%)
+2025-01-04 12:59:54,323 - INFO -   - Class distribution: [71 67]
+2025-01-04 12:59:54,324 - INFO -   - Number of unique domains: 129
+2025-01-04 12:59:54,324 - INFO - Validation set: 42 samples (21.0%)
+2025-01-04 12:59:54,324 - INFO -   - Class distribution: [20 22]
+2025-01-04 12:59:54,324 - INFO -   - Number of unique domains: 40
+2025-01-04 12:59:54,324 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:59:54,325 - INFO -   - Class distribution: [ 9 11]
+2025-01-04 12:59:54,325 - INFO -   - Number of unique domains: 19
+2025-01-04 12:59:54,325 - INFO - 
+Processing split 5/10
+2025-01-04 12:59:54,326 - INFO - Split 5 sizes:
+2025-01-04 12:59:54,326 - INFO - Training set: 138 samples (69.0%)
+2025-01-04 12:59:54,327 - INFO -   - Class distribution: [68 70]
+2025-01-04 12:59:54,327 - INFO -   - Number of unique domains: 129
+2025-01-04 12:59:54,328 - INFO - Validation set: 42 samples (21.0%)
+2025-01-04 12:59:54,328 - INFO -   - Class distribution: [23 19]
+2025-01-04 12:59:54,328 - INFO -   - Number of unique domains: 41
+2025-01-04 12:59:54,328 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:59:54,329 - INFO -   - Class distribution: [ 9 11]
+2025-01-04 12:59:54,329 - INFO -   - Number of unique domains: 19
+2025-01-04 12:59:54,329 - INFO - 
+Processing split 6/10
+2025-01-04 12:59:54,330 - INFO - Split 6 sizes:
+2025-01-04 12:59:54,330 - INFO - Training set: 138 samples (69.0%)
+2025-01-04 12:59:54,331 - INFO -   - Class distribution: [66 72]
+2025-01-04 12:59:54,331 - INFO -   - Number of unique domains: 129
+2025-01-04 12:59:54,331 - INFO - Validation set: 42 samples (21.0%)
+2025-01-04 12:59:54,331 - INFO -   - Class distribution: [23 19]
+2025-01-04 12:59:54,332 - INFO -   - Number of unique domains: 40
+2025-01-04 12:59:54,332 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:59:54,332 - INFO -   - Class distribution: [11  9]
+2025-01-04 12:59:54,332 - INFO -   - Number of unique domains: 20
+2025-01-04 12:59:54,332 - INFO - 
+Processing split 7/10
+2025-01-04 12:59:54,334 - INFO - Split 7 sizes:
+2025-01-04 12:59:54,334 - INFO - Training set: 138 samples (69.0%)
+2025-01-04 12:59:54,335 - INFO -   - Class distribution: [64 74]
+2025-01-04 12:59:54,335 - INFO -   - Number of unique domains: 126
+2025-01-04 12:59:54,335 - INFO - Validation set: 42 samples (21.0%)
+2025-01-04 12:59:54,335 - INFO -   - Class distribution: [26 16]
+2025-01-04 12:59:54,335 - INFO -   - Number of unique domains: 42
+2025-01-04 12:59:54,336 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:59:54,336 - INFO -   - Class distribution: [10 10]
+2025-01-04 12:59:54,336 - INFO -   - Number of unique domains: 20
+2025-01-04 12:59:54,337 - INFO - 
+Processing split 8/10
+2025-01-04 12:59:54,338 - INFO - Split 8 sizes:
+2025-01-04 12:59:54,338 - INFO - Training set: 137 samples (68.5%)
+2025-01-04 12:59:54,338 - INFO -   - Class distribution: [61 76]
+2025-01-04 12:59:54,338 - INFO -   - Number of unique domains: 129
+2025-01-04 12:59:54,338 - INFO - Validation set: 43 samples (21.5%)
+2025-01-04 12:59:54,339 - INFO -   - Class distribution: [26 17]
+2025-01-04 12:59:54,339 - INFO -   - Number of unique domains: 42
+2025-01-04 12:59:54,339 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:59:54,340 - INFO -   - Class distribution: [13  7]
+2025-01-04 12:59:54,340 - INFO -   - Number of unique domains: 20
+2025-01-04 12:59:54,340 - INFO - 
+Processing split 9/10
+2025-01-04 12:59:54,340 - INFO - Split 9 sizes:
+2025-01-04 12:59:54,341 - INFO - Training set: 137 samples (68.5%)
+2025-01-04 12:59:54,341 - INFO -   - Class distribution: [65 72]
+2025-01-04 12:59:54,341 - INFO -   - Number of unique domains: 126
+2025-01-04 12:59:54,341 - INFO - Validation set: 43 samples (21.5%)
+2025-01-04 12:59:54,342 - INFO -   - Class distribution: [21 22]
+2025-01-04 12:59:54,342 - INFO -   - Number of unique domains: 43
+2025-01-04 12:59:54,342 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:59:54,342 - INFO -   - Class distribution: [14  6]
+2025-01-04 12:59:54,342 - INFO -   - Number of unique domains: 20
+2025-01-04 12:59:54,342 - INFO - 
+Processing split 10/10
+2025-01-04 12:59:54,343 - INFO - Split 10 sizes:
+2025-01-04 12:59:54,344 - INFO - Training set: 137 samples (68.5%)
+2025-01-04 12:59:54,344 - INFO -   - Class distribution: [63 74]
+2025-01-04 12:59:54,344 - INFO -   - Number of unique domains: 130
+2025-01-04 12:59:54,344 - INFO - Validation set: 43 samples (21.5%)
+2025-01-04 12:59:54,345 - INFO -   - Class distribution: [27 16]
+2025-01-04 12:59:54,345 - INFO -   - Number of unique domains: 40
+2025-01-04 12:59:54,345 - INFO - Test set: 20 samples (10.0%)
+2025-01-04 12:59:54,345 - INFO -   - Class distribution: [10 10]
+2025-01-04 12:59:54,345 - INFO -   - Number of unique domains: 20
+2025-01-04 12:59:54,346 - INFO - 
+Data splitting completed in 0.04 seconds
+2025-01-04 12:59:54,346 - INFO - 
+Training model for split 1/10
+2025-01-04 13:03:54,176 - INFO - 
+Best parameters found:
+2025-01-04 13:03:54,176 - INFO - {'ccp_alpha': 0.001, 'class_weight': 'balanced', 'max_depth': 6, 'max_features': 'sqrt', 'max_samples': 0.7, 'min_samples_leaf': 3, 'min_samples_split': 8, 'n_estimators': 200}
+2025-01-04 13:03:54,177 - INFO - 
+Best cross-validation scores:
+2025-01-04 13:03:54,177 - INFO - accuracy: 0.9926
+2025-01-04 13:03:54,177 - INFO - precision: 1.0000
+2025-01-04 13:03:54,178 - INFO - recall: 0.9833
+2025-01-04 13:03:54,178 - INFO - f1: 0.9913
+2025-01-04 13:03:54,178 - INFO - roc_auc: 1.0000
+2025-01-04 13:03:55,416 - INFO - Model training completed in 241.07 seconds
+2025-01-04 13:03:55,559 - INFO - 
+Validation Set Set Performance:
+2025-01-04 13:03:55,563 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        20
+           1       1.00      1.00      1.00        25
+
+    accuracy                           1.00        45
+   macro avg       1.00      1.00      1.00        45
+weighted avg       1.00      1.00      1.00        45
+
+2025-01-04 13:03:55,563 - INFO - 
+Detailed Validation Set Set Metrics:
+2025-01-04 13:03:55,563 - INFO - Brier Score: 0.0058
+2025-01-04 13:03:55,564 - INFO - Log Loss: 0.0757
+2025-01-04 13:03:55,565 - INFO - Optimal Threshold: 0.8254
+2025-01-04 13:03:55,698 - INFO - 
+Test Set Set Performance:
+2025-01-04 13:03:55,702 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00         7
+           1       1.00      1.00      1.00        13
+
+    accuracy                           1.00        20
+   macro avg       1.00      1.00      1.00        20
+weighted avg       1.00      1.00      1.00        20
+
+2025-01-04 13:03:55,702 - INFO - 
+Detailed Test Set Set Metrics:
+2025-01-04 13:03:55,703 - INFO - Brier Score: 0.0044
+2025-01-04 13:03:55,703 - INFO - Log Loss: 0.0665
+2025-01-04 13:03:55,703 - INFO - Optimal Threshold: 0.9010
+2025-01-04 13:03:55,704 - INFO - Model evaluation completed in 0.29 seconds
+2025-01-04 13:03:55,704 - INFO - 
+Generating learning curve plot...
+2025-01-04 13:03:58,270 - INFO - Plot generation completed in 2.57 seconds
+2025-01-04 13:03:58,286 - INFO - 
+Feature Importance by Group:
+2025-01-04 13:03:58,286 - INFO - URL: 0.5241
+2025-01-04 13:03:58,286 - INFO - SSL: 0.3833
+2025-01-04 13:03:58,287 - INFO - DNS: 0.0547
+2025-01-04 13:03:58,287 - INFO - 
+Feature Importance:
+2025-01-04 13:03:58,289 - INFO -                 feature  importance
+               is_https    0.285047
+          domain_length    0.244182
+             url_length    0.162344
+has_multiple_subdomains    0.095145
+         ssl_days_valid    0.059913
+           ssl_is_valid    0.038381
+        domain_age_days    0.031150
+         num_mx_records    0.027593
+               has_dash    0.022420
+          has_mx_record    0.018241
+         num_ns_records    0.005872
+     days_to_expiration    0.002975
+          has_ns_record    0.002922
+        is_domain_young    0.002629
+       is_expiring_soon    0.000620
+          has_registrar    0.000491
+           has_a_record    0.000075
+          has_at_symbol    0.000000
+                 has_ip    0.000000
+2025-01-04 13:03:58,289 - INFO - Feature importance analysis completed in 0.02 seconds
+2025-01-04 13:03:58,525 - INFO - 
+Model saved to: models/split_1\phishing_detector_split_0_20250104_130358.joblib
+2025-01-04 13:03:58,526 - INFO - Feature names saved to: models/split_1\feature_names_split_0_20250104_130358.joblib
+2025-01-04 13:03:58,526 - INFO - Model saving completed in 0.24 seconds
+2025-01-04 13:03:58,526 - INFO - Split 1 completed in 244.18 seconds
+2025-01-04 13:03:58,527 - INFO - 
+Training model for split 2/10
+2025-01-04 13:08:07,926 - INFO - 
+Best parameters found:
+2025-01-04 13:08:07,926 - INFO - {'ccp_alpha': 0.001, 'class_weight': 'balanced', 'max_depth': 6, 'max_features': 'sqrt', 'max_samples': 0.7, 'min_samples_leaf': 3, 'min_samples_split': 8, 'n_estimators': 200}
+2025-01-04 13:08:07,926 - INFO - 
+Best cross-validation scores:
+2025-01-04 13:08:07,927 - INFO - accuracy: 0.9923
+2025-01-04 13:08:07,927 - INFO - precision: 1.0000
+2025-01-04 13:08:07,927 - INFO - recall: 0.9833
+2025-01-04 13:08:07,928 - INFO - f1: 0.9913
+2025-01-04 13:08:07,928 - INFO - roc_auc: 1.0000
+2025-01-04 13:08:09,108 - INFO - Model training completed in 250.58 seconds
+2025-01-04 13:08:09,244 - INFO - 
+Validation Set Set Performance:
+2025-01-04 13:08:09,249 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        21
+           1       1.00      1.00      1.00        28
+
+    accuracy                           1.00        49
+   macro avg       1.00      1.00      1.00        49
+weighted avg       1.00      1.00      1.00        49
+
+2025-01-04 13:08:09,250 - INFO - 
+Detailed Validation Set Set Metrics:
+2025-01-04 13:08:09,250 - INFO - Brier Score: 0.0052
+2025-01-04 13:08:09,251 - INFO - Log Loss: 0.0718
+2025-01-04 13:08:09,252 - INFO - Optimal Threshold: 0.8327
+2025-01-04 13:08:09,388 - INFO - 
+Test Set Set Performance:
+2025-01-04 13:08:09,392 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00         8
+           1       1.00      1.00      1.00        12
+
+    accuracy                           1.00        20
+   macro avg       1.00      1.00      1.00        20
+weighted avg       1.00      1.00      1.00        20
+
+2025-01-04 13:08:09,393 - INFO - 
+Detailed Test Set Set Metrics:
+2025-01-04 13:08:09,393 - INFO - Brier Score: 0.0041
+2025-01-04 13:08:09,394 - INFO - Log Loss: 0.0655
+2025-01-04 13:08:09,394 - INFO - Optimal Threshold: 0.9065
+2025-01-04 13:08:09,395 - INFO - Model evaluation completed in 0.29 seconds
+2025-01-04 13:08:09,395 - INFO - 
+Generating learning curve plot...
+2025-01-04 13:08:11,798 - INFO - Plot generation completed in 2.40 seconds
+2025-01-04 13:08:11,815 - INFO - 
+Feature Importance by Group:
+2025-01-04 13:08:11,815 - INFO - URL: 0.5361
+2025-01-04 13:08:11,815 - INFO - SSL: 0.3654
+2025-01-04 13:08:11,815 - INFO - DNS: 0.0456
+2025-01-04 13:08:11,815 - INFO - 
+Feature Importance:
+2025-01-04 13:08:11,817 - INFO -                 feature  importance
+               is_https    0.276904
+          domain_length    0.263658
+             url_length    0.146705
+has_multiple_subdomains    0.101676
+         ssl_days_valid    0.045143
+           ssl_is_valid    0.043397
+        domain_age_days    0.032659
+               has_dash    0.024049
+         num_mx_records    0.022775
+          has_mx_record    0.015763
+        is_domain_young    0.013172
+     days_to_expiration    0.005092
+         num_ns_records    0.004550
+          has_ns_record    0.002562
+          has_registrar    0.001601
+       is_expiring_soon    0.000295
+           has_a_record    0.000000
+          has_at_symbol    0.000000
+                 has_ip    0.000000
+2025-01-04 13:08:11,817 - INFO - Feature importance analysis completed in 0.02 seconds
+2025-01-04 13:08:12,058 - INFO - 
+Model saved to: models/split_2\phishing_detector_split_1_20250104_130811.joblib
+2025-01-04 13:08:12,060 - INFO - Feature names saved to: models/split_2\feature_names_split_1_20250104_130811.joblib
+2025-01-04 13:08:12,060 - INFO - Model saving completed in 0.24 seconds
+2025-01-04 13:08:12,060 - INFO - Split 2 completed in 253.53 seconds
+2025-01-04 13:08:12,060 - INFO - 
+Training model for split 3/10
+2025-01-04 13:12:18,501 - INFO - 
+Best parameters found:
+2025-01-04 13:12:18,502 - INFO - {'ccp_alpha': 0.001, 'class_weight': 'balanced', 'max_depth': 6, 'max_features': 'sqrt', 'max_samples': 0.7, 'min_samples_leaf': 3, 'min_samples_split': 8, 'n_estimators': 200}
+2025-01-04 13:12:18,502 - INFO - 
+Best cross-validation scores:
+2025-01-04 13:12:18,503 - INFO - accuracy: 0.9926
+2025-01-04 13:12:18,503 - INFO - precision: 1.0000
+2025-01-04 13:12:18,503 - INFO - recall: 0.9857
+2025-01-04 13:12:18,503 - INFO - f1: 0.9926
+2025-01-04 13:12:18,503 - INFO - roc_auc: 1.0000
+2025-01-04 13:12:19,735 - INFO - Model training completed in 247.67 seconds
+2025-01-04 13:12:19,860 - INFO - 
+Validation Set Set Performance:
+2025-01-04 13:12:19,863 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        24
+           1       1.00      1.00      1.00        19
+
+    accuracy                           1.00        43
+   macro avg       1.00      1.00      1.00        43
+weighted avg       1.00      1.00      1.00        43
+
+2025-01-04 13:12:19,863 - INFO - 
+Detailed Validation Set Set Metrics:
+2025-01-04 13:12:19,864 - INFO - Brier Score: 0.0086
+2025-01-04 13:12:19,864 - INFO - Log Loss: 0.0866
+2025-01-04 13:12:19,865 - INFO - Optimal Threshold: 0.7057
+2025-01-04 13:12:20,001 - INFO - 
+Test Set Set Performance:
+2025-01-04 13:12:20,005 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00         9
+           1       1.00      1.00      1.00        11
+
+    accuracy                           1.00        20
+   macro avg       1.00      1.00      1.00        20
+weighted avg       1.00      1.00      1.00        20
+
+2025-01-04 13:12:20,005 - INFO - 
+Detailed Test Set Set Metrics:
+2025-01-04 13:12:20,005 - INFO - Brier Score: 0.0051
+2025-01-04 13:12:20,006 - INFO - Log Loss: 0.0707
+2025-01-04 13:12:20,006 - INFO - Optimal Threshold: 0.8867
+2025-01-04 13:12:20,007 - INFO - Model evaluation completed in 0.27 seconds
+2025-01-04 13:12:20,007 - INFO - 
+Generating learning curve plot...
+2025-01-04 13:12:22,490 - INFO - Plot generation completed in 2.48 seconds
+2025-01-04 13:12:22,506 - INFO - 
+Feature Importance by Group:
+2025-01-04 13:12:22,506 - INFO - URL: 0.5258
+2025-01-04 13:12:22,506 - INFO - SSL: 0.3727
+2025-01-04 13:12:22,507 - INFO - DNS: 0.0555
+2025-01-04 13:12:22,507 - INFO - 
+Feature Importance:
+2025-01-04 13:12:22,508 - INFO -                 feature  importance
+               is_https    0.279975
+          domain_length    0.253006
+             url_length    0.139285
+has_multiple_subdomains    0.119901
+         ssl_days_valid    0.056159
+           ssl_is_valid    0.036601
+        domain_age_days    0.032619
+         num_mx_records    0.031223
+          has_mx_record    0.018342
+               has_dash    0.013591
+     days_to_expiration    0.005415
+        is_domain_young    0.004971
+         num_ns_records    0.003462
+          has_ns_record    0.002427
+          has_registrar    0.002240
+       is_expiring_soon    0.000757
+           has_a_record    0.000026
+          has_at_symbol    0.000000
+                 has_ip    0.000000
+2025-01-04 13:12:22,508 - INFO - Feature importance analysis completed in 0.02 seconds
+2025-01-04 13:12:22,756 - INFO - 
+Model saved to: models/split_3\phishing_detector_split_2_20250104_131222.joblib
+2025-01-04 13:12:22,758 - INFO - Feature names saved to: models/split_3\feature_names_split_2_20250104_131222.joblib
+2025-01-04 13:12:22,758 - INFO - Model saving completed in 0.25 seconds
+2025-01-04 13:12:22,758 - INFO - Split 3 completed in 250.70 seconds
+2025-01-04 13:12:22,758 - INFO - 
+Training model for split 4/10
+2025-01-04 13:16:40,310 - INFO - 
+Best parameters found:
+2025-01-04 13:16:40,311 - INFO - {'ccp_alpha': 0.001, 'class_weight': 'balanced', 'max_depth': 6, 'max_features': 'sqrt', 'max_samples': 0.7, 'min_samples_leaf': 3, 'min_samples_split': 8, 'n_estimators': 200}
+2025-01-04 13:16:40,311 - INFO - 
+Best cross-validation scores:
+2025-01-04 13:16:40,311 - INFO - accuracy: 1.0000
+2025-01-04 13:16:40,311 - INFO - precision: 1.0000
+2025-01-04 13:16:40,311 - INFO - recall: 1.0000
+2025-01-04 13:16:40,312 - INFO - f1: 1.0000
+2025-01-04 13:16:40,312 - INFO - roc_auc: 1.0000
+2025-01-04 13:16:41,513 - INFO - Model training completed in 258.75 seconds
+2025-01-04 13:16:41,644 - INFO - 
+Validation Set Set Performance:
+2025-01-04 13:16:41,648 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        20
+           1       1.00      1.00      1.00        22
+
+    accuracy                           1.00        42
+   macro avg       1.00      1.00      1.00        42
+weighted avg       1.00      1.00      1.00        42
+
+2025-01-04 13:16:41,648 - INFO - 
+Detailed Validation Set Set Metrics:
+2025-01-04 13:16:41,649 - INFO - Brier Score: 0.0052
+2025-01-04 13:16:41,650 - INFO - Log Loss: 0.0709
+2025-01-04 13:16:41,650 - INFO - Optimal Threshold: 0.8133
+2025-01-04 13:16:41,787 - INFO - 
+Test Set Set Performance:
+2025-01-04 13:16:41,790 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00         9
+           1       1.00      1.00      1.00        11
+
+    accuracy                           1.00        20
+   macro avg       1.00      1.00      1.00        20
+weighted avg       1.00      1.00      1.00        20
+
+2025-01-04 13:16:41,791 - INFO - 
+Detailed Test Set Set Metrics:
+2025-01-04 13:16:41,791 - INFO - Brier Score: 0.0287
+2025-01-04 13:16:41,792 - INFO - Log Loss: 0.1205
+2025-01-04 13:16:41,792 - INFO - Optimal Threshold: 0.2895
+2025-01-04 13:16:41,793 - INFO - Model evaluation completed in 0.28 seconds
+2025-01-04 13:16:41,793 - INFO - 
+Generating learning curve plot...
+2025-01-04 13:16:44,105 - INFO - Plot generation completed in 2.31 seconds
+2025-01-04 13:16:44,123 - INFO - 
+Feature Importance by Group:
+2025-01-04 13:16:44,123 - INFO - URL: 0.5064
+2025-01-04 13:16:44,123 - INFO - SSL: 0.4326
+2025-01-04 13:16:44,124 - INFO - DNS: 0.0321
+2025-01-04 13:16:44,124 - INFO - 
+Feature Importance:
+2025-01-04 13:16:44,125 - INFO -                 feature  importance
+               is_https    0.287712
+          domain_length    0.244747
+             url_length    0.153725
+         ssl_days_valid    0.089092
+has_multiple_subdomains    0.080103
+           ssl_is_valid    0.055783
+               has_dash    0.027849
+        domain_age_days    0.019462
+         num_mx_records    0.015300
+          has_mx_record    0.012614
+        is_domain_young    0.004783
+     days_to_expiration    0.003940
+         num_ns_records    0.002623
+          has_ns_record    0.001606
+          has_registrar    0.000358
+       is_expiring_soon    0.000302
+           has_a_record    0.000000
+          has_at_symbol    0.000000
+                 has_ip    0.000000
+2025-01-04 13:16:44,126 - INFO - Feature importance analysis completed in 0.02 seconds
+2025-01-04 13:16:44,313 - INFO - 
+Model saved to: models/split_4\phishing_detector_split_3_20250104_131644.joblib
+2025-01-04 13:16:44,314 - INFO - Feature names saved to: models/split_4\feature_names_split_3_20250104_131644.joblib
+2025-01-04 13:16:44,314 - INFO - Model saving completed in 0.19 seconds
+2025-01-04 13:16:44,315 - INFO - Split 4 completed in 261.56 seconds
+2025-01-04 13:16:44,315 - INFO - 
+Training model for split 5/10
+2025-01-04 13:20:57,380 - INFO - 
+Best parameters found:
+2025-01-04 13:20:57,380 - INFO - {'ccp_alpha': 0.001, 'class_weight': 'balanced', 'max_depth': 6, 'max_features': 'sqrt', 'max_samples': 0.7, 'min_samples_leaf': 3, 'min_samples_split': 8, 'n_estimators': 200}
+2025-01-04 13:20:57,381 - INFO - 
+Best cross-validation scores:
+2025-01-04 13:20:57,381 - INFO - accuracy: 0.9929
+2025-01-04 13:20:57,381 - INFO - precision: 1.0000
+2025-01-04 13:20:57,381 - INFO - recall: 0.9857
+2025-01-04 13:20:57,381 - INFO - f1: 0.9926
+2025-01-04 13:20:57,381 - INFO - roc_auc: 1.0000
+2025-01-04 13:20:58,621 - INFO - Model training completed in 254.31 seconds
+2025-01-04 13:20:58,743 - INFO - 
+Validation Set Set Performance:
+2025-01-04 13:20:58,747 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        23
+           1       1.00      1.00      1.00        19
+
+    accuracy                           1.00        42
+   macro avg       1.00      1.00      1.00        42
+weighted avg       1.00      1.00      1.00        42
+
+2025-01-04 13:20:58,747 - INFO - 
+Detailed Validation Set Set Metrics:
+2025-01-04 13:20:58,748 - INFO - Brier Score: 0.0053
+2025-01-04 13:20:58,748 - INFO - Log Loss: 0.0713
+2025-01-04 13:20:58,749 - INFO - Optimal Threshold: 0.8246
+2025-01-04 13:20:58,883 - INFO - 
+Test Set Set Performance:
+2025-01-04 13:20:58,888 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00         9
+           1       1.00      1.00      1.00        11
+
+    accuracy                           1.00        20
+   macro avg       1.00      1.00      1.00        20
+weighted avg       1.00      1.00      1.00        20
+
+2025-01-04 13:20:58,888 - INFO - 
+Detailed Test Set Set Metrics:
+2025-01-04 13:20:58,889 - INFO - Brier Score: 0.0053
+2025-01-04 13:20:58,890 - INFO - Log Loss: 0.0724
+2025-01-04 13:20:58,890 - INFO - Optimal Threshold: 0.8714
+2025-01-04 13:20:58,890 - INFO - Model evaluation completed in 0.27 seconds
+2025-01-04 13:20:58,891 - INFO - 
+Generating learning curve plot...
+2025-01-04 13:21:01,451 - INFO - Plot generation completed in 2.56 seconds
+2025-01-04 13:21:01,468 - INFO - 
+Feature Importance by Group:
+2025-01-04 13:21:01,468 - INFO - URL: 0.5234
+2025-01-04 13:21:01,468 - INFO - SSL: 0.3929
+2025-01-04 13:21:01,468 - INFO - DNS: 0.0489
+2025-01-04 13:21:01,468 - INFO - 
+Feature Importance:
+2025-01-04 13:21:01,470 - INFO -                 feature  importance
+               is_https    0.285678
+          domain_length    0.256494
+             url_length    0.155408
+has_multiple_subdomains    0.096114
+         ssl_days_valid    0.056259
+           ssl_is_valid    0.050948
+        domain_age_days    0.025495
+         num_mx_records    0.022408
+          has_mx_record    0.019234
+               has_dash    0.015345
+         num_ns_records    0.005526
+     days_to_expiration    0.005380
+        is_domain_young    0.002706
+          has_ns_record    0.001725
+          has_registrar    0.000724
+       is_expiring_soon    0.000553
+           has_a_record    0.000004
+          has_at_symbol    0.000000
+                 has_ip    0.000000
+2025-01-04 13:21:01,470 - INFO - Feature importance analysis completed in 0.02 seconds
+2025-01-04 13:21:01,705 - INFO - 
+Model saved to: models/split_5\phishing_detector_split_4_20250104_132101.joblib
+2025-01-04 13:21:01,707 - INFO - Feature names saved to: models/split_5\feature_names_split_4_20250104_132101.joblib
+2025-01-04 13:21:01,707 - INFO - Model saving completed in 0.24 seconds
+2025-01-04 13:21:01,707 - INFO - Split 5 completed in 257.39 seconds
+2025-01-04 13:21:01,708 - INFO - 
+Training model for split 6/10
+2025-01-04 13:25:19,337 - INFO - 
+Best parameters found:
+2025-01-04 13:25:19,338 - INFO - {'ccp_alpha': 0.001, 'class_weight': 'balanced', 'max_depth': 6, 'max_features': 'sqrt', 'max_samples': 0.7, 'min_samples_leaf': 3, 'min_samples_split': 8, 'n_estimators': 200}
+2025-01-04 13:25:19,338 - INFO - 
+Best cross-validation scores:
+2025-01-04 13:25:19,338 - INFO - accuracy: 0.9929
+2025-01-04 13:25:19,338 - INFO - precision: 1.0000
+2025-01-04 13:25:19,339 - INFO - recall: 0.9867
+2025-01-04 13:25:19,339 - INFO - f1: 0.9931
+2025-01-04 13:25:19,339 - INFO - roc_auc: 1.0000
+2025-01-04 13:25:20,566 - INFO - Model training completed in 258.86 seconds
+2025-01-04 13:25:20,692 - INFO - 
+Validation Set Set Performance:
+2025-01-04 13:25:20,696 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        23
+           1       1.00      1.00      1.00        19
+
+    accuracy                           1.00        42
+   macro avg       1.00      1.00      1.00        42
+weighted avg       1.00      1.00      1.00        42
+
+2025-01-04 13:25:20,696 - INFO - 
+Detailed Validation Set Set Metrics:
+2025-01-04 13:25:20,696 - INFO - Brier Score: 0.0055
+2025-01-04 13:25:20,697 - INFO - Log Loss: 0.0725
+2025-01-04 13:25:20,697 - INFO - Optimal Threshold: 0.8163
+2025-01-04 13:25:20,833 - INFO - 
+Test Set Set Performance:
+2025-01-04 13:25:20,838 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        11
+           1       1.00      1.00      1.00         9
+
+    accuracy                           1.00        20
+   macro avg       1.00      1.00      1.00        20
+weighted avg       1.00      1.00      1.00        20
+
+2025-01-04 13:25:20,839 - INFO - 
+Detailed Test Set Set Metrics:
+2025-01-04 13:25:20,839 - INFO - Brier Score: 0.0059
+2025-01-04 13:25:20,840 - INFO - Log Loss: 0.0749
+2025-01-04 13:25:20,841 - INFO - Optimal Threshold: 0.9232
+2025-01-04 13:25:20,841 - INFO - Model evaluation completed in 0.27 seconds
+2025-01-04 13:25:20,841 - INFO - 
+Generating learning curve plot...
+2025-01-04 13:25:23,308 - INFO - Plot generation completed in 2.47 seconds
+2025-01-04 13:25:23,326 - INFO - 
+Feature Importance by Group:
+2025-01-04 13:25:23,326 - INFO - URL: 0.5059
+2025-01-04 13:25:23,328 - INFO - SSL: 0.4046
+2025-01-04 13:25:23,328 - INFO - DNS: 0.0446
+2025-01-04 13:25:23,328 - INFO - 
+Feature Importance:
+2025-01-04 13:25:23,330 - INFO -                 feature  importance
+               is_https    0.292883
+          domain_length    0.244395
+             url_length    0.143985
+has_multiple_subdomains    0.101196
+         ssl_days_valid    0.073146
+           ssl_is_valid    0.038617
+        domain_age_days    0.032524
+         num_mx_records    0.019685
+          has_mx_record    0.018357
+               has_dash    0.016293
+         num_ns_records    0.005468
+     days_to_expiration    0.004971
+        is_domain_young    0.004483
+          has_registrar    0.002543
+          has_ns_record    0.001013
+       is_expiring_soon    0.000351
+           has_a_record    0.000091
+          has_at_symbol    0.000000
+                 has_ip    0.000000
+2025-01-04 13:25:23,330 - INFO - Feature importance analysis completed in 0.02 seconds
+2025-01-04 13:25:23,583 - INFO - 
+Model saved to: models/split_6\phishing_detector_split_5_20250104_132523.joblib
+2025-01-04 13:25:23,584 - INFO - Feature names saved to: models/split_6\feature_names_split_5_20250104_132523.joblib
+2025-01-04 13:25:23,585 - INFO - Model saving completed in 0.25 seconds
+2025-01-04 13:25:23,585 - INFO - Split 6 completed in 261.88 seconds
+2025-01-04 13:25:23,585 - INFO - 
+Training model for split 7/10
+2025-01-04 13:29:29,027 - INFO - 
+Best parameters found:
+2025-01-04 13:29:29,028 - INFO - {'ccp_alpha': 0.001, 'class_weight': 'balanced', 'max_depth': 6, 'max_features': 'sqrt', 'max_samples': 0.7, 'min_samples_leaf': 3, 'min_samples_split': 8, 'n_estimators': 200}
+2025-01-04 13:29:29,028 - INFO - 
+Best cross-validation scores:
+2025-01-04 13:29:29,028 - INFO - accuracy: 0.9929
+2025-01-04 13:29:29,029 - INFO - precision: 1.0000
+2025-01-04 13:29:29,029 - INFO - recall: 0.9867
+2025-01-04 13:29:29,029 - INFO - f1: 0.9931
+2025-01-04 13:29:29,029 - INFO - roc_auc: 1.0000
+2025-01-04 13:29:30,266 - INFO - Model training completed in 246.68 seconds
+2025-01-04 13:29:30,404 - INFO - 
+Validation Set Set Performance:
+2025-01-04 13:29:30,408 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        26
+           1       1.00      1.00      1.00        16
+
+    accuracy                           1.00        42
+   macro avg       1.00      1.00      1.00        42
+weighted avg       1.00      1.00      1.00        42
+
+2025-01-04 13:29:30,409 - INFO - 
+Detailed Validation Set Set Metrics:
+2025-01-04 13:29:30,409 - INFO - Brier Score: 0.0071
+2025-01-04 13:29:30,410 - INFO - Log Loss: 0.0814
+2025-01-04 13:29:30,410 - INFO - Optimal Threshold: 0.7489
+2025-01-04 13:29:30,550 - INFO - 
+Test Set Set Performance:
+2025-01-04 13:29:30,553 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        10
+           1       1.00      1.00      1.00        10
+
+    accuracy                           1.00        20
+   macro avg       1.00      1.00      1.00        20
+weighted avg       1.00      1.00      1.00        20
+
+2025-01-04 13:29:30,553 - INFO - 
+Detailed Test Set Set Metrics:
+2025-01-04 13:29:30,554 - INFO - Brier Score: 0.0063
+2025-01-04 13:29:30,555 - INFO - Log Loss: 0.0779
+2025-01-04 13:29:30,555 - INFO - Optimal Threshold: 0.8993
+2025-01-04 13:29:30,555 - INFO - Model evaluation completed in 0.29 seconds
+2025-01-04 13:29:30,556 - INFO - 
+Generating learning curve plot...
+2025-01-04 13:29:33,029 - INFO - Plot generation completed in 2.47 seconds
+2025-01-04 13:29:33,046 - INFO - 
+Feature Importance by Group:
+2025-01-04 13:29:33,047 - INFO - URL: 0.4980
+2025-01-04 13:29:33,047 - INFO - SSL: 0.4409
+2025-01-04 13:29:33,047 - INFO - DNS: 0.0341
+2025-01-04 13:29:33,048 - INFO - 
+Feature Importance:
+2025-01-04 13:29:33,049 - INFO -                 feature   importance
+               is_https 3.037355e-01
+          domain_length 2.545142e-01
+             url_length 1.452413e-01
+         ssl_days_valid 8.914506e-02
+has_multiple_subdomains 8.177039e-02
+           ssl_is_valid 4.803011e-02
+        domain_age_days 1.784117e-02
+         num_mx_records 1.681943e-02
+               has_dash 1.648748e-02
+          has_mx_record 1.511633e-02
+     days_to_expiration 5.122025e-03
+        is_domain_young 2.525953e-03
+         num_ns_records 2.179891e-03
+       is_expiring_soon 7.433487e-04
+          has_registrar 6.964246e-04
+          has_ns_record 3.077558e-05
+           has_a_record 5.912973e-07
+          has_at_symbol 0.000000e+00
+                 has_ip 0.000000e+00
+2025-01-04 13:29:33,050 - INFO - Feature importance analysis completed in 0.02 seconds
+2025-01-04 13:29:33,297 - INFO - 
+Model saved to: models/split_7\phishing_detector_split_6_20250104_132933.joblib
+2025-01-04 13:29:33,299 - INFO - Feature names saved to: models/split_7\feature_names_split_6_20250104_132933.joblib
+2025-01-04 13:29:33,299 - INFO - Model saving completed in 0.25 seconds
+2025-01-04 13:29:33,299 - INFO - Split 7 completed in 249.71 seconds
+2025-01-04 13:29:33,299 - INFO - 
+Training model for split 8/10
+2025-01-04 13:33:39,480 - INFO - 
+Best parameters found:
+2025-01-04 13:33:39,481 - INFO - {'ccp_alpha': 0.001, 'class_weight': 'balanced', 'max_depth': 6, 'max_features': 'sqrt', 'max_samples': 0.7, 'min_samples_leaf': 3, 'min_samples_split': 8, 'n_estimators': 200}
+2025-01-04 13:33:39,481 - INFO - 
+Best cross-validation scores:
+2025-01-04 13:33:39,481 - INFO - accuracy: 0.9929
+2025-01-04 13:33:39,482 - INFO - precision: 1.0000
+2025-01-04 13:33:39,482 - INFO - recall: 0.9875
+2025-01-04 13:33:39,482 - INFO - f1: 0.9935
+2025-01-04 13:33:39,483 - INFO - roc_auc: 1.0000
+2025-01-04 13:33:40,699 - INFO - Model training completed in 247.40 seconds
+2025-01-04 13:33:40,839 - INFO - 
+Validation Set Set Performance:
+2025-01-04 13:33:40,844 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        26
+           1       1.00      1.00      1.00        17
+
+    accuracy                           1.00        43
+   macro avg       1.00      1.00      1.00        43
+weighted avg       1.00      1.00      1.00        43
+
+2025-01-04 13:33:40,844 - INFO - 
+Detailed Validation Set Set Metrics:
+2025-01-04 13:33:40,844 - INFO - Brier Score: 0.0049
+2025-01-04 13:33:40,845 - INFO - Log Loss: 0.0708
+2025-01-04 13:33:40,846 - INFO - Optimal Threshold: 0.9190
+2025-01-04 13:33:40,980 - INFO - 
+Test Set Set Performance:
+2025-01-04 13:33:40,983 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        13
+           1       1.00      1.00      1.00         7
+
+    accuracy                           1.00        20
+   macro avg       1.00      1.00      1.00        20
+weighted avg       1.00      1.00      1.00        20
+
+2025-01-04 13:33:40,984 - INFO - 
+Detailed Test Set Set Metrics:
+2025-01-04 13:33:40,984 - INFO - Brier Score: 0.0084
+2025-01-04 13:33:40,985 - INFO - Log Loss: 0.0838
+2025-01-04 13:33:40,986 - INFO - Optimal Threshold: 0.7428
+2025-01-04 13:33:40,986 - INFO - Model evaluation completed in 0.29 seconds
+2025-01-04 13:33:40,987 - INFO - 
+Generating learning curve plot...
+2025-01-04 13:33:43,409 - INFO - Plot generation completed in 2.42 seconds
+2025-01-04 13:33:43,427 - INFO - 
+Feature Importance by Group:
+2025-01-04 13:33:43,427 - INFO - URL: 0.4971
+2025-01-04 13:33:43,428 - INFO - SSL: 0.4295
+2025-01-04 13:33:43,428 - INFO - DNS: 0.0425
+2025-01-04 13:33:43,428 - INFO - 
+Feature Importance:
+2025-01-04 13:33:43,429 - INFO -                 feature  importance
+               is_https    0.309430
+          domain_length    0.260455
+             url_length    0.126828
+has_multiple_subdomains    0.101512
+         ssl_days_valid    0.075785
+           ssl_is_valid    0.044261
+         num_mx_records    0.018619
+        domain_age_days    0.017815
+          has_mx_record    0.017219
+               has_dash    0.008292
+     days_to_expiration    0.007157
+         num_ns_records    0.005823
+        is_domain_young    0.004871
+       is_expiring_soon    0.000625
+          has_ns_record    0.000623
+          has_registrar    0.000466
+           has_a_record    0.000220
+          has_at_symbol    0.000000
+                 has_ip    0.000000
+2025-01-04 13:33:43,429 - INFO - Feature importance analysis completed in 0.02 seconds
+2025-01-04 13:33:43,622 - INFO - 
+Model saved to: models/split_8\phishing_detector_split_7_20250104_133343.joblib
+2025-01-04 13:33:43,624 - INFO - Feature names saved to: models/split_8\feature_names_split_7_20250104_133343.joblib
+2025-01-04 13:33:43,625 - INFO - Model saving completed in 0.20 seconds
+2025-01-04 13:33:43,625 - INFO - Split 8 completed in 250.33 seconds
+2025-01-04 13:33:43,625 - INFO - 
+Training model for split 9/10
+2025-01-04 13:37:49,264 - INFO - 
+Best parameters found:
+2025-01-04 13:37:49,264 - INFO - {'ccp_alpha': 0.001, 'class_weight': 'balanced', 'max_depth': 6, 'max_features': 'sqrt', 'max_samples': 0.7, 'min_samples_leaf': 3, 'min_samples_split': 8, 'n_estimators': 200}
+2025-01-04 13:37:49,264 - INFO - 
+Best cross-validation scores:
+2025-01-04 13:37:49,265 - INFO - accuracy: 0.9929
+2025-01-04 13:37:49,265 - INFO - precision: 1.0000
+2025-01-04 13:37:49,265 - INFO - recall: 0.9867
+2025-01-04 13:37:49,265 - INFO - f1: 0.9931
+2025-01-04 13:37:49,265 - INFO - roc_auc: 1.0000
+2025-01-04 13:37:50,451 - INFO - Model training completed in 246.83 seconds
+2025-01-04 13:37:50,568 - INFO - 
+Validation Set Set Performance:
+2025-01-04 13:37:50,573 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        21
+           1       1.00      1.00      1.00        22
+
+    accuracy                           1.00        43
+   macro avg       1.00      1.00      1.00        43
+weighted avg       1.00      1.00      1.00        43
+
+2025-01-04 13:37:50,573 - INFO - 
+Detailed Validation Set Set Metrics:
+2025-01-04 13:37:50,573 - INFO - Brier Score: 0.0071
+2025-01-04 13:37:50,574 - INFO - Log Loss: 0.0774
+2025-01-04 13:37:50,575 - INFO - Optimal Threshold: 0.6988
+2025-01-04 13:37:50,711 - INFO - 
+Test Set Set Performance:
+2025-01-04 13:37:50,714 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        14
+           1       1.00      1.00      1.00         6
+
+    accuracy                           1.00        20
+   macro avg       1.00      1.00      1.00        20
+weighted avg       1.00      1.00      1.00        20
+
+2025-01-04 13:37:50,715 - INFO - 
+Detailed Test Set Set Metrics:
+2025-01-04 13:37:50,716 - INFO - Brier Score: 0.0100
+2025-01-04 13:37:50,716 - INFO - Log Loss: 0.0872
+2025-01-04 13:37:50,717 - INFO - Optimal Threshold: 0.6726
+2025-01-04 13:37:50,717 - INFO - Model evaluation completed in 0.26 seconds
+2025-01-04 13:37:50,717 - INFO - 
+Generating learning curve plot...
+2025-01-04 13:37:53,255 - INFO - Plot generation completed in 2.54 seconds
+2025-01-04 13:37:53,273 - INFO - 
+Feature Importance by Group:
+2025-01-04 13:37:53,274 - INFO - URL: 0.4891
+2025-01-04 13:37:53,274 - INFO - SSL: 0.4361
+2025-01-04 13:37:53,274 - INFO - DNS: 0.0414
+2025-01-04 13:37:53,275 - INFO - 
+Feature Importance:
+2025-01-04 13:37:53,276 - INFO -                 feature  importance
+               is_https    0.312349
+          domain_length    0.260716
+             url_length    0.129143
+has_multiple_subdomains    0.080429
+         ssl_days_valid    0.077524
+           ssl_is_valid    0.046263
+         num_mx_records    0.024397
+        domain_age_days    0.023480
+               has_dash    0.018780
+          has_mx_record    0.014139
+     days_to_expiration    0.007348
+        is_domain_young    0.002187
+         num_ns_records    0.001911
+          has_ns_record    0.000910
+       is_expiring_soon    0.000236
+          has_registrar    0.000151
+           has_a_record    0.000036
+          has_at_symbol    0.000000
+                 has_ip    0.000000
+2025-01-04 13:37:53,276 - INFO - Feature importance analysis completed in 0.02 seconds
+2025-01-04 13:37:53,460 - INFO - 
+Model saved to: models/split_9\phishing_detector_split_8_20250104_133753.joblib
+2025-01-04 13:37:53,462 - INFO - Feature names saved to: models/split_9\feature_names_split_8_20250104_133753.joblib
+2025-01-04 13:37:53,462 - INFO - Model saving completed in 0.19 seconds
+2025-01-04 13:37:53,462 - INFO - Split 9 completed in 249.84 seconds
+2025-01-04 13:37:53,462 - INFO - 
+Training model for split 10/10
+2025-01-04 13:42:00,410 - INFO - 
+Best parameters found:
+2025-01-04 13:42:00,410 - INFO - {'ccp_alpha': 0.001, 'class_weight': 'balanced', 'max_depth': 6, 'max_features': 'sqrt', 'max_samples': 0.7, 'min_samples_leaf': 3, 'min_samples_split': 8, 'n_estimators': 200}
+2025-01-04 13:42:00,410 - INFO - 
+Best cross-validation scores:
+2025-01-04 13:42:00,410 - INFO - accuracy: 1.0000
+2025-01-04 13:42:00,410 - INFO - precision: 1.0000
+2025-01-04 13:42:00,411 - INFO - recall: 1.0000
+2025-01-04 13:42:00,411 - INFO - f1: 1.0000
+2025-01-04 13:42:00,411 - INFO - roc_auc: 1.0000
+2025-01-04 13:42:01,612 - INFO - Model training completed in 248.15 seconds
+2025-01-04 13:42:01,748 - INFO - 
+Validation Set Set Performance:
+2025-01-04 13:42:01,752 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        27
+           1       1.00      1.00      1.00        16
+
+    accuracy                           1.00        43
+   macro avg       1.00      1.00      1.00        43
+weighted avg       1.00      1.00      1.00        43
+
+2025-01-04 13:42:01,753 - INFO - 
+Detailed Validation Set Set Metrics:
+2025-01-04 13:42:01,753 - INFO - Brier Score: 0.0163
+2025-01-04 13:42:01,754 - INFO - Log Loss: 0.1033
+2025-01-04 13:42:01,755 - INFO - Optimal Threshold: 0.3870
+2025-01-04 13:42:01,892 - INFO - 
+Test Set Set Performance:
+2025-01-04 13:42:01,895 - INFO -               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        10
+           1       1.00      1.00      1.00        10
+
+    accuracy                           1.00        20
+   macro avg       1.00      1.00      1.00        20
+weighted avg       1.00      1.00      1.00        20
+
+2025-01-04 13:42:01,895 - INFO - 
+Detailed Test Set Set Metrics:
+2025-01-04 13:42:01,896 - INFO - Brier Score: 0.0052
+2025-01-04 13:42:01,896 - INFO - Log Loss: 0.0700
+2025-01-04 13:42:01,897 - INFO - Optimal Threshold: 0.9256
+2025-01-04 13:42:01,897 - INFO - Model evaluation completed in 0.28 seconds
+2025-01-04 13:42:01,897 - INFO - 
+Generating learning curve plot...
+2025-01-04 13:42:04,216 - INFO - Plot generation completed in 2.32 seconds
+2025-01-04 13:42:04,231 - INFO - 
+Feature Importance by Group:
+2025-01-04 13:42:04,232 - INFO - URL: 0.5086
+2025-01-04 13:42:04,232 - INFO - SSL: 0.4088
+2025-01-04 13:42:04,232 - INFO - DNS: 0.0468
+2025-01-04 13:42:04,232 - INFO - 
+Feature Importance:
+2025-01-04 13:42:04,233 - INFO -                 feature  importance
+               is_https    0.296378
+          domain_length    0.238856
+             url_length    0.168853
+has_multiple_subdomains    0.085888
+         ssl_days_valid    0.064983
+           ssl_is_valid    0.047414
+        domain_age_days    0.028415
+          has_mx_record    0.022477
+         num_mx_records    0.020486
+               has_dash    0.014970
+     days_to_expiration    0.004134
+         num_ns_records    0.002592
+        is_domain_young    0.001643
+          has_ns_record    0.001214
+       is_expiring_soon    0.000869
+          has_registrar    0.000829
+           has_a_record    0.000000
+          has_at_symbol    0.000000
+                 has_ip    0.000000
+2025-01-04 13:42:04,233 - INFO - Feature importance analysis completed in 0.02 seconds
+2025-01-04 13:42:04,474 - INFO - 
+Model saved to: models/split_10\phishing_detector_split_9_20250104_134204.joblib
+2025-01-04 13:42:04,475 - INFO - Feature names saved to: models/split_10\feature_names_split_9_20250104_134204.joblib
+2025-01-04 13:42:04,475 - INFO - Model saving completed in 0.24 seconds
+2025-01-04 13:42:04,475 - INFO - Split 10 completed in 251.01 seconds
+2025-01-04 13:42:04,475 - INFO - 
+Final Results:
+2025-01-04 13:42:04,476 - INFO - Sample Size: 100 URLs
+2025-01-04 13:42:04,476 - INFO - Number of Cross-validation Splits: 10
+2025-01-04 13:42:04,477 - INFO - Mean Cross-Validation Accuracy: 1.0000 (+/- 0.0000)
+2025-01-04 13:42:04,477 - INFO - Best Accuracy: 1.0000
+2025-01-04 13:42:04,477 - INFO - Worst Accuracy: 1.0000
+2025-01-04 13:42:04,477 - INFO - Total execution time: 2669.37 seconds
+2025-01-04 13:42:04,477 - INFO - Average time per model: 266.94 seconds
+2025-01-04 13:42:04,478 - INFO - 
+Final Results:
+2025-01-04 13:42:04,478 - INFO - Sample Size: 100 URLs
+2025-01-04 13:42:04,478 - INFO - Number of Cross-validation Splits: 10
+2025-01-04 13:42:04,479 - INFO - Mean Cross-Validation Accuracy: 1.0000 (+/- 0.0000)
+2025-01-04 13:42:04,479 - INFO - Best Accuracy: 1.0000
+2025-01-04 13:42:04,479 - INFO - Worst Accuracy: 1.0000
+2025-01-04 13:42:04,479 - INFO - Total execution time: 2802.98 seconds
+2025-01-04 13:42:04,479 - INFO - Average time per model: 280.30 seconds

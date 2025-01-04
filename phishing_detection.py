@@ -417,77 +417,52 @@ def prepare_data_splits(features_df, test_size=0.2, val_size=0.2, n_splits=5):
 
 def tune_random_forest(X_train, y_train):
     """
-    Perform hyperparameter tuning for Random Forest using GridSearchCV with enhanced cross-validation
-    and regularization parameters. Returns both the base model and calibrated model.
+    Perform hyperparameter tuning for Random Forest with emphasis on DNS features
+    and improved generalization.
     """
-    # Define feature groups and their weights
-    feature_groups = {
-        'url': ['url_length', 'domain_length', 'has_ip', 'has_at_symbol', 'has_dash', 'has_multiple_subdomains'],
-        'dns': ['has_a_record', 'num_a_records', 'has_mx_record', 'num_mx_records', 'has_ns_record', 'num_ns_records'],
-        'ssl': ['is_https', 'ssl_days_valid', 'ssl_is_valid']
-    }
-    
-    feature_weights = {
-        'url': 0.5,    # Reduce URL feature dominance
-        'dns': 2.0,    # Increase DNS feature importance
-        'ssl': 1.5     # Moderate increase for SSL features
-    }
-    
-    # Apply feature weights to the training data
-    X_train_weighted = X_train.copy()
-    for group, features in feature_groups.items():
-        weight = feature_weights[group]
-        for feature in features:
-            if feature in X_train.columns:
-                X_train_weighted[feature] *= weight
-
-    # Define parameter grid with enhanced regularization
     param_grid = {
-        'n_estimators': [200],  # Increased from 50
-        'max_depth': [8, 10, None],  # Added specific depth limits
-        'min_samples_split': [10],  # Increased from 2
-        'min_samples_leaf': [4],  # Increased from 1
+        'n_estimators': [200, 300],
+        'max_depth': [6, 8, 10],
+        'min_samples_split': [8, 10, 12],
+        'min_samples_leaf': [3, 4, 5],
         'max_features': ['sqrt', 'log2'],
-        'max_samples': [0.7],  # Use 70% of samples for each tree
-        'class_weight': ['balanced'],
-        'ccp_alpha': [0.001, 0.01]  # Add cost-complexity pruning
+        'max_samples': [0.7, 0.8],
+        'ccp_alpha': [0.001, 0.01],  # Increased pruning for better generalization
+        'class_weight': ['balanced', 'balanced_subsample']  # Better handling of imbalanced data
     }
-
-    # Initialize base model
+    
+    # Create base model with DNS feature weights
     base_model = RandomForestClassifier(
         random_state=42,
-        n_jobs=-1,
-        oob_score=True,  # Enable out-of-bag score
-        bootstrap=True
+        bootstrap=True,
+        oob_score=True,  # Out-of-bag score for better generalization estimate
+        n_jobs=-1
     )
-
-    # Initialize cross-validation
-    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-
-    # Initialize GridSearchCV with multiple scoring metrics
+    
+    # Define scoring metrics
     scoring = {
         'accuracy': 'accuracy',
-        'precision': 'precision_weighted',
-        'recall': 'recall_weighted',
-        'f1': 'f1_weighted',
+        'precision': 'precision',
+        'recall': 'recall',
+        'f1': 'f1',
         'roc_auc': 'roc_auc'
     }
-
+    
+    # Perform grid search with stratified k-fold
+    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
     grid_search = GridSearchCV(
         estimator=base_model,
         param_grid=param_grid,
         cv=cv,
         scoring=scoring,
-        refit='f1',  # Use F1 score for selecting best model
+        refit='f1',  # Optimize for F1-score
         n_jobs=-1,
         verbose=1
     )
-
-    # Fit GridSearchCV
-    logging.info("Fitting GridSearchCV...")
-    grid_search.fit(X_train_weighted, y_train)
-
-    # Log best parameters and scores
+    
+    # Fit the model
+    grid_search.fit(X_train, y_train)
+    
     logging.info("\nBest parameters found:")
     logging.info(grid_search.best_params_)
     
@@ -495,18 +470,28 @@ def tune_random_forest(X_train, y_train):
     for metric in scoring.keys():
         score = grid_search.cv_results_[f'mean_test_{metric}'][grid_search.best_index_]
         logging.info(f"{metric}: {score:.4f}")
-
-    # Get best model
+    
+    # Get the best model
     best_model = grid_search.best_estimator_
-
-    # Calibrate probabilities using isotonic regression
+    
+    # Apply feature importance weights
+    feature_weights = np.ones(X_train.shape[1])
+    dns_feature_indices = [i for i, col in enumerate(X_train.columns) if 'dns_' in col.lower()]
+    feature_weights[dns_feature_indices] = 2.0  # Double the importance of DNS features
+    
+    # Train calibrated model with feature weights
     calibrated_model = CalibratedClassifierCV(
         best_model,
-        cv='prefit',
-        method='isotonic'
+        cv=5,
+        method='sigmoid'
     )
-    calibrated_model.fit(X_train_weighted, y_train)
-
+    
+    sample_weights = np.ones(len(y_train))
+    for idx in dns_feature_indices:
+        sample_weights *= (1 + X_train.iloc[:, idx] * 0.5)  # Increase weight for samples with strong DNS signals
+    
+    calibrated_model.fit(X_train, y_train, sample_weight=sample_weights)
+    
     return calibrated_model, best_model
 
 def analyze_feature_importance(model, feature_names):
