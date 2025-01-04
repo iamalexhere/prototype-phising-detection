@@ -7,8 +7,10 @@ from pathlib import Path
 import tempfile
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.calibration import CalibratedClassifierCV
-from sklearn.model_selection import learning_curve
+from sklearn.model_selection import learning_curve, train_test_split
 import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score
+import time
 
 # Add parent directory to path to import phishing_detection
 sys.path.append(str(Path(__file__).parent.parent))
@@ -105,6 +107,39 @@ class TestPhishingDetection(unittest.TestCase):
         labels = features_df['label'].unique()
         self.assertTrue(all(label in [0, 1] for label in labels))
 
+    def test_load_and_process_data_small(self):
+        """Test data loading and processing with small sample size"""
+        features_df = load_and_process_data(
+            str(self.test_dir / 'phishing_urls.txt'),
+            str(self.test_dir / 'legitimate_urls.txt'),
+            sample_size=4
+        )
+        self.assertIsNotNone(features_df)
+        self.assertEqual(len(features_df), 4)
+
+    def test_load_and_process_data_large(self):
+        """Test data loading and processing with large sample size handling"""
+        # Create larger test datasets
+        large_phishing = self.test_dir / 'large_phishing.txt'
+        large_legitimate = self.test_dir / 'large_legitimate.txt'
+        
+        # Generate test URLs
+        phishing_urls = [f'http://phishing{i}.fake.com/scam' for i in range(100)]
+        legitimate_urls = [f'http://legitimate{i}.com' for i in range(100)]
+        
+        large_phishing.write_text('\n'.join(phishing_urls))
+        large_legitimate.write_text('\n'.join(legitimate_urls))
+        
+        # Test with larger sample size
+        features_df = load_and_process_data(
+            str(large_phishing),
+            str(large_legitimate),
+            sample_size=150
+        )
+        
+        self.assertIsNotNone(features_df)
+        self.assertLessEqual(len(features_df), 200)  # Should not exceed available URLs
+
     def test_prepare_data_splits(self):
         """Test data splitting functionality"""
         # Create a sample DataFrame
@@ -173,6 +208,79 @@ class TestPhishingDetection(unittest.TestCase):
         self.assertEqual(base_prob.shape, (10, 2))
         self.assertEqual(calibrated_prob.shape, (10, 2))
 
+    def test_model_training_parameters(self):
+        """Test model training with different parameter configurations"""
+        # Create synthetic dataset
+        X = np.random.rand(1000, 10)  # More features for realistic testing
+        y = np.random.randint(0, 2, 1000)
+        
+        # Test with different parameter configurations
+        param_sets = [
+            {'n_estimators': 50, 'max_depth': 10},
+            {'n_estimators': 100, 'max_depth': None},
+            {'n_estimators': 200, 'max_samples': 0.8}
+        ]
+        
+        for params in param_sets:
+            model = RandomForestClassifier(**params, random_state=42)
+            model.fit(X, y)
+            
+            # Test predictions
+            X_test = np.random.rand(100, 10)
+            predictions = model.predict(X_test)
+            probabilities = model.predict_proba(X_test)
+            
+            self.assertEqual(len(predictions), 100)
+            self.assertEqual(probabilities.shape, (100, 2))
+
+    def test_model_training_pipeline(self):
+        """Test the complete model training pipeline"""
+        # Create synthetic dataset
+        X = np.random.rand(500, 15)  # Similar to actual feature count
+        y = np.random.randint(0, 2, 500)
+        
+        # Split data
+        X_train, X_test = train_test_split(X, test_size=0.2, random_state=42)
+        y_train, y_test = train_test_split(y, test_size=0.2, random_state=42)
+        
+        # Train models
+        base_model, calibrated_model = tune_random_forest(X_train, y_train)
+        
+        # Test base model
+        self.assertIsInstance(base_model, RandomForestClassifier)
+        self.assertTrue(hasattr(base_model, 'feature_importances_'))
+        
+        # Test calibrated model
+        self.assertIsInstance(calibrated_model, CalibratedClassifierCV)
+        
+        # Test predictions
+        test_pred = calibrated_model.predict(X_test)
+        test_prob = calibrated_model.predict_proba(X_test)
+        
+        self.assertEqual(len(test_pred), len(y_test))
+        self.assertEqual(test_prob.shape[0], len(y_test))
+        self.assertEqual(test_prob.shape[1], 2)
+
+    def test_learning_curve_generation(self):
+        """Test learning curve generation with different dataset sizes"""
+        visualizer = ModelVisualizer(output_dir=str(self.test_dir / 'test_plots'))
+        
+        # Test with different dataset sizes
+        sizes = [100, 500]
+        for size in sizes:
+            X = np.random.rand(size, 10)
+            y = np.random.randint(0, 2, size)
+            
+            model = RandomForestClassifier(n_estimators=50, random_state=42)
+            model.fit(X, y)
+            
+            # Generate learning curve
+            visualizer.plot_learning_curve(model, X, y)
+            
+            # Check if plot was created with correct name
+            plot_file = self.test_dir / 'test_plots' / f'learning_curve-{size}.png'
+            self.assertTrue(plot_file.exists())
+
     def test_model_visualizer(self):
         """Test model visualization functions"""
         # Create temporary directory for plots
@@ -192,6 +300,36 @@ class TestPhishingDetection(unittest.TestCase):
             
             # Check if plot was created
             self.assertTrue(os.path.exists(os.path.join(tmpdir, 'learning_curve.png')))
+
+    def test_model_scalability(self):
+        """Test model's ability to handle larger datasets"""
+        # Create larger synthetic dataset
+        X = np.random.rand(5000, 15)
+        y = np.random.randint(0, 2, 5000)
+        
+        # Split data
+        X_train, X_test = train_test_split(X, test_size=0.2, random_state=42)
+        y_train, y_test = train_test_split(y, test_size=0.2, random_state=42)
+        
+        # Time the training process
+        start_time = time.time()
+        base_model, calibrated_model = tune_random_forest(X_train, y_train)
+        training_time = time.time() - start_time
+        
+        # Check training time is reasonable (adjust threshold as needed)
+        self.assertLess(training_time, 300)  # Should complete within 5 minutes
+        
+        # Test prediction speed
+        start_time = time.time()
+        predictions = calibrated_model.predict(X_test)
+        prediction_time = time.time() - start_time
+        
+        # Check prediction time is reasonable
+        self.assertLess(prediction_time, 5)  # Should complete within 5 seconds
+        
+        # Verify accuracy is reasonable
+        accuracy = accuracy_score(y_test, predictions)
+        self.assertGreater(accuracy, 0.5)  # Should be better than random guessing
 
     @classmethod
     def tearDownClass(cls):

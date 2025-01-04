@@ -414,18 +414,18 @@ def tune_random_forest(X_train, y_train):
     
     # Define parameter grid with regularization parameters
     param_grid = {
-        'n_estimators': [50, 100],
-        'max_depth': [None, 10, 20],
-        'min_samples_split': [2, 5],
-        'min_samples_leaf': [1, 2],
+        'n_estimators': [100, 200],  # Increased for larger dataset
+        'max_depth': [None, 20, 30],  # Increased depth options
+        'min_samples_split': [2, 5, 10],
+        'min_samples_leaf': [1, 2, 4],
         'max_features': ['sqrt', 'log2'],
         'max_samples': [0.8, 1.0],  # Bootstrap sample size
         'class_weight': ['balanced'],
-        'ccp_alpha': [0.0, 0.01, 0.02]  # Pruning parameter
+        'ccp_alpha': [0.0, 0.01]  # Pruning parameter
     }
     
-    # Initialize base classifier
-    base_clf = RandomForestClassifier(random_state=42)
+    # Initialize base classifier with n_jobs for parallel processing
+    base_clf = RandomForestClassifier(random_state=42, n_jobs=-1)
     
     # Use StratifiedKFold with shuffling for better cross-validation
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
@@ -466,9 +466,10 @@ def tune_random_forest(X_train, y_train):
     
     # Calibrate probabilities using the best model
     calibrated_model = CalibratedClassifierCV(
-        RandomForestClassifier(**grid_search.best_params_, random_state=42), 
+        RandomForestClassifier(**grid_search.best_params_, random_state=42, n_jobs=-1), 
         method='sigmoid',
-        cv=5
+        cv=5,
+        n_jobs=-1
     )
     calibrated_model.fit(X_train, y_train)
     
@@ -487,10 +488,11 @@ class ModelVisualizer:
         """
         logging.info("\nGenerating learning curve plot...")
         
-        train_sizes = np.linspace(0.1, 1.0, 5)
+        # Adjust train sizes for larger dataset
+        train_sizes = np.linspace(0.1, 1.0, 10)  # More points for smoother curve
         cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
         
-        plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(12, 8))  # Larger figure for better visibility
         train_sizes, train_scores, val_scores = learning_curve(
             model, X, y,
             train_sizes=train_sizes,
@@ -511,11 +513,11 @@ class ModelVisualizer:
         
         plt.xlabel('Training Examples')
         plt.ylabel('F1 Score')
-        plt.title('Learning Curve')
+        plt.title('Learning Curve (30,000 Samples)')
         plt.legend(loc='lower right')
         plt.grid(True)
         
-        plt.savefig(os.path.join(self.output_dir, 'learning_curve.png'))
+        plt.savefig(os.path.join(self.output_dir, 'learning_curve-30000.png'))
         plt.close()
 
     def save_plot(self, plot_name):
@@ -644,7 +646,7 @@ def main():
         
         # Load and process data
         logging.info("Starting phishing URL detection model training...")
-        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=100)
+        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=30000)
         
         # Split the data
         logging.info("\nSplitting data into train, validation, and test sets...")
