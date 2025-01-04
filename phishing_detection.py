@@ -276,7 +276,7 @@ def extract_domain(url):
         logging.warning(f"Error extracting domain from URL {url}: {str(e)}")
         return "unknown_domain"
 
-def load_and_process_data(phishing_file_path: str, legitimate_file_path: str, sample_size: int = 1000, batch_size: int = 50) -> pd.DataFrame:
+def load_and_process_data(phishing_file_path: str, legitimate_file_path: str, sample_size: int = 10000, batch_size: int = 50) -> pd.DataFrame:
     """
     Load and process both phishing and legitimate URL datasets with enhanced preprocessing
     """
@@ -992,7 +992,7 @@ def main():
         # Set dataset paths
         phishing_file = 'verified_online.csv'
         legitimate_file = 'URL-categorization-DFE.csv'
-        sample_size = 1000  # Reduced sample size
+        sample_size = 10000  # Reduced sample size
         
         # Process data and train model
         start_time = time.time()
