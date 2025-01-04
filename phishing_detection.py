@@ -82,6 +82,20 @@ def setup_logging(log_dir='logs'):
     logging.info(f"Logging setup complete. Log file: {log_file}")
     return log_file
 
+def normalize_url(url: str) -> str:
+    """
+    Normalize URL to ensure consistent handling of different URL formats.
+    Example: 'google.com' and 'https://google.com/' will be normalized to the same format.
+    """
+    if not url:
+        return ""
+    if not url.startswith(('http://', 'https://')):
+        url = 'http://' + url
+    parsed = urlparse(url)
+    return parsed.scheme + '://' + parsed.netloc + parsed.path + \
+           ('?' + parsed.query if parsed.query else '') + \
+           ('#' + parsed.fragment if parsed.fragment else '')
+
 urllib3.disable_warnings()
 warnings.filterwarnings('ignore', category=UserWarning)
 
@@ -171,6 +185,8 @@ class URLFeatureExtractor:
         Extract features from a given URL including DNS and domain-based features
         """
         try:
+            # Normalize URL first
+            url = normalize_url(url)
             parsed = urlparse(url)
             domain = parsed.netloc
             
