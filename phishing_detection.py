@@ -865,127 +865,107 @@ class ModelVisualizer:
     def __init__(self, output_dir='plots'):
         self.output_dir = output_dir
         os.makedirs(output_dir, exist_ok=True)
+        plt.style.use('seaborn')
+    
+    def save_plot(self, plot_name):
+        """Save the current plot to the output directory."""
+        plt.tight_layout()
+        save_path = os.path.join(self.output_dir, f"{plot_name}.png")
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        plt.close()
+    
+    def plot_learning_curve(self, model, X, y, title="Learning Curve"):
+        """Plot learning curve to visualize model's performance with varying training set sizes."""
+        start_time = time.time()
         
-    def plot_learning_curve(self, model, X, y):
-        """
-        Plot learning curve to visualize model's performance with varying training set sizes
-        """
-        logging.info("\nGenerating learning curve plot...")
-        
-        # Adjust train sizes for larger dataset
-        train_sizes = np.linspace(0.2, 1.0, 5)  # More points for smoother curve
-        cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-        
-        plt.figure(figsize=(12, 8))
         train_sizes, train_scores, val_scores = learning_curve(
-            model, X, y,
-            train_sizes=train_sizes,
-            cv=cv,
-            n_jobs=-1,
-            scoring='f1'
+            model, X, y, cv=5,
+            train_sizes=np.linspace(0.1, 1.0, 10),
+            scoring='accuracy', n_jobs=-1
         )
         
-        train_mean = np.mean(train_scores, axis=1)
-        train_std = np.std(train_scores, axis=1)
-        val_mean = np.mean(val_scores, axis=1)
-        val_std = np.std(val_scores, axis=1)
-        
-        plt.plot(train_sizes, train_mean, label='Training score', color='blue', marker='o')
-        plt.fill_between(train_sizes, train_mean - train_std, train_mean + train_std, alpha=0.15, color='blue')
-        plt.plot(train_sizes, val_mean, label='Cross-validation score', color='green', marker='o')
-        plt.fill_between(train_sizes, val_mean - val_std, val_mean + val_std, alpha=0.15, color='green')
+        plt.figure(figsize=(10, 6))
+        plt.plot(train_sizes, np.mean(train_scores, axis=1), label='Training Score')
+        plt.plot(train_sizes, np.mean(val_scores, axis=1), label='Cross-validation Score')
         
         plt.xlabel('Training Examples')
-        plt.ylabel('F1 Score')
-        plt.title('Learning Curve')
-        plt.legend(loc='lower right')
+        plt.ylabel('Score')
+        plt.title(title)
+        plt.legend(loc='best')
         plt.grid(True)
         
-        self.save_plot('learning_curve')
-        
-    def save_plot(self, plot_name):
-        """Save the current plot to the output directory"""
-        plt.tight_layout()
-        plt.savefig(os.path.join(self.output_dir, f"{plot_name}.png"), dpi=300, bbox_inches='tight')
-        plt.close('all')
-        
-    def plot_confusion_matrix(self, y_true, y_pred, classes=['Legitimate', 'Phishing']):
-        """Generate and save confusion matrix plot"""
-        plt.figure(figsize=(10, 8))
+        self.save_plot(f"{title.lower().replace(' ', '_')}")
+        logging.info(f"Plot generation completed in {time.time() - start_time:.2f} seconds")
+    
+    def plot_confusion_matrix(self, y_true, y_pred, title="Confusion Matrix"):
+        """Generate and save confusion matrix plot."""
+        plt.figure(figsize=(8, 6))
         cm = confusion_matrix(y_true, y_pred)
         sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
-                   xticklabels=classes, yticklabels=classes)
-        plt.title('Confusion Matrix')
-        plt.ylabel('True Label')
-        plt.xlabel('Predicted Label')
-        self.save_plot('confusion_matrix')
+                   xticklabels=['Legitimate', 'Phishing'],
+                   yticklabels=['Legitimate', 'Phishing'])
+        plt.title(title)
+        plt.xlabel('Predicted')
+        plt.ylabel('True')
+        self.save_plot(f"{title.lower().replace(' ', '_')}")
+    
+    def plot_feature_importance(self, feature_names, importances, title="Feature Importance"):
+        """Generate and save feature importance plot with optional group coloring."""
+        plt.figure(figsize=(12, 6))
         
-    def plot_feature_importance(self, feature_names, importances, feature_groups=None):
-        """Generate and save feature importance plot with optional group coloring"""
-        plt.figure(figsize=(12, 8))
+        # Sort features by importance
+        indices = np.argsort(importances)[::-1]
         
-        # Create DataFrame for plotting
-        importance_df = pd.DataFrame({
-            'feature': feature_names,
-            'importance': importances
-        }).sort_values('importance', ascending=True)
+        # Plot bars
+        plt.bar(range(len(importances)), importances[indices])
         
-        # Add group information if provided
-        if feature_groups:
-            group_colors = {'URL': 'skyblue', 'DNS': 'lightgreen', 'SSL': 'salmon'}
-            colors = []
-            for feature in importance_df['feature']:
-                for group, features in feature_groups.items():
-                    if feature in features:
-                        colors.append(group_colors[group])
-                        break
-                else:
-                    colors.append('gray')
-            
-            # Create bar plot with group colors
-            plt.barh(range(len(importance_df)), importance_df['importance'], color=colors)
-            
-            # Add legend
-            handles = [plt.Rectangle((0,0),1,1, color=color) for color in group_colors.values()]
-            plt.legend(handles, group_colors.keys(), loc='lower right')
-        else:
-            sns.barplot(data=importance_df, y='feature', x='importance')
+        # Customize plot
+        plt.title(title)
+        plt.xlabel('Features')
+        plt.ylabel('Importance')
+        plt.xticks(range(len(importances)), 
+                  [feature_names[i] for i in indices],
+                  rotation=45, ha='right')
         
-        plt.title('Feature Importance')
-        plt.xlabel('Importance Score')
-        plt.ylabel('Features')
-        self.save_plot('feature_importance')
+        # Add grid for better readability
+        plt.grid(axis='y', linestyle='--', alpha=0.7)
         
-    def plot_roc_curve(self, y_true, y_prob):
-        """Generate and save ROC curve plot"""
+        self.save_plot(f"{title.lower().replace(' ', '_')}")
+    
+    def plot_roc_curve(self, y_true, y_prob, title="ROC Curve"):
+        """Generate and save ROC curve plot."""
         fpr, tpr, _ = roc_curve(y_true, y_prob)
         roc_auc = auc(fpr, tpr)
         
-        plt.figure(figsize=(10, 8))
+        plt.figure(figsize=(8, 6))
         plt.plot(fpr, tpr, color='darkorange', lw=2,
-                label=f'ROC curve (AUC = {roc_auc:.3f})')
+                label=f'ROC curve (AUC = {roc_auc:.2f})')
         plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
         plt.xlim([0.0, 1.0])
         plt.ylim([0.0, 1.05])
         plt.xlabel('False Positive Rate')
         plt.ylabel('True Positive Rate')
-        plt.title('Receiver Operating Characteristic (ROC) Curve')
+        plt.title(title)
         plt.legend(loc="lower right")
-        self.save_plot('roc_curve')
+        plt.grid(True)
         
-    def plot_precision_recall_curve(self, y_true, y_prob):
-        """Generate and save precision-recall curve plot"""
+        self.save_plot(f"{title.lower().replace(' ', '_')}")
+    
+    def plot_precision_recall_curve(self, y_true, y_prob, title="Precision-Recall Curve"):
+        """Generate and save precision-recall curve plot."""
         precision, recall, _ = precision_recall_curve(y_true, y_prob)
         avg_precision = average_precision_score(y_true, y_prob)
         
-        plt.figure(figsize=(10, 8))
+        plt.figure(figsize=(8, 6))
         plt.plot(recall, precision, color='darkorange', lw=2,
-                label=f'PR curve (AP = {avg_precision:.3f})')
+                label=f'Precision-Recall curve (AP = {avg_precision:.2f})')
         plt.xlabel('Recall')
         plt.ylabel('Precision')
-        plt.title('Precision-Recall Curve')
+        plt.title(title)
         plt.legend(loc="lower left")
-        self.save_plot('precision_recall_curve')
+        plt.grid(True)
+        
+        self.save_plot(f"{title.lower().replace(' ', '_')}")
 
 def main():
     """Main function to run the phishing detection model."""
