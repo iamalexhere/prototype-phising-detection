@@ -11,7 +11,7 @@ from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import (
     classification_report, confusion_matrix, roc_curve, auc,
     precision_recall_curve, average_precision_score,
-    log_loss, brier_score_loss
+    log_loss, brier_score_loss, accuracy_score
 )
 from sklearn.model_selection import GridSearchCV
 import ipaddress
@@ -42,6 +42,7 @@ from urllib3.util.retry import Retry
 import threading
 from typing import List, Dict, Any
 import time
+import pickle
 
 # Configure logging
 def setup_logging(log_dir='logs'):
@@ -516,7 +517,7 @@ class ModelVisualizer:
         plt.legend(loc='lower right')
         plt.grid(True)
         
-        plt.savefig(os.path.join(self.output_dir, 'learning_curve-30000.png'))
+        plt.savefig(os.path.join(self.output_dir, 'learning_curve-100.png'))
         plt.close()
 
     def save_plot(self, plot_name):
@@ -630,6 +631,172 @@ def save_model(model, feature_names, output_dir='models'):
     logging.info(f"Feature names saved to: {feature_names_path}")
     
     return model_path, feature_names_path
+
+def extract_features_optimized(url):
+    """Extract minimal but effective features from a single URL."""
+    features = {}
+    
+    try:
+        # Only extract essential URL-based features (fast operations)
+        features['url_length'] = len(url)
+        features['num_dots'] = url.count('.')
+        features['num_hyphens'] = url.count('-')
+        features['num_underscores'] = url.count('_')
+        features['num_slashes'] = url.count('/')
+        features['num_equals'] = url.count('=')
+        features['num_digits'] = sum(c.isdigit() for c in url)
+        
+        # Basic domain features
+        domain = extract_domain(url)
+        if domain:
+            features['domain_length'] = len(domain)
+            features['is_ip'] = bool(re.match(r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$', domain))
+        
+        return features
+    except Exception as e:
+        logging.error(f"Error extracting features from {url}: {str(e)}")
+        return None
+
+def extract_features_batch_optimized(urls, batch_size=50):
+    """Extract features from URLs in parallel batches."""
+    start_time = time.time()
+    all_features = []
+    feature_names = None
+    
+    def process_chunk(url_chunk):
+        return [extract_features_optimized(url) for url in url_chunk]
+    
+    # Process URLs in chunks using ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=min(batch_size, len(urls))) as executor:
+        chunks = [urls[i:i+batch_size] for i in range(0, len(urls), batch_size)]
+        chunk_futures = [executor.submit(process_chunk, chunk) for chunk in chunks]
+        
+        for future in as_completed(chunk_futures):
+            try:
+                chunk_features = future.result()
+                all_features.extend(chunk_features)
+            except Exception as e:
+                logging.error(f"Error processing chunk: {str(e)}")
+    
+    if all_features:
+        feature_names = list(all_features[0].keys())
+    
+    processing_time = time.time() - start_time
+    logging.info(f"Batch feature extraction completed in {processing_time:.2f} seconds")
+    logging.info(f"Average time per URL: {processing_time/len(urls):.4f} seconds")
+    
+    return all_features, feature_names
+
+def preprocess_file_data_optimized(phishing_file, legitimate_file, dataset_name, sample_size=None, force_reprocess=False):
+    """Optimized preprocessing of URL data."""
+    cache_file = f'preprocessed_data/{dataset_name}_cache.pkl'
+    
+    if not force_reprocess and os.path.exists(cache_file):
+        with open(cache_file, 'rb') as f:
+            return pickle.load(f)
+    
+    # Read URLs from CSV files efficiently
+    phishing_urls = pd.read_csv(phishing_file, usecols=['url'], nrows=sample_size//2 if sample_size else None)['url'].tolist()
+    legitimate_urls = pd.read_csv(legitimate_file, usecols=['url'], nrows=sample_size//2 if sample_size else None)['url'].tolist()
+    
+    # Process in optimized batches
+    start_time = time.time()
+    features, feature_names = extract_features_batch_optimized(phishing_urls + legitimate_urls)
+    processing_time = time.time() - start_time
+    
+    # Cache results
+    with open(cache_file, 'wb') as f:
+        pickle.dump((features, feature_names, processing_time), f)
+    
+    return features, feature_names, processing_time
+
+def process_and_train(phishing_file, legitimate_file, dataset_name, sample_size=None, force_reprocess=False):
+    """Process URLs and train the model with optimized processing."""
+    logging.info(f"Processing data for dataset: {dataset_name}")
+    
+    try:
+        # Data Processing Phase
+        start_processing = time.time()
+        logging.info("Starting data processing phase...")
+        
+        features, feature_names, processing_time = preprocess_file_data_optimized(
+            phishing_file, 
+            legitimate_file, 
+            dataset_name,
+            sample_size,
+            force_reprocess
+        )
+        
+        logging.info(f"Data processing completed in {processing_time:.2f} seconds")
+        logging.info(f"Features shape: {len(features)}")
+        
+        # Data Splitting Phase
+        start_splitting = time.time()
+        X_train, X_val, X_test, y_train, y_val, y_test = split_data(
+            np.array(features), 
+            np.array([1] * (len(features)//2) + [0] * (len(features)//2))
+        )
+        splitting_time = time.time() - start_splitting
+        logging.info(f"Data splitting completed in {splitting_time:.2f} seconds")
+        
+        # Model Training Phase
+        start_training = time.time()
+        logging.info("Starting model training phase...")
+        
+        model = train_model(X_train, y_train, X_val, y_val)
+        
+        training_time = time.time() - start_training
+        total_time = time.time() - start_processing
+        
+        # Log timing information
+        logging.info("\nPerformance Summary:")
+        logging.info(f"Data Processing Time: {processing_time:.2f} seconds")
+        logging.info(f"Data Splitting Time: {splitting_time:.2f} seconds")
+        logging.info(f"Model Training Time: {training_time:.2f} seconds")
+        logging.info(f"Total Time: {total_time:.2f} seconds")
+        
+        if model is not None:
+            val_accuracy = accuracy_score(y_val, model.predict(X_val))
+            logging.info(f"Validation Accuracy: {val_accuracy:.4f}")
+        
+        return model
+        
+    except Exception as e:
+        logging.error(f"Error in process_and_train: {str(e)}")
+        raise
+
+def split_data(features, labels, test_size=0.2, val_size=0.2):
+    """Split data into training, validation, and test sets."""
+    # First split into training and temp sets
+    X_train, X_temp, y_train, y_temp = train_test_split(
+        features, labels, test_size=(test_size + val_size), random_state=42
+    )
+    
+    # Split temp into validation and test sets
+    val_ratio = val_size / (test_size + val_size)
+    X_val, X_test, y_val, y_test = train_test_split(
+        X_temp, y_temp, test_size=(1 - val_ratio), random_state=42
+    )
+    
+    logging.info(f"Training set size: {len(X_train)}")
+    logging.info(f"Validation set size: {len(X_val)}")
+    logging.info(f"Test set size: {len(X_test)}")
+    
+    return X_train, X_val, X_test, y_train, y_val, y_test
+
+def train_model(X_train, y_train, X_val, y_val):
+    """Train the model with the given data."""
+    # Initialize model
+    model = RandomForestClassifier(n_estimators=100, random_state=42)
+    
+    # Train model
+    model.fit(X_train, y_train)
+    
+    # Evaluate on validation set
+    y_pred = model.predict(X_val)
+    logging.info(f"Validation Accuracy: {accuracy_score(y_val, y_pred):.4f}")
+    
+    return model
 
 def main():
     try:
