@@ -429,7 +429,7 @@ def tune_random_forest(X_train, y_train):
     base_clf = RandomForestClassifier(random_state=42, n_jobs=-1)
     
     # Use StratifiedKFold with shuffling for better cross-validation
-    cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
+    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
     
     # Initialize GridSearchCV with multiple scoring metrics
     grid_search = GridSearchCV(
@@ -469,7 +469,7 @@ def tune_random_forest(X_train, y_train):
     calibrated_model = CalibratedClassifierCV(
         RandomForestClassifier(**grid_search.best_params_, random_state=42), 
         method='sigmoid',
-        cv=3  # Reduced CV folds for smaller dataset
+        cv=5  # Reduced CV folds for smaller dataset
     )
     calibrated_model.fit(X_train, y_train)
     
@@ -490,7 +490,7 @@ class ModelVisualizer:
         
         # Adjust train sizes for larger dataset
         train_sizes = np.linspace(0.2, 1.0, 3)  # Fewer points for learning curve
-        cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
+        cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
         
         plt.figure(figsize=(12, 8))  # Larger figure for better visibility
         train_sizes, train_scores, val_scores = learning_curve(
@@ -513,11 +513,11 @@ class ModelVisualizer:
         
         plt.xlabel('Training Examples')
         plt.ylabel('F1 Score')
-        plt.title('Learning Curve (30,000 Samples)')
+        plt.title('Learning Curve (500 Samples)')
         plt.legend(loc='lower right')
         plt.grid(True)
         
-        plt.savefig(os.path.join(self.output_dir, 'learning_curve-100.png'))
+        plt.savefig(os.path.join(self.output_dir, 'learning_curve-500.png'))
         plt.close()
 
     def save_plot(self, plot_name):
@@ -532,10 +532,10 @@ class ModelVisualizer:
         cm = confusion_matrix(y_true, y_pred)
         sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
                    xticklabels=classes, yticklabels=classes)
-        plt.title('Confusion Matrix')
+        plt.title('Confusion Matrix (500 Samples)')
         plt.ylabel('True Label')
         plt.xlabel('Predicted Label')
-        self.save_plot('confusion_matrix-100')
+        self.save_plot('confusion_matrix-500')
 
     def plot_feature_importance(self, feature_names, importances):
         """Generate and save feature importance plot"""
@@ -546,10 +546,10 @@ class ModelVisualizer:
         }).sort_values('importance', ascending=True)
         
         sns.barplot(data=importance_df, y='feature', x='importance')
-        plt.title('Feature Importance')
+        plt.title('Feature Importance (500 Samples)')
         plt.xlabel('Importance Score')
         plt.ylabel('Features')
-        self.save_plot('feature_importance-100')
+        self.save_plot('feature_importance-500')
 
     def plot_roc_curve(self, y_true, y_prob):
         """Generate and save ROC curve plot"""
@@ -564,9 +564,9 @@ class ModelVisualizer:
         plt.ylim([0.0, 1.05])
         plt.xlabel('False Positive Rate')
         plt.ylabel('True Positive Rate')
-        plt.title('Receiver Operating Characteristic (ROC) Curve')
+        plt.title('Receiver Operating Characteristic (ROC) Curve (500 Samples)')
         plt.legend(loc="lower right")
-        self.save_plot('roc_curve-100')
+        self.save_plot('roc_curve-500')
 
     def plot_precision_recall_curve(self, y_true, y_prob):
         """Generate and save precision-recall curve plot"""
@@ -578,9 +578,9 @@ class ModelVisualizer:
                 label=f'PR curve (AP = {avg_precision:.2f})')
         plt.xlabel('Recall')
         plt.ylabel('Precision')
-        plt.title('Precision-Recall Curve')
+        plt.title('Precision-Recall Curve (500 Samples)')
         plt.legend(loc="lower left")
-        self.save_plot('precision_recall_curve-100')
+        self.save_plot('precision_recall_curve-500')
 
 def evaluate_model(model, X, y, set_name=""):
     """
@@ -710,8 +710,99 @@ def preprocess_file_data_optimized(phishing_file, legitimate_file, dataset_name,
     
     return features, feature_names, processing_time
 
+def normalize_features(features_list):
+    """Normalize features to prevent domination of large-scale features."""
+    normalized_features = []
+    
+    # Get all feature names from first item
+    if not features_list:
+        return []
+    
+    feature_names = list(features_list[0].keys())
+    
+    # Calculate min and max for each feature
+    feature_stats = {name: {'min': float('inf'), 'max': float('-inf')} for name in feature_names}
+    
+    # First pass: find min and max
+    for features in features_list:
+        for name, value in features.items():
+            if isinstance(value, (int, float)):
+                feature_stats[name]['min'] = min(feature_stats[name]['min'], value)
+                feature_stats[name]['max'] = max(feature_stats[name]['max'], value)
+    
+    # Second pass: normalize
+    for features in features_list:
+        normalized = {}
+        for name, value in features.items():
+            if isinstance(value, (int, float)):
+                min_val = feature_stats[name]['min']
+                max_val = feature_stats[name]['max']
+                if max_val > min_val:
+                    normalized[name] = (value - min_val) / (max_val - min_val)
+                else:
+                    normalized[name] = value
+            else:
+                normalized[name] = value
+        normalized_features.append(normalized)
+    
+    return normalized_features
+
+def analyze_feature_importance(model, feature_names):
+    """Analyze and log feature importance."""
+    importances = model.feature_importances_
+    indices = np.argsort(importances)[::-1]
+    
+    logging.info("\nFeature Importance Analysis:")
+    for f in range(len(feature_names)):
+        logging.info(f"{feature_names[indices[f]]}: {importances[indices[f]]:.4f}")
+    
+    return dict(zip(feature_names, importances))
+
+def select_features(features_list, importance_dict, threshold=0.01):
+    """Select features based on importance threshold."""
+    selected_features = [name for name, importance in importance_dict.items() 
+                        if importance >= threshold]
+    
+    logging.info(f"\nSelected {len(selected_features)} features with threshold {threshold}:")
+    logging.info(f"Selected features: {selected_features}")
+    
+    return selected_features
+
+def train_model(X_train, y_train, X_val, y_val, feature_names):
+    """Train model with regularization and feature importance analysis."""
+    start_time = time.time()
+    
+    # Initialize model with regularization parameters
+    model = RandomForestClassifier(
+        n_estimators=100,
+        max_depth=10,  # Prevent overfitting
+        min_samples_split=5,  # Minimum samples required to split
+        min_samples_leaf=2,   # Minimum samples required at leaf node
+        max_features='sqrt',  # Use sqrt of features for each tree
+        random_state=42
+    )
+    
+    # Train model
+    model.fit(X_train, y_train)
+    
+    # Analyze feature importance
+    importance_dict = analyze_feature_importance(model, feature_names)
+    
+    # Evaluate on validation set
+    y_pred = model.predict(X_val)
+    val_accuracy = accuracy_score(y_val, y_pred)
+    
+    training_time = time.time() - start_time
+    
+    # Log performance metrics
+    logging.info(f"\nModel Training Performance:")
+    logging.info(f"Training time: {training_time:.2f} seconds")
+    logging.info(f"Validation Accuracy: {val_accuracy:.4f}")
+    
+    return model, importance_dict
+
 def process_and_train(phishing_file, legitimate_file, dataset_name, sample_size=None, force_reprocess=False):
-    """Process URLs and train the model with optimized processing."""
+    """Process data and train model with performance logging and feature analysis."""
     logging.info(f"Processing data for dataset: {dataset_name}")
     
     try:
@@ -727,15 +818,26 @@ def process_and_train(phishing_file, legitimate_file, dataset_name, sample_size=
             force_reprocess
         )
         
+        # Normalize features
+        logging.info("Normalizing features...")
+        normalized_features = normalize_features(features)
+        
         logging.info(f"Data processing completed in {processing_time:.2f} seconds")
-        logging.info(f"Features shape: {len(features)}")
+        logging.info(f"Number of features: {len(feature_names)}")
         
         # Data Splitting Phase
         start_splitting = time.time()
+        logging.info("Splitting data into train/val/test sets...")
+        
+        # Convert features to numpy array
+        feature_array = np.array([[feat[name] for name in feature_names] 
+                                for feat in normalized_features])
+        labels = np.array([1] * (len(features)//2) + [0] * (len(features)//2))
+        
         X_train, X_val, X_test, y_train, y_val, y_test = split_data(
-            np.array(features), 
-            np.array([1] * (len(features)//2) + [0] * (len(features)//2))
+            feature_array, labels
         )
+        
         splitting_time = time.time() - start_splitting
         logging.info(f"Data splitting completed in {splitting_time:.2f} seconds")
         
@@ -743,21 +845,21 @@ def process_and_train(phishing_file, legitimate_file, dataset_name, sample_size=
         start_training = time.time()
         logging.info("Starting model training phase...")
         
-        model = train_model(X_train, y_train, X_val, y_val)
+        model, importance_dict = train_model(X_train, y_train, X_val, y_val, feature_names)
+        
+        # Select important features
+        selected_features = select_features(normalized_features, importance_dict)
         
         training_time = time.time() - start_training
         total_time = time.time() - start_processing
         
-        # Log timing information
+        # Log comprehensive timing information
         logging.info("\nPerformance Summary:")
         logging.info(f"Data Processing Time: {processing_time:.2f} seconds")
         logging.info(f"Data Splitting Time: {splitting_time:.2f} seconds")
         logging.info(f"Model Training Time: {training_time:.2f} seconds")
         logging.info(f"Total Time: {total_time:.2f} seconds")
-        
-        if model is not None:
-            val_accuracy = accuracy_score(y_val, model.predict(X_val))
-            logging.info(f"Validation Accuracy: {val_accuracy:.4f}")
+        logging.info(f"Average time per sample: {total_time/len(features):.4f} seconds")
         
         return model
         
@@ -812,7 +914,7 @@ def main():
         
         # Load and process data
         logging.info("Starting phishing URL detection model training...")
-        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=100)
+        features_df = load_and_process_data(phishing_file_path, legitimate_file_path, sample_size=500)
         
         # Split the data
         logging.info("\nSplitting data into train, validation, and test sets...")
