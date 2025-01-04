@@ -139,7 +139,7 @@ class URLFeatureExtractor:
     A class to extract features from URLs for phishing detection with optimized parallel processing
     """
     
-    def __init__(self, max_workers=10):
+    def __init__(self, max_workers=20):
         self.max_workers = max_workers
         self.feature_cache = {}
     
@@ -276,7 +276,7 @@ def extract_domain(url):
         logging.warning(f"Error extracting domain from URL {url}: {str(e)}")
         return "unknown_domain"
 
-def load_and_process_data(phishing_file_path: str, legitimate_file_path: str, sample_size: int = 100, batch_size: int = 50) -> pd.DataFrame:
+def load_and_process_data(phishing_file_path: str, legitimate_file_path: str, sample_size: int = 1000, batch_size: int = 50) -> pd.DataFrame:
     """
     Load and process both phishing and legitimate URL datasets with enhanced preprocessing
     """
@@ -437,10 +437,10 @@ def tune_random_forest(X_train, y_train):
     and improved generalization.
     """
     param_grid = {
-        'n_estimators': [200, 300],
+        'n_estimators': [100, 200],
         'max_depth': [6, 8, 10],
-        'min_samples_split': [8, 10, 12],
-        'min_samples_leaf': [3, 4, 5],
+        'min_samples_split': [10, 15, 20],
+        'min_samples_leaf': [4, 6, 8],
         'max_features': ['sqrt', 'log2'],
         'max_samples': [0.7, 0.8],
         'ccp_alpha': [0.001, 0.01],  # Increased pruning for better generalization
@@ -992,7 +992,7 @@ def main():
         # Set dataset paths
         phishing_file = 'verified_online.csv'
         legitimate_file = 'URL-categorization-DFE.csv'
-        sample_size = 100  # Reduced sample size
+        sample_size = 1000  # Reduced sample size
         
         # Process data and train model
         start_time = time.time()
