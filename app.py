@@ -6,6 +6,7 @@ import logging
 from pathlib import Path
 import json
 from datetime import datetime
+from screenshot import capture_website_screenshot
 
 app = Flask(__name__)
 
@@ -50,6 +51,52 @@ def normalize_feature_vector(feature_vector, feature_names):
     
     return normalized
 
+def get_risk_classification(probability):
+    """
+    Get detailed risk classification based on final adjusted probability score
+    Returns dictionary with classification details
+    """
+    if probability < 0.2:
+        return {
+            "level": "Safe",
+            "description": "This website has passed our security checks",
+            "color": "success",
+            "icon": "fa-check-circle",
+            "details": "After analyzing all security factors including domain history, SSL certificate, and DNS records, this website shows strong signs of being legitimate"
+        }
+    elif probability < 0.4:
+        return {
+            "level": "Low Risk",
+            "description": "This website appears mostly safe but has minor security concerns",
+            "color": "info",
+            "icon": "fa-info-circle",
+            "details": "While the overall security score is good, there are some recommended security improvements that could be made"
+        }
+    elif probability < 0.6:
+        return {
+            "level": "Medium Risk",
+            "description": "This website has some concerning security issues",
+            "color": "warning",
+            "icon": "fa-exclamation-circle",
+            "details": "Our analysis found several security concerns. While not definitively malicious, exercise caution and verify the website's legitimacy before proceeding"
+        }
+    elif probability < 0.8:
+        return {
+            "level": "High Risk",
+            "description": "Multiple security issues detected - likely malicious",
+            "color": "danger",
+            "icon": "fa-exclamation-triangle",
+            "details": "This website exhibits many characteristics commonly associated with phishing attempts. It is strongly recommended to avoid entering any sensitive information"
+        }
+    else:
+        return {
+            "level": "Critical Risk",
+            "description": "This website is almost certainly malicious",
+            "color": "critical",
+            "icon": "fa-skull-crossbones",
+            "details": "Our analysis indicates this is very likely a phishing website. DO NOT proceed or enter any information. If you've already shared any data, consider it compromised"
+        }
+
 def analyze_url(url):
     """Analyze URL and return phishing prediction results"""
     try:
@@ -88,7 +135,10 @@ def analyze_url(url):
         
         # Get prediction probability
         probability = model.predict_proba(feature_vector)[0]
-        phishing_prob = probability[1]
+        phishing_prob = probability[1] * 100  # Convert to percentage
+        
+        # Try to capture screenshot
+        screenshot_success, screenshot_path = capture_website_screenshot(url)
         
         # Calculate trust score
         trust_score = 0
@@ -184,45 +234,65 @@ def analyze_url(url):
             trust_score += 0.10
             
         # Calculate adjusted probability
-        adjusted_prob = max(0.01, min(0.99, phishing_prob - trust_score))
-        is_phishing = 1 if adjusted_prob > 0.45 else 0
+        adjusted_prob = max(0.01, min(0.99, phishing_prob / 100 - trust_score))
+        is_phishing = adjusted_prob > 0.45
+        
+        # Get risk classification based on final score
+        risk_class = get_risk_classification(adjusted_prob)
         
         # Prepare trust indicators
         trust_indicators = []
-        if features.get('is_https', 0) and features.get('ssl_is_valid', 0):
-            trust_indicators.append(f"Valid HTTPS/SSL certificate (valid for {features.get('ssl_days_valid', 0)} days)")
-        if not features.get('has_multiple_subdomains', 0):
-            trust_indicators.append("Simple domain structure (no multiple subdomains)")
-        if features.get('domain_age_days', 0) > 365:
-            trust_indicators.append(f"Domain age: {features['domain_age_days'] / 365:.1f} years")
-        if features.get('has_mx_record', 0) and features.get('has_ns_record', 0):
-            trust_indicators.append("Valid DNS records (MX and NS)")
-            
-        # Prepare warning indicators
         warning_indicators = []
+        
+        # SSL/HTTPS indicators
+        if features.get('is_https', 0):
+            trust_indicators.append("Uses HTTPS encryption")
+            if features.get('ssl_is_valid', 0):
+                trust_indicators.append(f"Valid SSL certificate (expires in {int(features.get('ssl_days_valid', 0))} days)")
+            else:
+                warning_indicators.append("Invalid SSL certificate")
+        else:
+            warning_indicators.append("No HTTPS encryption")
+            
+        # Domain age indicators
+        domain_age = features.get('domain_age_days', 0)
+        if domain_age > 365:
+            trust_indicators.append(f"Domain is {domain_age/365:.1f} years old")
+        elif domain_age > 180:
+            trust_indicators.append(f"Domain is {int(domain_age)} days old")
+        else:
+            warning_indicators.append(f"Domain is only {int(domain_age)} days old")
+            
+        # DNS record indicators
+        if features.get('has_mx_record', 0):
+            trust_indicators.append(f"Has {features.get('num_mx_records', 0)} mail servers")
+        if features.get('has_ns_record', 0):
+            trust_indicators.append(f"Has {features.get('num_ns_records', 0)} name servers")
+            
+        # URL structure indicators
         if features.get('has_ip', 0):
-            warning_indicators.append("URL contains IP address")
+            warning_indicators.append("Uses IP address instead of domain name")
         if features.get('has_at_symbol', 0):
-            warning_indicators.append("URL contains @ symbol")
+            warning_indicators.append("Contains @ symbol in URL")
         if features.get('has_multiple_subdomains', 0):
-            warning_indicators.append("Multiple subdomains detected")
-        if features.get('is_domain_young', 0):
-            warning_indicators.append("Domain is relatively new")
-        if not features.get('ssl_is_valid', 0):
-            warning_indicators.append("Invalid or missing SSL certificate")
+            warning_indicators.append("Uses multiple subdomains")
+        if features.get('has_double_slash', 0):
+            warning_indicators.append("Contains double slash in path")
             
         return {
             "url": url,
-            "raw_probability": float(phishing_prob * 100),
+            "raw_probability": float(phishing_prob),
             "trust_score": float(trust_score * 100),
             "adjusted_probability": float(adjusted_prob * 100),
-            "is_phishing": is_phishing,
-            "trust_indicators": trust_indicators,
-            "warning_indicators": warning_indicators,
+            "is_phishing": bool(is_phishing),
+            "risk_classification": risk_class,
+            "trust_indicators": list(trust_indicators),
+            "warning_indicators": list(warning_indicators),
             "features": {k: str(float(v)) if isinstance(v, (int, float)) else str(v) 
                        for k, v in features.items()},
-            "model_name": model_name,
-            "insights": insights
+            "model_name": str(model_name),
+            "insights": dict(insights),
+            "screenshot": str(screenshot_path) if screenshot_success else None
         }
         
     except Exception as e:

@@ -74,6 +74,107 @@
         .insight-card li.warning {
             color: var(--warning-color);
         }
+
+        .screenshot-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .screenshot-container {
+            position: relative;
+            margin-top: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .screenshot-warning {
+            padding: 0.75rem;
+            background: var(--warning-bg);
+            color: var(--warning-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .screenshot-warning i {
+            font-size: 1.1rem;
+        }
+
+        .screenshot-warning p {
+            margin: 0;
+        }
+
+        #websiteScreenshot {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-height: 600px;
+            object-fit: contain;
+        }
+
+        .result-classification {
+            text-align: center;
+            padding: 2rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            background: var(--card-bg);
+        }
+
+        .classification-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .classification-level {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .classification-description {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .classification-details {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Classification colors */
+        .classification-success {
+            background: var(--success-bg);
+            color: var(--success-color);
+        }
+
+        .classification-info {
+            background: var(--info-bg);
+            color: var(--info-color);
+        }
+
+        .classification-warning {
+            background: var(--warning-bg);
+            color: var(--warning-color);
+        }
+
+        .classification-danger {
+            background: var(--danger-bg);
+            color: var(--danger-color);
+        }
+
+        .classification-critical {
+            background: var(--critical-bg);
+            color: var(--critical-color);
+        }
     </style>
 </head>
 <body>
@@ -108,6 +209,10 @@
                 </div>
             </div>
 
+            <div id="riskClassification" class="result-classification">
+                <!-- Risk classification will be populated here -->
+            </div>
+
             <div class="confidence-section">
                 <div class="scores-grid">
                     <div class="score-card">
@@ -140,6 +245,17 @@
                 <h3>Security Insights</h3>
                 <div id="insightsGrid" class="insights-grid">
                     <!-- Insights will be populated here -->
+                </div>
+            </div>
+
+            <div id="screenshotSection" class="screenshot-section" style="display: none;">
+                <h3>Website Preview</h3>
+                <div class="screenshot-container">
+                    <div class="screenshot-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>This is a preview of the suspicious website. Do not interact with it directly.</p>
+                    </div>
+                    <img id="websiteScreenshot" src="" alt="Website Preview">
                 </div>
             </div>
 
@@ -208,18 +324,24 @@
             const resultTitle = document.getElementById('resultTitle');
             const resultUrl = document.getElementById('resultUrl');
             
-            if (data.is_phishing) {
-                resultIcon.className = 'fas fa-exclamation-triangle';
-                resultIcon.style.color = 'var(--danger-color)';
-                resultTitle.textContent = 'Potential Phishing Website';
-                resultTitle.style.color = 'var(--danger-color)';
-            } else {
-                resultIcon.className = 'fas fa-check-circle';
-                resultIcon.style.color = 'var(--success-color)';
-                resultTitle.textContent = 'Legitimate Website';
-                resultTitle.style.color = 'var(--success-color)';
-            }
+            // Update risk classification
+            const classification = data.risk_classification;
+            const riskSection = document.getElementById('riskClassification');
             
+            riskSection.className = `result-classification classification-${classification.color}`;
+            riskSection.innerHTML = `
+                <div class="classification-icon">
+                    <i class="fas ${classification.icon}"></i>
+                </div>
+                <div class="classification-level">${classification.level}</div>
+                <div class="classification-description">${classification.description}</div>
+                <div class="classification-details">${classification.details}</div>
+            `;
+            
+            resultIcon.className = `fas ${classification.icon}`;
+            resultIcon.style.color = `var(--${classification.color}-color)`;
+            resultTitle.textContent = classification.level;
+            resultTitle.style.color = `var(--${classification.color}-color)`;
             resultUrl.textContent = data.url;
             
             // Update confidence bars
@@ -230,6 +352,9 @@
             // Update indicators
             updateIndicators('trustIndicators', data.trust_indicators);
             updateIndicators('warningIndicators', data.warning_indicators);
+            
+            // Update screenshot
+            updateScreenshot(data.screenshot);
             
             // Update insights
             updateInsights(data.insights);
@@ -414,6 +539,18 @@
             };
             
             return feature in positiveFeatures ? positiveFeatures[feature](value) : false;
+        }
+
+        function updateScreenshot(screenshotPath) {
+            const screenshotSection = document.getElementById('screenshotSection');
+            const screenshotImg = document.getElementById('websiteScreenshot');
+            
+            if (screenshotPath) {
+                screenshotImg.src = "{{ url_for('static', filename='') }}" + screenshotPath;
+                screenshotSection.style.display = 'block';
+            } else {
+                screenshotSection.style.display = 'none';
+            }
         }
     </script>
 </body>
