@@ -62,114 +62,120 @@ Our URL Phishing Detection system works like a highly trained security expert wh
 
 ## System Architecture
 
-Our URL Phishing Detection system is built with a modular architecture that ensures efficient processing and accurate predictions. Here's a detailed look at how the system works:
+Our phishing detection system employs a multi-layered architecture designed for efficient URL analysis and real-time threat detection. Here's a comprehensive breakdown of each component:
 
 ```mermaid
 graph TD
-    subgraph User Interface
+    subgraph User Interface Layer
         A[Web Browser] -->|URL Input| B[Flask Frontend]
-        A -->|QR Code Upload| B
+        B -->|JSON Request| C[Flask Backend]
     end
     
-    subgraph Backend Processing
-        B -->|HTTP Request| C[Flask Backend]
-        C -->|URL Features| D[Feature Extractor]
-        D -->|18 Features| E[Random Forest Model]
-        E -->|Prediction| F[Result Processor]
-        F -->|JSON Response| B
+    subgraph Feature Processing Layer
+        C -->|URL| D[URLFeatureExtractor]
+        D -->|Extract| E[URL Features]
+        D -->|Extract| F[Domain Features]
+        D -->|Extract| G[Security Features]
+        
+        E -->|Process| H[Feature Vector]
+        F -->|Process| H
+        G -->|Process| H
     end
     
-    subgraph Feature Extraction
-        D --> G[Length Features]
-        D --> H[Character Features]
-        D --> I[Security Features]
-        G --> D1[URL/Domain/Path Length]
-        H --> D2[Special Chars/Digits]
-        I --> D3[HTTPS/Dots/Tokens]
+    subgraph Analysis Layer
+        H -->|Normalize| I[Random Forest Model]
+        I -->|Predict| J[Risk Analysis]
+        J -->|Calculate| K[Trust Score]
+        
+        J --> L[Risk Classification]
+        J --> M[Security Insights]
     end
     
-    subgraph Model Training
-        J[Training Data] -->|Preprocessing| K[Balanced Dataset]
-        K -->|70%| L[Training Set]
-        K -->|15%| M[Validation Set]
-        K -->|15%| N[Test Set]
-        L --> O[GridSearchCV]
-        O -->|Best Parameters| P[Final Model]
+    subgraph Response Layer
+        L -->|Format| N[JSON Response]
+        M -->|Format| N
+        K -->|Format| N
+        N -->|Send| B
     end
 ```
 
 The system architecture diagram above shows:
-1. **User Interface**: A web-based interface where users can input URLs or upload QR codes
+1. **User Interface**: A web-based interface where users can input URLs
 2. **Backend Processing**: Flask-based server that handles requests and coordinates the detection process
-3. **Feature Extraction**: Extracts 18 distinct features from URLs (detailed below)
+3. **Feature Extraction**: Extracts 22 distinct features from URLs (detailed below)
 4. **Model Training**: Shows how our Random Forest model was trained and optimized
 
 ### Feature Extraction Process
 
 The feature extraction is a critical component that transforms URLs into meaningful numerical features:
-
 ```mermaid
 graph LR
     A[Input URL] --> B[URL Parser]
-    B --> C[Length Features]
-    B --> D[Character Features]
-    B --> E[Security Features]
+    B --> C[URL Features]
+    B --> D[DNS Features]
+    B --> E[SSL Features]
     
-    subgraph Length Features
+    subgraph URL Features
         C --> C1[URL Length]
         C --> C2[Domain Length]
-        C --> C3[Path Length]
-        C --> C4[Subdomain Length]
-        C --> C5[TLD Length]
+        C --> C3[IP Detection]
+        C --> C4[@ Symbol]
+        C --> C5[Hyphens]
+        C --> C6[Multiple Subdomains]
     end
     
-    subgraph Character Features
-        D --> D1[Special Chars]
-        D --> D2[Digit Count]
-        D --> D3[@Symbol]
-        D --> D4[IP Detection]
-        D --> D5[Underscore Count]
-        D --> D6[Percent Symbol Count]
-        D --> D7[Hash Symbol Count]
+    subgraph DNS Features
+        D --> D1[A Record]
+        D --> D2[Number of A Records]
+        D --> D3[MX Record]
+        D --> D4[Number of MX Records]
+        D --> D5[NS Record]
+        D --> D6[Number of NS Records]
     end
     
-    subgraph Security Features
+    subgraph SSL Features
         E --> E1[HTTPS]
-        E --> E2[Dots Count]
-        E --> E3[Hyphens]
-        E --> E4[Domain Tokens]
-        E --> E5[Query Params]
-        E --> E6[Ampersand Count]
+        E --> E2[SSL Validity Days]
+        E --> E3[SSL Valid]
     end
 ```
 
 Our feature extractor processes URLs in three main categories:
-1. **Length Features**: Analyzes various length-based characteristics (5 features)
-   - URL total length
-   - Domain length
-   - Path length
-   - Subdomain length
-   - TLD length
+1. **URL Features**: Analyzes various URL features
+    - url_length
+    - domain_length
+    - has_at_symbol
+    - has_double_slash
+    - has_dash
+    - has_multiple_subdomains
+    - suspicious_tld
+    - domain_digit_ratio
+    - special_char_ratio
 
-2. **Character Features**: Examines character patterns (7 features)
-   - Special character count
-   - Digit count
-   - @ symbol presence
-   - IP address detection
-   - Underscore count
-   - Percent symbol count
-   - Hash symbol count
+2. **DNS Features**: Analyzes various DNS features
+    - has_a_record
+    - is_private_ip
+    - has_mx_record
+    - num_mx_records
+    - has_ns_record
+    - num_ns_records
+    - domain_age_days
+    - is_domain_young
+    - days_to_expiration
+    - is_expiring_soon
+    - has_registrar
 
-3. **Security Features**: Checks security-related indicators (6 features)
-   - HTTPS usage
-   - Dot count
-   - Hyphen usage
-   - Domain token count
-   - Query parameter count
-   - Ampersand count
+3. **SSL Features**: Analyzes SSL features
+    - ssl_days_valid
+    - ssl_is_valid
 
-All these features (total of 18) are implemented in our `URLFeatureExtractor` class and have been proven effective in identifying phishing URLs.
-
+```python
+feature_groups = {
+        'URL': ['url_length', 'domain_length', 'has_ip', 'has_at_symbol', 'has_dash', 'has_multiple_subdomains'],
+        'DNS': ['has_a_record', 'num_a_records', 'has_mx_record', 'num_mx_records', 'has_ns_record', 'num_ns_records'],
+        'SSL': ['is_https', 'ssl_days_valid', 'ssl_is_valid']
+    }
+```
 ## Dataset Analysis
 
 ### Data Sources
@@ -190,93 +196,71 @@ All these features (total of 18) are implemented in our `URLFeatureExtractor` cl
 
 ### Data Processing Pipeline
 **Data Split Ratios**
-   - Training: 70% (42000 samples)
-   - Validation: 15% (9000 samples)
-   - Testing: 15% (9000 sampless)
+
 
 ## Feature Engineering
 
 ### URL Features Extracted
 1. **Url based Features**
    ```python
-   @staticmethod
-    def is_ip_address(url):
-        """Check if the URL uses an IP address instead of a domain name."""
-        try:
-            domain = urlparse(url).netloc
-            ipaddress.ip_address(domain)
-            return 1
-        except:
-            return 0
-    
-    @staticmethod
-    def extract_features(url):
+    def extract_features(self, url: str) -> Dict[str, Any]:
         """
-        Extract features from a given URL
-        
-        Features:
-        - URL length
-        - Domain length
-        - Path length
-        - Number of special characters
-        - Number of digits
-        - Presence of @ symbol
-        - Use of IP address
-        - Additional security features
+        Extract features from a given URL including DNS and domain-based features
         """
         try:
-            parsed = urlparse(url)
-            extracted = tldextract.extract(url)
+            # Preprocess URL first to remove protocol bias
+            preprocessed_url = preprocess_url(url)
             
-            # Length-based features
-            url_length = len(url)
-            domain_length = len(parsed.netloc)
-            path_length = len(parsed.path)
+            # Now normalize for feature extraction
+            normalized_url = normalize_url(url)
+            parsed = urlparse('http://' + preprocessed_url)  # Add protocol temporarily for parsing
+            domain = parsed.netloc
             
-            # Character-based features
-            special_chars = len(re.findall(r'[^a-zA-Z0-9]', url))
-            digits = len(re.findall(r'\d', url))
-            has_at_symbol = '@' in url
-            is_ip = URLFeatureExtractor.is_ip_address(url)
+            # Extract DNS features using our improved dns_features module
+            dns_features_df = extract_dns_features(url)
+            # Convert Series to scalar values
+            dns_features = {col: dns_features_df[col].iloc[0] for col in dns_features_df.columns}
             
-            # Additional security features
-            num_dots = url.count('.')
-            num_hyphens = url.count('-')
-            num_underscores = url.count('_')
-            num_percent = url.count('%')
-            num_query_components = len(parsed.query.split('&')) if parsed.query else 0
-            num_ampersand = url.count('&')
-            num_hash = url.count('#')
-            has_https = int(parsed.scheme == 'https')
-            
-            # Domain-based features
-            domain_token_count = len(re.findall(r'[a-zA-Z0-9]+', extracted.domain))
-            subdomain_length = len(extracted.subdomain)
-            tld_length = len(extracted.suffix) if extracted.suffix else 0
-            
-            return {
-                'url_length': url_length,
-                'domain_length': domain_length,
-                'path_length': path_length,
-                'special_chars_count': special_chars,
-                'digits_count': digits,
-                'has_at_symbol': int(has_at_symbol),
-                'is_ip_address': is_ip,
-                'num_dots': num_dots,
-                'num_hyphens': num_hyphens,
-                'num_underscores': num_underscores,
-                'num_percent': num_percent,
-                'num_query_components': num_query_components,
-                'num_ampersand': num_ampersand,
-                'num_hash': num_hash,
-                'has_https': has_https,
-                'domain_token_count': domain_token_count,
-                'subdomain_length': subdomain_length,
-                'tld_length': tld_length
+            # Basic URL features
+            features = {
+                'url_length': len(preprocessed_url),
+                'domain_length': len(domain),
+                'has_ip': self.is_ip_address(preprocessed_url),
+                'has_at_symbol': '@' in preprocessed_url,
+                'has_double_slash': '//' in parsed.path,  # Look only in path
+                'has_dash': '-' in domain,
+                'has_multiple_subdomains': len(domain.split('.')) > 2,
+                # Remove 'is_https' feature as it's biasing the model
+                'suspicious_tld': domain.split('.')[-1] in ['xyz', 'top', 'work', 'live', 'monster', 'info'],
+                'domain_digit_ratio': sum(c.isdigit() for c in domain) / len(domain) if domain else 0,
+                'special_char_ratio': sum(not c.isalnum() for c in preprocessed_url) / len(preprocessed_url),
             }
+            
+            # Add DNS features
+            features.update({
+                'has_a_record': dns_features['has_a_record'],
+                'num_a_records': dns_features['num_a_records'],
+                'is_private_ip': dns_features['is_private_ip'],
+                'has_mx_record': dns_features['has_mx_record'],
+                'num_mx_records': dns_features['num_mx_records'],
+                'has_ns_record': dns_features['has_ns_record'],
+                'num_ns_records': dns_features['num_ns_records'],
+                'domain_age_days': dns_features['domain_age_days'],
+                'is_domain_young': dns_features['is_domain_young'],
+                'days_to_expiration': dns_features['days_to_expiration'],
+                'is_expiring_soon': dns_features['is_expiring_soon'],
+                'has_registrar': dns_features['has_registrar'],
+                'has_registrant': dns_features['has_registrant'],
+                'ssl_days_valid': dns_features['ssl_days_valid'],
+                'ssl_is_valid': dns_features['ssl_is_valid'],
+                'ssl_is_expired': dns_features['ssl_is_expired'],
+                'ssl_is_self_signed': dns_features['ssl_is_self_signed']
+            })
+            
+            return features
+            
         except Exception as e:
-            print(f"Error processing URL: {url}")
-            print(f"Error message: {str(e)}")
+            logging.error(f"Error extracting features for {url}: {str(e)}")
             return None
    ```
 
@@ -285,116 +269,200 @@ All these features (total of 18) are implemented in our `URLFeatureExtractor` cl
 ### Random Forest Configuration
 ```python
 param_grid = {
-        'n_estimators': [100, 200, 300],
-        'max_depth': [5, 10, 15, None],
-        'min_samples_split': [2, 5, 10],
-        'min_samples_leaf': [1, 2, 4],
-        'max_features': ['sqrt', 'log2']
-}
+        'n_estimators': [100, 200],
+        'max_depth': [6, 8, 10],
+        'min_samples_split': [10, 15, 20],
+        'min_samples_leaf': [4, 6, 8],
+        'max_features': ['sqrt', 'log2'],
+        'max_samples': [0.7, 0.8],
+        'ccp_alpha': [0.001, 0.01],  # Increased pruning for better generalization
+        'class_weight': ['balanced', 'balanced_subsample']  # Better handling of imbalanced data
+    }
 ```
 
 ## Performance Analysis
 
 ### Best parameters found:
-max_depth: 5
-max_features: sqrt
-min_samples_leaf: 1
-min_samples_split: 2
-n_estimators: 100
-
+2025-01-05 21:07:33,887 - INFO - {'ccp_alpha': 0.001, 'class_weight': 'balanced', 'max_depth': 10, 'max_features': 'sqrt', 'max_samples': 0.8, 'min_samples_leaf': 4, 'min_samples_split': 20, 'n_estimators': 100}
 
 ### ROC Curve
-![ROC Curve](plots/roc_curve-30000.png)
+![ROC Curve](plots/split_10/roc_curve.png)
 
-The ROC curve shows the trade-off between the True Positive Rate and False Positive Rate at various classification thresholds. Our model achieves an AUC of 0.96, indicating excellent discriminative ability.
+The ROC curve shows the trade-off between the True Positive Rate and False Positive Rate at various classification thresholds. Our curve here almost creates a perfect top-left corner, indicated that the model is very good.
 
 ### Confusion Matrix
-![Confusion Matrix](plots/confusion_matrix-30000.png)
+![Confusion Matrix](plots/split_10/confusion_matrix.png)
 
 The confusion matrix shows:
-- True Positives (450): Correctly identified phishing URLs
-- True Negatives (455): Correctly identified legitimate URLs
-- False Positives (45): Legitimate URLs misclassified as phishing
-- False Negatives (50): Phishing URLs misclassified as legitimate
+True Positives (916): The model correctly predicted a phishing URL as phishing. (Bottom right cell)
+True Negatives (1035): The model correctly predicted a legitimate URL as legitimate. (Top left cell)
+False Positives (28): The model incorrectly predicted a legitimate URL as phishing (Type I error). (Top right cell)
+False Negatives (21): The model incorrectly predicted a phishing URL as legitimate (Type II error). (Bottom left cell)
+The counts of TN and TP are the dominant ones on the diagonal, indicating that the model is performing well overall. There is a small portion of cases that the model misclassified.
+can see that the true negatives are larger than true positives, indicating that your validation dataset is probably not balanced.
+The relatively low counts of false positives and false negatives mean the model has both low false alarm rate and low miss rate.
+
 
 ### Feature Importance
-![Feature Importance](plots/feature_importance-30000.png)
+![Feature Importance](plots/split_10/feature_importance_split_10.png)
 
-The feature importance plot shows the relative contribution of each feature to the model's decisions. URL length and special character count are the most influential features.
+Feature importance scores tell you which features in your dataset the model relies on most when making predictions. The bar chart visualizes these scores. A higher score indicates that the feature has a larger impact on the model's output.
 
 ### Precision Recall Curve
-![Precision Recall Curve](plots/precision_recall_curve-30000.png)
+![Precision Recall Curve](plots/split_10/precision-recall_curve.png)
 
 The Precision-Recall curve shows perfect scores, indicating the model identifies both phishing and legitimate URLs with 100% accuracy.
 
-### Learning Curve
-![Learning Curve](plots/learning_curve-30000.png)
+The high average precision score of 1.00 indicates that this model has a very good capability of achieving both high precision and high recall at the same time.
+The curve close to the upper right corner means that the model can achieve high recall without significant drop in precision.
 
-The learning curve demonstrates consistent perfect performance on both training and validation sets, showing the model has learned the patterns effectively.
+### Learning Curve
+![Learning Curve](plots/split_10/learning_curve.png)
+
+The learning curve demonstrates consistent perfect performance on both training and validation sets, showing the model has learned the patterns effectively. The convergence of training and cross-validation scores indicates the model has a good fit.The close distance between the two curves indicates there is no large gap between how the model performs on data it has seen and data it hasn't seen. The shape and flattening of these two curves show that this model is probably well-trained with existing data. Adding more data will not bring significantly more benefit.The model shows high values of performance metrics.
+
+###Feature Value Counts
+![Feature Value Counts](plots/split_10/feature_value_counts.png)
+These are a series of bar charts that show the distribution of specific categorical features, separated by the target variable labels (legitimate vs. phishing). They are effectively frequency plots that allow for direct comparison between different label groups.
+
+It clearly demonstrates how different classes (legitimate and phishing) are distributed for certain features. For example, for the has_mx_record feature the phishing category has far more samples with 0.0, as opposed to the legitimate category, which has more samples with 1.0.
+
+If the two classes are heavily distributed to different values in one feature, then it is a strong candidate for feature selection.
+
+It is used to visualize and understand how categorical features behave, for example, does a certain feature has more "False" value for phishing or legitimate?
+
+### Feature Distributions
+![Feature Distributions](plots/split_10/feature_distributions.png)
+
+These are Kernel Density Estimate (KDE) plots visualizing the probability distributions of numerical features, separated by the target variable label. These plots give us an idea of the shape and spread of feature values for each class.
+
+We can see how well separated different classes are for certain features. If the two classes have distinct and separate peaks, it indicates that the feature is useful for distinguishing them. For example, the num_mx_records feature has a distribution shifted significantly to the left for phishing labels compared to legitimate labels, indicating that the model can use that feature to distinguish between them.
+Similar to the bar charts, if the two classes are heavily distributed to different ranges in one feature, then it is a strong candidate for feature selection.
+These plots allow you to explore the behavior of numerical features, similar to feature value counts, but for numerical data.
+
+### Individual Conditional Expectation (ICE) Plots
+![Individual Conditional Expectation (ICE) Plots](plots/split_10/ice_curves.png)
+ICE plots visualize how the model's prediction for a single instance changes as you vary a feature, while holding all other features constant. In a typical setup, each line in the plot represents one of data points. It can provide a sense of variance across different instances.
+We can see how the model reacts to different values of a feature for different individual instances. If the ICE plot shows high variance (many lines are going up and down differently), it may mean the influence of the feature is not uniform.
+
+### Partial Dependence Plots (PDP)
+![Partial Dependence Plots (PDP)](plots/split_10/partial_dependence.png)
+A Partial Dependence Plot (PDP) illustrates how the average prediction of a model changes as a single feature is varied, while marginalizing over all other features. In other words, it shows the average effect of a feature on the prediction.
+You can see the average effects a particular feature has on your model's results. For instance, the url_length feature shows partial dependence plateaus at higher values, indicating that the prediction output is not sensitive to this feature beyond a certain length.
+The plot visualizes the non-linearities of the feature, showing where the effect increases or decreases more quickly.
+If there are areas of the plot where the partial dependence is very high or very low, it can suggest where a better feature can be engineered.
+
 
 ### Cross-Validation Results
 ```
+2025-01-05 22:15:09,530 - INFO - 
+Training model for split 10/10
+2025-01-05 22:23:14,911 - INFO - 
+Best parameters found:
+2025-01-05 22:23:14,912 - INFO - {'ccp_alpha': 0.001, 'class_weight': 'balanced_subsample', 'max_depth': 10, 'max_features': 'sqrt', 'max_samples': 0.8, 'min_samples_leaf': 4, 'min_samples_split': 10, 'n_estimators': 100}
+2025-01-05 22:23:14,912 - INFO - 
 Best cross-validation scores:
-f1: 1.0000 (+/- 0.0000)
-precision: 1.0000 (+/- 0.0000)
-recall: 1.0000 (+/- 0.0000)
-accuracy: 1.0000 (+/- 0.0000)
+2025-01-05 22:23:14,913 - INFO - accuracy: 0.9688
+2025-01-05 22:23:14,913 - INFO - precision: 0.9617
+2025-01-05 22:23:14,913 - INFO - recall: 0.9790
+2025-01-05 22:23:14,913 - INFO - f1: 0.9702
+2025-01-05 22:23:14,914 - INFO - roc_auc: 0.9955
+2025-01-05 22:23:16,474 - INFO - Model training completed in 486.94 seconds
+2025-01-05 22:23:16,628 - INFO - 
+Validation Set Set Performance:
+2025-01-05 22:23:16,632 - INFO -               precision    recall  f1-score   support
 
-Detailed cross-validation of best model:
+           0       0.98      0.97      0.97      2256
+           1       0.96      0.97      0.97      1840
 
-Detailed Cross-Validation Metrics:
+    accuracy                           0.97      4096
+   macro avg       0.97      0.97      0.97      4096
+weighted avg       0.97      0.97      0.97      4096
 
-Accuracy:
-Training: 1.0000 (+/- 0.0000)
-Testing:  1.0000 (+/- 0.0000)
+2025-01-05 22:23:16,633 - INFO - 
+Detailed Validation Set Set Metrics:
+2025-01-05 22:23:16,634 - INFO - Brier Score: 0.0262
+2025-01-05 22:23:16,635 - INFO - Log Loss: 0.0988
+2025-01-05 22:23:16,636 - INFO - Optimal Threshold: 0.6057
+2025-01-05 22:23:16,784 - INFO - 
+Test Set Set Performance:
+2025-01-05 22:23:16,787 - INFO -               precision    recall  f1-score   support
 
-Precision:
-Training: 1.0000 (+/- 0.0000)
-Testing:  1.0000 (+/- 0.0000)
+           0       0.98      0.97      0.98      1063
+           1       0.97      0.98      0.97       937
 
-Recall:
-Training: 1.0000 (+/- 0.0000)
-Testing:  1.0000 (+/- 0.0000)
+    accuracy                           0.98      2000
+   macro avg       0.98      0.98      0.98      2000
+weighted avg       0.98      0.98      0.98      2000
 
-F1:
-Training: 1.0000 (+/- 0.0000)
-Testing:  1.0000 (+/- 0.0000)
-
-Generating learning curve plot...
-
-Evaluating on validation set:
-
-Validation Set Performance:
-              precision    recall  f1-score   support
-
-           0       1.00      1.00      1.00      4500
-           1       1.00      1.00      1.00      4500
-
-    accuracy                           1.00      9000
-   macro avg       1.00      1.00      1.00      9000
-weighted avg       1.00      1.00      1.00      9000
-
-
-Detailed Validation Set Metrics:
-Brier Score: 0.0000
-Log Loss: 0.0021
-
-Evaluating on test set:
-
-Test Set Performance:
-              precision    recall  f1-score   support
-
-           0       1.00      1.00      1.00      4500
-           1       1.00      1.00      1.00      4500
-
-    accuracy                           1.00      9000
-   macro avg       1.00      1.00      1.00      9000
-weighted avg       1.00      1.00      1.00      9000
-
-
-Detailed Test Set Metrics:
-Brier Score: 0.0000
-Log Loss: 0.0022
+2025-01-05 22:23:16,788 - INFO - 
+Detailed Test Set Set Metrics:
+2025-01-05 22:23:16,789 - INFO - Brier Score: 0.0225
+2025-01-05 22:23:16,790 - INFO - Log Loss: 0.0881
+2025-01-05 22:23:16,790 - INFO - Optimal Threshold: 0.6732
+2025-01-05 22:23:16,791 - INFO - Model evaluation completed in 0.32 seconds
+2025-01-05 22:23:20,385 - INFO - Plot generation completed in 3.27 seconds
+2025-01-05 22:23:35,149 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-05 22:23:35,156 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-05 22:23:35,182 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-05 22:23:35,188 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-05 22:23:35,215 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-05 22:23:35,221 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-05 22:23:35,306 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-05 22:23:35,313 - INFO - Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2025-01-05 22:23:36,004 - INFO - Plot generation completed in 19.21 seconds
+2025-01-05 22:23:36,029 - INFO - 
+Feature Importance by Group:
+2025-01-05 22:23:36,029 - INFO - DNS: 0.4601
+2025-01-05 22:23:36,030 - INFO - SSL: 0.2614
+2025-01-05 22:23:36,030 - INFO - URL: 0.1666
+2025-01-05 22:23:36,030 - INFO - 
+Feature Importance:
+2025-01-05 22:23:36,031 - INFO -                 feature  importance
+          has_mx_record    0.202168
+         num_mx_records    0.184467
+         ssl_days_valid    0.143131
+           ssl_is_valid    0.118295
+             url_length    0.086987
+           has_a_record    0.055786
+has_multiple_subdomains    0.045170
+        domain_age_days    0.041983
+          domain_length    0.032782
+     special_char_ratio    0.027101
+         suspicious_tld    0.012944
+         num_ns_records    0.012866
+        is_domain_young    0.009081
+     days_to_expiration    0.007953
+     domain_digit_ratio    0.007352
+          has_ns_record    0.004822
+          has_registrar    0.002866
+       is_expiring_soon    0.002611
+               has_dash    0.001617
+          has_at_symbol    0.000020
+       has_double_slash    0.000000
+          is_private_ip    0.000000
+2025-01-05 22:23:36,033 - INFO - Feature importance analysis completed in 0.03 seconds
+2025-01-05 22:23:36,167 - INFO - 
+Model saved to: models/split_10\phishing_detector_split_9_20250105_222336.joblib
+2025-01-05 22:23:36,168 - INFO - Feature names saved to: models/split_10\feature_names_split_9_20250105_222336.joblib
+2025-01-05 22:23:36,169 - INFO - Model saving completed in 0.14 seconds
+2025-01-05 22:23:36,169 - INFO - Split 10 completed in 506.64 seconds
+2025-01-05 22:23:36,169 - INFO - 
+Final Results:
+2025-01-05 22:23:36,169 - INFO - Sample Size: 10000 URLs
+2025-01-05 22:23:36,170 - INFO - Number of Cross-validation Splits: 10
+2025-01-05 22:23:36,170 - INFO - Mean Cross-Validation Accuracy: 0.9727 (+/- 0.0083)
+2025-01-05 22:23:36,170 - INFO - Best Accuracy: 0.9790
+2025-01-05 22:23:36,170 - INFO - Worst Accuracy: 0.9630
+2025-01-05 22:23:36,171 - INFO - Total execution time: 8949.49 seconds
+2025-01-05 22:23:36,171 - INFO - Average time per model: 894.95 seconds
+2025-01-05 22:23:36,177 - INFO - 
+Final Results:
+2025-01-05 22:23:36,177 - INFO - Sample Size: 10000 URLs
+2025-01-05 22:23:36,178 - INFO - Number of Cross-validation Splits: 10
+2025-01-05 22:23:36,178 - INFO - Mean Cross-Validation Accuracy: 0.9727 (+/- 0.0083)
+2025-01-05 22:23:36,178 - INFO - Best Accuracy: 0.9790
+2025-01-05 22:23:36,179 - INFO - Worst Accuracy: 0.9630
 ```
 
 ## Limitations and Challenges
@@ -472,3 +540,5 @@ deactivate
 - This project requires Python 3.8+
 - All dependencies are listed in `requirements.txt`
 - For development, it's recommended to use the virtual environment
+
+Insights
