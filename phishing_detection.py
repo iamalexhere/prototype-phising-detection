@@ -45,6 +45,7 @@ import time
 import pickle
 from sklearn.model_selection import GroupKFold, GroupShuffleSplit
 import traceback
+from sklearn.inspection import partial_dependence, PartialDependenceDisplay
 
 # Configure logging
 def setup_logging(log_dir='logs'):
@@ -276,7 +277,7 @@ def extract_domain(url):
         logging.warning(f"Error extracting domain from URL {url}: {str(e)}")
         return "unknown_domain"
 
-def load_and_process_data(phishing_file_path: str, legitimate_file_path: str, sample_size: int = 10000, batch_size: int = 50) -> pd.DataFrame:
+def load_and_process_data(phishing_file_path: str, legitimate_file_path: str, sample_size: int = 100, batch_size: int = 50) -> pd.DataFrame:
     """
     Load and process both phishing and legitimate URL datasets with enhanced preprocessing
     """
@@ -357,6 +358,7 @@ def load_and_process_data(phishing_file_path: str, legitimate_file_path: str, sa
     numerical_cols = numerical_cols.drop('label') if 'label' in numerical_cols else numerical_cols
     
     if len(numerical_cols) > 0:
+        # Fix: Pass the actual data to fit_transform, not just column names
         features_df_prep[numerical_cols] = scaler.fit_transform(features_df_prep[numerical_cols])
         logging.info(f"Scaled {len(numerical_cols)} numerical features using RobustScaler")
     
@@ -801,6 +803,15 @@ def process_and_train(phishing_file, legitimate_file, dataset_name, sample_size=
             visualizer.plot_confusion_matrix(y_test, y_test_pred)
             visualizer.plot_roc_curve(y_test, y_test_prob)
             visualizer.plot_precision_recall_curve(y_test, y_test_prob)
+            
+            # Add ICE curves and partial dependence plots
+            visualizer.plot_ice_curves(best_base_model, X_train, feature_names, top_n=3)
+            visualizer.plot_partial_dependence(best_base_model, X_train, feature_names, top_n=5)
+            
+            # Add new plots
+            visualizer.plot_feature_distributions(X_train, y_train, feature_names)
+            visualizer.plot_feature_countplots(X_train, y_train, feature_names)
+            
             plot_end_time = time.time()
             logging.info(f"Plot generation completed in {plot_end_time - plot_start_time:.2f} seconds")
             
@@ -982,6 +993,276 @@ class ModelVisualizer:
         plt.grid(True)
         
         self.save_plot(f"{title.lower().replace(' ', '_')}")
+    
+    def plot_partial_dependence(self, model, X, feature_names, top_n=5, title="Partial Dependence Plots"):
+        """Generate and save partial dependence plots for top N most important features."""
+        # Get feature importances
+        importances = model.feature_importances_
+        
+        # Get indices of top N most important features
+        top_features_idx = np.argsort(importances)[-top_n:]
+        selected_features = [feature_names[i] for i in top_features_idx]
+        
+        # Create subplots for each feature
+        n_cols = min(3, top_n)
+        n_rows = (top_n + n_cols - 1) // n_cols
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(5*n_cols, 4*n_rows))
+        
+        if n_rows == 1:
+            axes = axes.reshape(1, -1)
+        
+        # Generate PDP for each selected feature
+        for idx, (feature, ax) in enumerate(zip(selected_features, axes.ravel())):
+            feature_idx = feature_names.index(feature)
+            
+            try:
+                # Calculate partial dependence with new API
+                pdp_result = partial_dependence(
+                    model, X, [feature_idx],
+                    kind='average',
+                    grid_resolution=50
+                )
+                
+                # Extract values from result object
+                feature_values = pdp_result['values'][0]  # Grid points
+                pdp_mean = pdp_result['average'][0]  # Average predictions
+                
+                # Plot PDP
+                ax.plot(feature_values, pdp_mean, 'b-', label='Partial dependence')
+                ax.set_xlabel(feature)
+                ax.set_ylabel('Partial dependence')
+                ax.grid(True)
+                
+                # Add feature importance as title
+                importance = importances[feature_names.index(feature)]
+                ax.set_title(f'{feature}\n(importance: {importance:.3f})')
+                
+            except Exception as e:
+                logging.warning(f"Could not generate PDP plot for feature {feature}: {str(e)}")
+                ax.text(0.5, 0.5, f"Could not generate PDP plot\nfor feature {feature}",
+                       ha='center', va='center', transform=ax.transAxes)
+        
+        # Remove empty subplots if any
+        for idx in range(len(selected_features), len(axes.ravel())):
+            fig.delaxes(axes.ravel()[idx])
+        
+        plt.suptitle(title, y=1.02)
+        plt.tight_layout()
+        
+        self.save_plot(f"{title.lower().replace(' ', '_')}")
+        logging.info(f"Generated partial dependence plots for top {top_n} features")
+    
+    def plot_ice_curves(self, model, X, feature_names, top_n=3, n_samples=50, title="Individual Conditional Expectation Plots"):
+        """Generate and save ICE plots for top N most important features with sampling."""
+        # Get feature importances and top features
+        importances = model.feature_importances_
+        top_features_idx = np.argsort(importances)[-top_n:]
+        selected_features = [feature_names[i] for i in top_features_idx]
+        
+        # Sample instances for clearer visualization
+        sample_indices = np.random.choice(len(X), min(n_samples, len(X)), replace=False)
+        X_sampled = X.iloc[sample_indices] if hasattr(X, 'iloc') else X[sample_indices]
+        
+        # Create subplots
+        fig, axes = plt.subplots(1, top_n, figsize=(6*top_n, 5))
+        if top_n == 1:
+            axes = [axes]
+        
+        # Generate ICE plots
+        for idx, (feature, ax) in enumerate(zip(selected_features, axes)):
+            feature_idx = feature_names.index(feature)
+            
+            try:
+                # Calculate ICE values with new API
+                ice_result = partial_dependence(
+                    model, X_sampled, [feature_idx],
+                    kind='both',  # This returns both individual and average effects
+                    grid_resolution=20
+                )
+                
+                # Extract values from result object
+                feature_values = ice_result['values'][0]  # Grid points
+                ice_predictions = ice_result['individual'][0]  # Individual predictions
+                mean_ice = ice_result['average'][0]  # Average predictions
+                
+                # Plot individual ICE curves
+                for ice_curve in ice_predictions.T:  # Transpose to get individual curves
+                    ax.plot(feature_values, ice_curve, 'b-', alpha=0.1)
+                
+                # Plot the mean curve
+                ax.plot(feature_values, mean_ice, 'r-', linewidth=2, label='Mean ICE')
+                
+                ax.set_xlabel(feature)
+                ax.set_ylabel('Model prediction')
+                ax.grid(True)
+                
+                # Add feature importance as title
+                importance = importances[feature_names.index(feature)]
+                ax.set_title(f'{feature}\n(importance: {importance:.3f})')
+                
+            except Exception as e:
+                logging.warning(f"Could not generate ICE plot for feature {feature}: {str(e)}")
+                ax.text(0.5, 0.5, f"Could not generate ICE plot\nfor feature {feature}",
+                       ha='center', va='center', transform=ax.transAxes)
+        
+        plt.suptitle(title, y=1.02)
+        plt.tight_layout()
+        
+        self.save_plot(f"{title.lower().replace(' ', '_')}")
+
+    def plot_feature_distributions(self, X, y, feature_names, title="Feature Distributions"):
+        """Generate density plots for each feature split by class."""
+        importances = self.get_feature_importances()
+        top_features = pd.DataFrame({
+            'feature': feature_names,
+            'importance': importances
+        }).sort_values('importance', ascending=False)['feature'].head(10)
+
+        n_cols = 2
+        n_rows = (len(top_features) + 1) // n_cols
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(15, 4*n_rows))
+        axes = axes.ravel()
+
+        df = pd.DataFrame(X, columns=feature_names)
+        df['label'] = y
+
+        for idx, feature in enumerate(top_features):
+            sns.kdeplot(
+                data=df, x=feature, hue='label',
+                ax=axes[idx], common_norm=False,
+                fill=True, alpha=0.5,
+                hue_order=[0, 1],
+                palette=['green', 'red']
+            )
+            axes[idx].set_title(f'{feature}\n(importance: {importances[feature_names.index(feature)]:.3f})')
+            axes[idx].set_xlabel(feature)
+            axes[idx].set_ylabel('Density')
+            if idx == 0:
+                axes[idx].legend(['Legitimate', 'Phishing'])
+
+        # Remove empty subplots
+        for idx in range(len(top_features), len(axes)):
+            fig.delaxes(axes[idx])
+
+        plt.suptitle(title, y=1.02)
+        plt.tight_layout()
+        self.save_plot(f"{title.lower().replace(' ', '_')}")
+
+    def plot_feature_countplots(self, X, y, feature_names, title="Feature Value Counts"):
+        """Generate count plots for categorical features split by class."""
+        importances = self.get_feature_importances()
+        categorical_features = [f for f in feature_names if X[f].nunique() <= 5]
+        top_cats = sorted(categorical_features, 
+                         key=lambda x: importances[feature_names.index(x)],
+                         reverse=True)[:6]
+
+        n_cols = 2
+        n_rows = (len(top_cats) + 1) // n_cols
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(15, 4*n_rows))
+        axes = axes.ravel()
+
+        df = pd.DataFrame(X, columns=feature_names)
+        df['label'] = y
+
+        for idx, feature in enumerate(top_cats):
+            sns.countplot(
+                data=df,
+                x=feature,
+                hue='label',
+                ax=axes[idx],
+                palette=['green', 'red']
+            )
+            axes[idx].set_title(f'{feature}\n(importance: {importances[feature_names.index(feature)]:.3f})')
+            if idx == 0:
+                axes[idx].legend(['Legitimate', 'Phishing'])
+            axes[idx].set_xlabel(feature)
+            axes[idx].set_ylabel('Count')
+
+        # Remove empty subplots
+        for idx in range(len(top_cats), len(axes)):
+            fig.delaxes(axes[idx])
+
+        plt.suptitle(title, y=1.02)
+        plt.tight_layout()
+        self.save_plot(f"{title.lower().replace(' ', '_')}")
+
+    def get_feature_importances(self):
+        """Helper method to get feature importances from the model."""
+        if hasattr(self.model, 'feature_importances_'):
+            return self.model.feature_importances_
+        return np.zeros(len(self.feature_names))
+
+    def plot_ice_curves(self, model, X, feature_names, top_n=3):
+        """Fixed version of ICE curves plot."""
+        # Store model and feature names for other plotting methods
+        self.model = model
+        self.feature_names = feature_names
+        
+        # Get feature importances and top features
+        importances = model.feature_importances_
+        top_features_idx = np.argsort(importances)[-top_n:]
+        selected_features = [feature_names[i] for i in top_features_idx]
+        
+        fig, axes = plt.subplots(1, top_n, figsize=(6*top_n, 5))
+        if top_n == 1:
+            axes = [axes]
+        
+        # Create display object
+        for idx, (feature, ax) in enumerate(zip(selected_features, axes)):
+            try:
+                feature_idx = feature_names.index(feature)
+                display = PartialDependenceDisplay.from_estimator(
+                    model, X, [feature_idx],
+                    kind='both',
+                    subsample=50,
+                    random_state=42,
+                    ax=ax
+                )
+                ax.set_title(f'{feature}\n(importance: {importances[feature_idx]:.3f})')
+            except Exception as e:
+                logging.warning(f"Could not generate ICE plot for feature {feature}: {str(e)}")
+                ax.text(0.5, 0.5, f"Could not generate ICE plot\nfor feature {feature}",
+                       ha='center', va='center', transform=ax.transAxes)
+        
+        plt.suptitle("Individual Conditional Expectation Plots", y=1.02)
+        plt.tight_layout()
+        self.save_plot("ice_curves")
+
+    def plot_partial_dependence(self, model, X, feature_names, top_n=5):
+        """Fixed version of partial dependence plots."""
+        self.model = model  # Store for other methods
+        self.feature_names = feature_names
+        
+        importances = model.feature_importances_
+        top_features_idx = np.argsort(importances)[-top_n:]
+        selected_features = [feature_names[i] for i in top_features_idx]
+        
+        fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+        axes = axes.ravel()
+        
+        for idx, feature in enumerate(selected_features):
+            if idx >= len(axes):
+                break
+            try:
+                feature_idx = feature_names.index(feature)
+                display = PartialDependenceDisplay.from_estimator(
+                    model, X, [feature_idx],
+                    kind='average',
+                    ax=axes[idx]
+                )
+                axes[idx].set_title(f'{feature}\n(importance: {importances[feature_idx]:.3f})')
+            except Exception as e:
+                logging.warning(f"Could not generate PDP plot for feature {feature}: {str(e)}")
+                axes[idx].text(0.5, 0.5, f"Could not generate PDP plot\nfor feature {feature}",
+                             ha='center', va='center', transform=axes[idx].transAxes)
+        
+        # Remove empty subplots
+        for idx in range(len(selected_features), len(axes)):
+            fig.delaxes(axes[idx])
+        
+        plt.suptitle("Partial Dependence Plots", y=1.02)
+        plt.tight_layout()
+        self.save_plot("partial_dependence")
 
 def main():
     """Main function to run the phishing detection model."""
@@ -992,7 +1273,7 @@ def main():
         # Set dataset paths
         phishing_file = 'verified_online.csv'
         legitimate_file = 'URL-categorization-DFE.csv'
-        sample_size = 10000  # Reduced sample size
+        sample_size = 100  # Reduced sample size
         
         # Process data and train model
         start_time = time.time()
