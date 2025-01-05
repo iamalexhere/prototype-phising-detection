@@ -93,6 +93,77 @@ def analyze_url(url):
         # Calculate trust score
         trust_score = 0
         
+        # Prepare insights
+        insights = {
+            'domain_health': {
+                'title': 'Domain Health',
+                'status': 'Good' if features.get('domain_age_days', 0) > 180 else 'Suspicious',
+                'details': []
+            },
+            'dns_security': {
+                'title': 'DNS Security',
+                'status': 'Secure' if all([
+                    features.get('has_mx_record', 0),
+                    features.get('has_ns_record', 0),
+                    features.get('num_ns_records', 0) >= 2
+                ]) else 'Incomplete',
+                'details': []
+            },
+            'ssl_status': {
+                'title': 'SSL Security',
+                'status': 'Secure' if all([
+                    features.get('is_https', 0),
+                    features.get('ssl_is_valid', 0),
+                    features.get('ssl_days_valid', 0) > 90
+                ]) else 'Insecure',
+                'details': []
+            }
+        }
+        
+        # Domain Health Details
+        domain_age = features.get('domain_age_days', 0)
+        if domain_age > 0:
+            age_years = domain_age / 365
+            insights['domain_health']['details'].append(
+                f"Domain age: {age_years:.1f} years" if age_years >= 1 else f"Domain age: {int(domain_age)} days"
+            )
+        if features.get('has_registrar'):
+            insights['domain_health']['details'].append("Domain has valid registrar information")
+        if features.get('days_to_expiration'):
+            days_left = features.get('days_to_expiration')
+            insights['domain_health']['details'].append(
+                f"Domain expires in {int(days_left)} days"
+            )
+            
+        # DNS Security Details
+        if features.get('has_mx_record'):
+            mx_count = features.get('num_mx_records', 0)
+            insights['dns_security']['details'].append(
+                f"Has {mx_count} mail server{'s' if mx_count > 1 else ''}"
+            )
+        if features.get('has_ns_record'):
+            ns_count = features.get('num_ns_records', 0)
+            insights['dns_security']['details'].append(
+                f"Has {ns_count} name server{'s' if ns_count > 1 else ''}"
+            )
+        if features.get('has_a_record'):
+            insights['dns_security']['details'].append("Domain resolves to valid IP")
+            if features.get('is_private_ip'):
+                insights['dns_security']['details'].append("WARNING: Resolves to private IP address")
+        
+        # SSL Security Details
+        if features.get('is_https'):
+            insights['ssl_status']['details'].append("Uses HTTPS encryption")
+            if features.get('ssl_is_valid'):
+                days_valid = features.get('ssl_days_valid', 0)
+                insights['ssl_status']['details'].append(
+                    f"Valid SSL certificate (expires in {int(days_valid)} days)"
+                )
+            else:
+                insights['ssl_status']['details'].append("WARNING: Invalid SSL certificate")
+        else:
+            insights['ssl_status']['details'].append("WARNING: No HTTPS encryption")
+        
         # SSL Group (~50% importance)
         if features.get('is_https', 0) and features.get('ssl_is_valid', 0):
             trust_score += 0.25
@@ -150,7 +221,8 @@ def analyze_url(url):
             "warning_indicators": warning_indicators,
             "features": {k: str(float(v)) if isinstance(v, (int, float)) else str(v) 
                        for k, v in features.items()},
-            "model_name": model_name
+            "model_name": model_name,
+            "insights": insights
         }
         
     except Exception as e:

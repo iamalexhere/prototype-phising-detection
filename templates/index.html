@@ -7,6 +7,74 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .insights-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .insight-card {
+            padding: 1.5rem;
+            background: var(--bg-color);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .insight-card h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 0 1rem 0;
+            font-size: 1.1rem;
+        }
+
+        .insight-card .status {
+            font-size: 0.9rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            margin-left: auto;
+        }
+
+        .status.good, .status.secure {
+            background: var(--success-bg);
+            color: var(--success-color);
+        }
+
+        .status.suspicious, .status.incomplete, .status.insecure {
+            background: var(--warning-bg);
+            color: var(--warning-color);
+        }
+
+        .insight-card ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .insight-card li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .insight-card li:last-child {
+            border-bottom: none;
+        }
+
+        .insight-card li.warning {
+            color: var(--warning-color);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -65,6 +133,13 @@
                         </div>
                         <p id="finalScoreText" class="score-text"></p>
                     </div>
+                </div>
+            </div>
+
+            <div class="insights-section">
+                <h3>Security Insights</h3>
+                <div id="insightsGrid" class="insights-grid">
+                    <!-- Insights will be populated here -->
                 </div>
             </div>
 
@@ -156,6 +231,9 @@
             updateIndicators('trustIndicators', data.trust_indicators);
             updateIndicators('warningIndicators', data.warning_indicators);
             
+            // Update insights
+            updateInsights(data.insights);
+            
             // Update features
             updateFeatures(data.features);
         }
@@ -175,6 +253,47 @@
             list.innerHTML = indicators.length ? 
                 indicators.map(indicator => `<li>${indicator}</li>`).join('') :
                 '<li class="no-indicators">No indicators found</li>';
+        }
+
+        function updateInsights(insights) {
+            const grid = document.getElementById('insightsGrid');
+            grid.innerHTML = '';
+            
+            for (const [key, insight] of Object.entries(insights)) {
+                const card = document.createElement('div');
+                card.className = 'insight-card';
+                
+                let icon;
+                switch(key) {
+                    case 'domain_health':
+                        icon = 'fa-globe';
+                        break;
+                    case 'dns_security':
+                        icon = 'fa-shield-alt';
+                        break;
+                    case 'ssl_status':
+                        icon = 'fa-lock';
+                        break;
+                }
+                
+                card.innerHTML = `
+                    <h4>
+                        <i class="fas ${icon}"></i>
+                        ${insight.title}
+                        <span class="status ${insight.status.toLowerCase()}">${insight.status}</span>
+                    </h4>
+                    <ul>
+                        ${insight.details.map(detail => `
+                            <li class="${detail.toLowerCase().includes('warning') ? 'warning' : ''}">
+                                ${detail.startsWith('WARNING') ? `<i class="fas fa-exclamation-triangle"></i> ` : ''}
+                                ${detail}
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+                
+                grid.appendChild(card);
+            }
         }
 
         function updateFeatures(features) {
