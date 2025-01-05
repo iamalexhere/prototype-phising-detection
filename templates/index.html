@@ -182,9 +182,33 @@
             grid.innerHTML = '';
             
             const featureGroups = {
-                url: ['domain_length', 'has_ip', 'has_at_symbol', 'has_multiple_subdomains'],
-                domain: ['domain_age_days', 'has_mx_record', 'has_ns_record', 'is_private_ip'],
-                security: ['is_https', 'ssl_is_valid', 'ssl_days_valid']
+                'URL Structure': [
+                    'url_length', 
+                    'domain_length', 
+                    'has_ip', 
+                    'has_at_symbol', 
+                    'has_double_slash',
+                    'has_dash',
+                    'has_multiple_subdomains'
+                ],
+                'Domain Information': [
+                    'domain_age_days',
+                    'is_domain_young',
+                    'days_to_expiration',
+                    'is_expiring_soon',
+                    'has_registrar',
+                    'has_a_record',
+                    'has_mx_record',
+                    'num_mx_records',
+                    'has_ns_record',
+                    'num_ns_records',
+                    'is_private_ip'
+                ],
+                'Security': [
+                    'is_https',
+                    'ssl_is_valid',
+                    'ssl_days_valid'
+                ]
             };
             
             for (const [group, featureList] of Object.entries(featureGroups)) {
@@ -221,35 +245,53 @@
         }
 
         function formatFeatureValue(feature, value) {
-            if (feature === 'domain_age_days') {
-                const days = parseFloat(value);
-                return days >= 365 ? `${(days / 365).toFixed(1)} years` : `${Math.round(days)} days`;
-            }
+            if (typeof value === 'undefined' || value === null) return 'N/A';
             
-            if (feature === 'ssl_days_valid') {
-                return `${Math.round(parseFloat(value))} days`;
+            switch(feature) {
+                case 'domain_age_days':
+                    const days = parseFloat(value);
+                    return days >= 365 ? `${(days / 365).toFixed(1)} years` : `${Math.round(days)} days`;
+                case 'days_to_expiration':
+                case 'ssl_days_valid':
+                    return `${Math.round(parseFloat(value))} days`;
+                case 'url_length':
+                case 'domain_length':
+                    return `${value} characters`;
+                case 'num_mx_records':
+                case 'num_ns_records':
+                    return `${value} records`;
+                default:
+                    if (value === '1' || value === 1) return 'Yes';
+                    if (value === '0' || value === 0) return 'No';
+                    return value;
             }
-            
-            if (feature === 'domain_length') {
-                return `${value} characters`;
-            }
-            
-            return value === '1' ? 'Yes' : value === '0' ? 'No' : value;
         }
 
         function isPositiveFeature(feature, value) {
+            if (typeof value === 'undefined' || value === null) return false;
+            
             const positiveFeatures = {
+                'url_length': (val) => parseInt(val) < 75,
                 'domain_length': (val) => parseInt(val) < 30,
-                'has_ip': (val) => val === '0',
-                'has_at_symbol': (val) => val === '0',
-                'has_multiple_subdomains': (val) => val === '0',
+                'has_ip': (val) => val === '0' || val === 0,
+                'has_at_symbol': (val) => val === '0' || val === 0,
+                'has_double_slash': (val) => val === '0' || val === 0,
+                'has_dash': (val) => val === '0' || val === 0,
+                'has_multiple_subdomains': (val) => val === '0' || val === 0,
                 'domain_age_days': (val) => parseFloat(val) > 180,
-                'is_https': (val) => val === '1',
-                'ssl_is_valid': (val) => val === '1',
+                'is_domain_young': (val) => val === '0' || val === 0,
+                'days_to_expiration': (val) => parseFloat(val) > 90,
+                'is_expiring_soon': (val) => val === '0' || val === 0,
+                'has_registrar': (val) => val === '1' || val === 1,
+                'is_https': (val) => val === '1' || val === 1,
+                'ssl_is_valid': (val) => val === '1' || val === 1,
                 'ssl_days_valid': (val) => parseFloat(val) > 90,
-                'has_mx_record': (val) => val === '1',
-                'has_ns_record': (val) => val === '1',
-                'is_private_ip': (val) => val === '0'
+                'has_mx_record': (val) => val === '1' || val === 1,
+                'num_mx_records': (val) => parseInt(val) > 0,
+                'has_ns_record': (val) => val === '1' || val === 1,
+                'num_ns_records': (val) => parseInt(val) >= 2,
+                'has_a_record': (val) => val === '1' || val === 1,
+                'is_private_ip': (val) => val === '0' || val === 0
             };
             
             return feature in positiveFeatures ? positiveFeatures[feature](value) : false;
