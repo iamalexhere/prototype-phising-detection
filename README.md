@@ -105,8 +105,30 @@ The system architecture diagram above shows:
 3. **Feature Extraction**: Extracts 22 distinct features from URLs (detailed below)
 4. **Model Training**: Shows how our Random Forest model was trained and optimized
 
-### Feature Extraction Process
+## Dataset Analysis
 
+### Data Sources
+1. **Phishing URLs**: `verified_online.csv`
+   - Verified phishing URLs from online sources
+   - Real-world examples of malicious URLs
+   - Total samples: 68227 URLs
+   - Collection period: 2024
+   - Source: http://data.phishtank.com/data/online-valid.csv.gz
+
+2. **Legitimate URLs**: `URL-categorization-DFE.csv`
+   - Known legitimate URLs from various categories
+   - Diverse range of legitimate web domains
+   - Total samples: 31085 URLs
+   - Categories: Business, Education, Government, etc.
+   - Collection period: 2016
+   - Source: https://data.world/crowdflower/url-categorization
+
+### Data Processing Pipeline
+**Data Split Ratios**
+
+## Feature Engineering
+
+### URL Features Extracted
 The feature extraction is a critical component that transforms URLs into meaningful numerical features:
 ```mermaid
 graph LR
@@ -176,95 +198,44 @@ feature_groups = {
         'SSL': ['is_https', 'ssl_days_valid', 'ssl_is_valid']
     }
 ```
-## Dataset Analysis
-
-### Data Sources
-1. **Phishing URLs**: `verified_online.csv`
-   - Verified phishing URLs from online sources
-   - Real-world examples of malicious URLs
-   - Total samples: 68227 URLs
-   - Collection period: 2024
-   - Source: http://data.phishtank.com/data/online-valid.csv.gz
-
-2. **Legitimate URLs**: `URL-categorization-DFE.csv`
-   - Known legitimate URLs from various categories
-   - Diverse range of legitimate web domains
-   - Total samples: 31085 URLs
-   - Categories: Business, Education, Government, etc.
-   - Collection period: 2016
-   - Source: https://data.world/crowdflower/url-categorization
-
-### Data Processing Pipeline
-**Data Split Ratios**
-
-
-## Feature Engineering
-
-### URL Features Extracted
-1. **Url based Features**
-   ```python
-    def extract_features(self, url: str) -> Dict[str, Any]:
-        """
-        Extract features from a given URL including DNS and domain-based features
-        """
-        try:
-            # Preprocess URL first to remove protocol bias
-            preprocessed_url = preprocess_url(url)
-            
-            # Now normalize for feature extraction
-            normalized_url = normalize_url(url)
-            parsed = urlparse('http://' + preprocessed_url)  # Add protocol temporarily for parsing
-            domain = parsed.netloc
-            
-            # Extract DNS features using our improved dns_features module
-            dns_features_df = extract_dns_features(url)
-            # Convert Series to scalar values
-            dns_features = {col: dns_features_df[col].iloc[0] for col in dns_features_df.columns}
-            
-            # Basic URL features
-            features = {
-                'url_length': len(preprocessed_url),
-                'domain_length': len(domain),
-                'has_ip': self.is_ip_address(preprocessed_url),
-                'has_at_symbol': '@' in preprocessed_url,
-                'has_double_slash': '//' in parsed.path,  # Look only in path
-                'has_dash': '-' in domain,
-                'has_multiple_subdomains': len(domain.split('.')) > 2,
-                # Remove 'is_https' feature as it's biasing the model
-                'suspicious_tld': domain.split('.')[-1] in ['xyz', 'top', 'work', 'live', 'monster', 'info'],
-                'domain_digit_ratio': sum(c.isdigit() for c in domain) / len(domain) if domain else 0,
-                'special_char_ratio': sum(not c.isalnum() for c in preprocessed_url) / len(preprocessed_url),
-            }
-            
-            # Add DNS features
-            features.update({
-                'has_a_record': dns_features['has_a_record'],
-                'num_a_records': dns_features['num_a_records'],
-                'is_private_ip': dns_features['is_private_ip'],
-                'has_mx_record': dns_features['has_mx_record'],
-                'num_mx_records': dns_features['num_mx_records'],
-                'has_ns_record': dns_features['has_ns_record'],
-                'num_ns_records': dns_features['num_ns_records'],
-                'domain_age_days': dns_features['domain_age_days'],
-                'is_domain_young': dns_features['is_domain_young'],
-                'days_to_expiration': dns_features['days_to_expiration'],
-                'is_expiring_soon': dns_features['is_expiring_soon'],
-                'has_registrar': dns_features['has_registrar'],
-                'has_registrant': dns_features['has_registrant'],
-                'ssl_days_valid': dns_features['ssl_days_valid'],
-                'ssl_is_valid': dns_features['ssl_is_valid'],
-                'ssl_is_expired': dns_features['ssl_is_expired'],
-                'ssl_is_self_signed': dns_features['ssl_is_self_signed']
-            })
-            
-            return features
-            
-        except Exception as e:
-            logging.error(f"Error extracting features for {url}: {str(e)}")
-            return None
-   ```
 
 ## Model Architecture
+
+### Overview
+
+```mermaid
+flowchart TD
+    subgraph Data[Data Processing]
+        A[Load URLs] --> B[Feature Extraction]
+        B --> C[Data Preprocessing]
+        C --> D[Train/Val/Test Split]
+    end
+
+    subgraph RF[Random Forest Model]
+        D --> E[GridSearchCV]
+        
+        E --> F[Parameter Grid]
+        F --> F1[n_estimators: 100,200]
+        F --> F2[max_depth: 6,8,10]
+        F --> F3[min_samples: 10,15,20]
+
+        E --> G[Cross Validation]
+        G --> G1[5-Fold Split]
+        G --> G2[Stratified Sampling]
+
+        E --> H[Model Selection]
+        H --> H1[Best Parameters]
+        H --> H2[Feature Importance]
+    end
+
+    subgraph Eval[Evaluation]
+        H --> I[Best Model]
+        I --> J[Performance Metrics]
+        J --> J1[Accuracy]
+        J --> J2[ROC-AUC]
+        J --> J3[F1-Score]
+    end
+```
 
 ### Random Forest Configuration
 ```python
