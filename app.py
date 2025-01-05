@@ -38,7 +38,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 setup_app_logging()
 
 # Load the model and feature names
-model_dir = 'models'
+model_dir = 'models/split_10'
 model_files = [f for f in os.listdir(model_dir) if f.startswith('phishing_detector_') and f.endswith('.joblib')]
 feature_files = [f for f in os.listdir(model_dir) if f.startswith('feature_names_') and f.endswith('.joblib')]
 
