@@ -12,22 +12,19 @@
     <div class="container">
         <div class="header">
             <h1>URL Phishing Detector</h1>
-            <p>Check if a URL is potentially malicious using our advanced machine learning model with DNS analysis</p>
+            <p>Check if a URL is potentially malicious using our advanced machine learning model</p>
         </div>
 
         <div class="input-section">
-            <input type="url" id="urlInput" class="url-input" placeholder="Enter URL to analyze">
-            <button id="analyzeBtn" class="analyze-btn">Analyze URL</button>
-            
-            <div id="dropzone" class="dropzone">
-                <p>Drop QR code image here or click to upload</p>
-                <input type="file" id="fileInput" hidden accept="image/*">
-            </div>
+            <form id="urlForm">
+                <input type="url" id="urlInput" class="url-input" placeholder="Enter URL to analyze" required>
+                <button type="submit" class="analyze-btn">Analyze URL</button>
+            </form>
         </div>
 
         <div id="loading" class="loading">
             <div class="spinner"></div>
-            <p>Analyzing URL and DNS features...</p>
+            <p>Analyzing URL...</p>
         </div>
 
         <div id="errorMessage" class="error-message"></div>
@@ -44,222 +41,67 @@
             </div>
 
             <div class="confidence-section">
-                <p>Confidence Level</p>
-                <div class="confidence-bar">
-                    <div id="confidenceLevel" class="confidence-level"></div>
-                </div>
-                <p id="confidenceText"></p>
-            </div>
-
-            <div class="dns-analysis">
-                <h3>DNS Analysis</h3>
-                <div class="dns-grid">
-                    <div class="dns-card" id="dnsRecords">
-                        <h4>DNS Records</h4>
-                        <div class="dns-content"></div>
+                <div class="scores-grid">
+                    <div class="score-card">
+                        <h3>Raw Score</h3>
+                        <div class="confidence-bar">
+                            <div id="rawScoreBar" class="confidence-level"></div>
+                        </div>
+                        <p id="rawScoreText" class="score-text"></p>
                     </div>
-                    <div class="dns-card" id="domainAge">
-                        <h4>Domain Age</h4>
-                        <div class="dns-content"></div>
+                    
+                    <div class="score-card">
+                        <h3>Trust Score</h3>
+                        <div class="confidence-bar">
+                            <div id="trustScoreBar" class="confidence-level"></div>
+                        </div>
+                        <p id="trustScoreText" class="score-text"></p>
                     </div>
-                    <div class="dns-card" id="sslCert">
-                        <h4>SSL Certificate</h4>
-                        <div class="dns-content"></div>
-                    </div>
-                    <div class="dns-card" id="registration">
-                        <h4>Registration</h4>
-                        <div class="dns-content"></div>
+                    
+                    <div class="score-card">
+                        <h3>Final Score</h3>
+                        <div class="confidence-bar">
+                            <div id="finalScoreBar" class="confidence-level"></div>
+                        </div>
+                        <p id="finalScoreText" class="score-text"></p>
                     </div>
                 </div>
             </div>
 
-            <div class="all-features">
-                <h3>Extracted Features</h3>
-                <div class="features-grid">
-                    <div class="feature-card" id="urlStructure">
-                        <h4>URL Structure</h4>
-                        <div class="feature-content"></div>
+            <div class="indicators-section">
+                <div class="indicators-grid">
+                    <div class="indicator-card">
+                        <h3><i class="fas fa-check-circle"></i> Trust Indicators</h3>
+                        <ul id="trustIndicators" class="indicators-list"></ul>
                     </div>
-                    <div class="feature-card" id="specialChars">
-                        <h4>Special Characters</h4>
-                        <div class="feature-content"></div>
-                    </div>
-                    <div class="feature-card" id="securityIndicators">
-                        <h4>Security Indicators</h4>
-                        <div class="feature-content"></div>
+                    <div class="indicator-card">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Warning Indicators</h3>
+                        <ul id="warningIndicators" class="indicators-list"></ul>
                     </div>
                 </div>
             </div>
 
-            <div class="feature-importance">
-                <h3>Feature Importance</h3>
-                <div id="featureImportanceInfo"></div>
-                <div id="featureChart"></div>
+            <div class="features-section">
+                <h3>URL Analysis Details</h3>
+                <div id="featuresGrid" class="features-grid">
+                    <!-- Features will be populated here -->
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        const urlInput = document.getElementById('urlInput');
-        const analyzeBtn = document.getElementById('analyzeBtn');
-        const loading = document.getElementById('loading');
-        const results = document.getElementById('results');
-        const errorMessage = document.getElementById('errorMessage');
-        const dropzone = document.getElementById('dropzone');
-        const fileInput = document.getElementById('fileInput');
-
-        function showLoading() {
-            loading.style.display = 'flex';
-            results.style.display = 'none';
-            errorMessage.style.display = 'none';
-        }
-
-        function hideLoading() {
-            loading.style.display = 'none';
-        }
-
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            results.style.display = 'none';
-            hideLoading();
-        }
-
-        function displayResults(data) {
-            if (data.error) {
-                showError(data.error);
-                return;
-            }
-
-            const resultIcon = document.getElementById('resultIcon');
-            const resultTitle = document.getElementById('resultTitle');
-            const resultUrl = document.getElementById('resultUrl');
-            const confidenceLevel = document.getElementById('confidenceLevel');
-            const confidenceText = document.getElementById('confidenceText');
-
-            // Update result header
-            if (data.prediction === 1) {
-                resultIcon.className = 'fas fa-exclamation-triangle';
-                resultIcon.style.color = '#dc3545';
-                resultTitle.textContent = 'Potential Phishing URL Detected';
-                resultTitle.style.color = '#dc3545';
-            } else {
-                resultIcon.className = 'fas fa-check-circle';
-                resultIcon.style.color = '#28a745';
-                resultTitle.textContent = 'Legitimate URL';
-                resultTitle.style.color = '#28a745';
-            }
-
-            resultUrl.textContent = urlInput.value;
-
-            // Update confidence bar
-            const confidence = data.probability * 100;
-            confidenceLevel.style.width = `${confidence}%`;
-            confidenceText.textContent = `${confidence.toFixed(1)}% confidence`;
-
-            // Update DNS features
-            updateDNSCard('dnsRecords', data.dns_features['DNS Records']);
-            updateDNSCard('domainAge', data.dns_features['Domain Age']);
-            updateDNSCard('sslCert', data.dns_features['SSL Certificate']);
-            updateDNSCard('registration', data.dns_features['Registration']);
-
-            // Update feature cards
-            updateFeatureCard('urlStructure', data.all_features['URL Structure']);
-            updateFeatureCard('specialChars', data.all_features['Special Characters']);
-            updateFeatureCard('securityIndicators', data.all_features['Security Indicators']);
-
-            // Update feature importance
-            updateFeatureImportance(data.feature_importance);
-
-            results.style.display = 'block';
-            hideLoading();
-        }
-
-        function updateDNSCard(cardId, data) {
-            const card = document.getElementById(cardId);
-            const content = card.querySelector('.dns-content');
-            content.innerHTML = '';
-
-            for (const [key, value] of Object.entries(data)) {
-                const item = document.createElement('div');
-                item.className = 'dns-item';
-                item.innerHTML = `
-                    <span class="dns-label">${key}:</span>
-                    <span class="dns-value ${getValueClass(value)}">${value}</span>
-                `;
-                content.appendChild(item);
-            }
-        }
-
-        function getValueClass(value) {
-            value = String(value);  // Convert value to string to ensure includes() is available
-            if (value === 'Present' || value === 'Valid' || value === 'Yes' || value.includes('Established')) {
-                return 'positive';
-            } else if (value === 'Missing' || value === 'Invalid' || value === 'No' || value.includes('Young')) {
-                return 'negative';
-            }
-            return '';
-        }
-
-        function updateFeatureCard(cardId, data) {
-            const card = document.getElementById(cardId);
-            const content = card.querySelector('.feature-content');
-            content.innerHTML = '';
-
-            for (const [key, value] of Object.entries(data)) {
-                const item = document.createElement('div');
-                item.className = 'feature-item';
-                const formattedValue = typeof value === 'number' ? 
-                    (Number.isInteger(value) ? value : value.toFixed(2)) : 
-                    value;
-                item.innerHTML = `
-                    <span class="feature-label">${key}:</span>
-                    <span class="feature-value ${getValueClass(value)}">${formattedValue}</span>
-                `;
-                content.appendChild(item);
-            }
-        }
-
-        function updateFeatureImportance(featureImportance) {
-            const chartDiv = document.getElementById('featureChart');
-            const infoDiv = document.getElementById('featureImportanceInfo');
+        document.getElementById('urlForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            // Check if any feature has non-zero importance
-            const hasImportance = Object.values(featureImportance).some(v => v > 0);
+            const url = document.getElementById('urlInput').value.trim();
+            if (!url) return;
             
-            if (!hasImportance) {
-                infoDiv.innerHTML = '<p class="info-message">Feature importance information is not available for this model type.</p>';
-                chartDiv.style.display = 'none';
-                return;
-            }
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('results').classList.remove('show');
+            document.getElementById('errorMessage').classList.remove('show');
             
-            infoDiv.innerHTML = '';
-            chartDiv.style.display = 'block';
-            
-            const features = Object.entries(featureImportance)
-                .filter(([_, importance]) => importance > 0)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 10);
-
-            const chartHtml = features.map(([feature, importance]) => {
-                const percentage = (importance * 100).toFixed(1);
-                return `
-                    <div class="feature-bar">
-                        <div class="feature-name" title="${feature}">${feature}</div>
-                        <div class="feature-value-bar">
-                            <div class="feature-value" style="width: ${percentage}%"></div>
-                        </div>
-                        <div class="feature-percentage">${percentage}%</div>
-                    </div>
-                `;
-            }).join('');
-
-            chartDiv.innerHTML = chartHtml;
-        }
-
-        async function analyzeUrl(url) {
             try {
-                showLoading();
                 const response = await fetch('/analyze', {
                     method: 'POST',
                     headers: {
@@ -267,69 +109,151 @@
                     },
                     body: JSON.stringify({ url: url })
                 });
+                
                 const data = await response.json();
-                displayResults(data);
-            } catch (error) {
-                showError('Error analyzing URL: ' + error.message);
-            }
-        }
-
-        function handleFile(file) {
-            if (!file || !file.type.startsWith('image/')) {
-                showError('Please upload an image file');
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('qr_image', file);
-
-            showLoading();
-            fetch('/analyze', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => displayResults(data))
-            .catch(error => showError('Error processing QR code: ' + error.message));
-        }
-
-        analyzeBtn.addEventListener('click', () => {
-            const url = urlInput.value.trim();
-            if (!url) {
-                showError('Please enter a URL');
-                return;
-            }
-            analyzeUrl(url);
-        });
-
-        urlInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const url = urlInput.value.trim();
-                if (!url) {
-                    showError('Please enter a URL');
-                    return;
+                
+                if (data.error) {
+                    throw new Error(data.error);
                 }
-                analyzeUrl(url);
+                
+                updateResults(data);
+                document.getElementById('results').classList.add('show');
+            } catch (error) {
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.textContent = error.message;
+                errorMessage.classList.add('show');
+            } finally {
+                document.getElementById('loading').classList.remove('show');
             }
         });
 
-        dropzone.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        function updateResults(data) {
+            // Update result header
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultUrl = document.getElementById('resultUrl');
+            
+            if (data.is_phishing) {
+                resultIcon.className = 'fas fa-exclamation-triangle';
+                resultIcon.style.color = 'var(--danger-color)';
+                resultTitle.textContent = 'Potential Phishing Website';
+                resultTitle.style.color = 'var(--danger-color)';
+            } else {
+                resultIcon.className = 'fas fa-check-circle';
+                resultIcon.style.color = 'var(--success-color)';
+                resultTitle.textContent = 'Legitimate Website';
+                resultTitle.style.color = 'var(--success-color)';
+            }
+            
+            resultUrl.textContent = data.url;
+            
+            // Update confidence bars
+            updateConfidenceBar('rawScoreBar', 'rawScoreText', data.raw_probability);
+            updateConfidenceBar('trustScoreBar', 'trustScoreText', data.trust_score);
+            updateConfidenceBar('finalScoreBar', 'finalScoreText', data.adjusted_probability);
+            
+            // Update indicators
+            updateIndicators('trustIndicators', data.trust_indicators);
+            updateIndicators('warningIndicators', data.warning_indicators);
+            
+            // Update features
+            updateFeatures(data.features);
+        }
 
-        dropzone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropzone.classList.add('dragover');
-        });
+        function updateConfidenceBar(barId, textId, value) {
+            const bar = document.getElementById(barId);
+            const text = document.getElementById(textId);
+            
+            bar.style.width = `${value}%`;
+            bar.style.backgroundColor = value > 50 ? 'var(--danger-color)' : 'var(--success-color)';
+            text.textContent = `${value.toFixed(1)}%`;
+            text.style.color = value > 50 ? 'var(--danger-color)' : 'var(--success-color)';
+        }
 
-        dropzone.addEventListener('dragleave', () => {
-            dropzone.classList.remove('dragover');
-        });
+        function updateIndicators(listId, indicators) {
+            const list = document.getElementById(listId);
+            list.innerHTML = indicators.length ? 
+                indicators.map(indicator => `<li>${indicator}</li>`).join('') :
+                '<li class="no-indicators">No indicators found</li>';
+        }
 
-        dropzone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropzone.classList.remove('dragover');
-            handleFile(e.dataTransfer.files[0]);
-        });
+        function updateFeatures(features) {
+            const grid = document.getElementById('featuresGrid');
+            grid.innerHTML = '';
+            
+            const featureGroups = {
+                url: ['domain_length', 'has_ip', 'has_at_symbol', 'has_multiple_subdomains'],
+                domain: ['domain_age_days', 'has_mx_record', 'has_ns_record', 'is_private_ip'],
+                security: ['is_https', 'ssl_is_valid', 'ssl_days_valid']
+            };
+            
+            for (const [group, featureList] of Object.entries(featureGroups)) {
+                featureList.forEach(feature => {
+                    if (feature in features) {
+                        const card = createFeatureCard(feature, features[feature]);
+                        grid.appendChild(card);
+                    }
+                });
+            }
+        }
+
+        function createFeatureCard(feature, value) {
+            const card = document.createElement('div');
+            card.className = 'feature-card';
+            
+            const title = formatFeatureName(feature);
+            const formattedValue = formatFeatureValue(feature, value);
+            const isPositive = isPositiveFeature(feature, value);
+            
+            card.innerHTML = `
+                <h3>${title}</h3>
+                <p class="${isPositive ? 'positive' : 'negative'}">${formattedValue}</p>
+            `;
+            
+            return card;
+        }
+
+        function formatFeatureName(feature) {
+            return feature
+                .split('_')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        }
+
+        function formatFeatureValue(feature, value) {
+            if (feature === 'domain_age_days') {
+                const days = parseFloat(value);
+                return days >= 365 ? `${(days / 365).toFixed(1)} years` : `${Math.round(days)} days`;
+            }
+            
+            if (feature === 'ssl_days_valid') {
+                return `${Math.round(parseFloat(value))} days`;
+            }
+            
+            if (feature === 'domain_length') {
+                return `${value} characters`;
+            }
+            
+            return value === '1' ? 'Yes' : value === '0' ? 'No' : value;
+        }
+
+        function isPositiveFeature(feature, value) {
+            const positiveFeatures = {
+                'domain_length': (val) => parseInt(val) < 30,
+                'has_ip': (val) => val === '0',
+                'has_at_symbol': (val) => val === '0',
+                'has_multiple_subdomains': (val) => val === '0',
+                'domain_age_days': (val) => parseFloat(val) > 180,
+                'is_https': (val) => val === '1',
+                'ssl_is_valid': (val) => val === '1',
+                'ssl_days_valid': (val) => parseFloat(val) > 90,
+                'has_mx_record': (val) => val === '1',
+                'has_ns_record': (val) => val === '1',
+                'is_private_ip': (val) => val === '0'
+            };
+            
+            return feature in positiveFeatures ? positiveFeatures[feature](value) : false;
+        }
     </script>
 </body>
 </html>
