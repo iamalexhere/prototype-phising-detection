@@ -83,17 +83,40 @@ def setup_logging(log_dir='logs'):
     logging.info(f"Logging setup complete. Log file: {log_file}")
     return log_file
 
+def preprocess_url(url: str) -> str:
+    """
+    Preprocess URL to ensure consistent format between legitimate and phishing datasets.
+    Strip protocol (http/https) from all URLs to prevent protocol-based bias.
+    """
+    # Remove protocol if exists
+    url = re.sub(r'^https?://', '', url.strip().lower())
+    
+    # Remove trailing slash
+    url = url.rstrip('/')
+    
+    # Remove 'www.' if exists
+    url = re.sub(r'^www\.', '', url)
+    
+    return url
+
 def normalize_url(url: str) -> str:
     """
     Normalize URL to ensure consistent handling of different URL formats.
-    Example: 'google.com' and 'https://google.com/' will be normalized to the same format.
     """
     if not url:
         return ""
+    
+    # First preprocess to remove bias
+    url = preprocess_url(url)
+    
+    # Add a default protocol for parsing
     if not url.startswith(('http://', 'https://')):
         url = 'http://' + url
+        
     parsed = urlparse(url)
-    return parsed.scheme + '://' + parsed.netloc + parsed.path + \
+    
+    # Return only domain and path components
+    return parsed.netloc + parsed.path + \
            ('?' + parsed.query if parsed.query else '') + \
            ('#' + parsed.fragment if parsed.fragment else '')
 
@@ -186,9 +209,12 @@ class URLFeatureExtractor:
         Extract features from a given URL including DNS and domain-based features
         """
         try:
-            # Normalize URL first
-            url = normalize_url(url)
-            parsed = urlparse(url)
+            # Preprocess URL first to remove protocol bias
+            preprocessed_url = preprocess_url(url)
+            
+            # Now normalize for feature extraction
+            normalized_url = normalize_url(url)
+            parsed = urlparse('http://' + preprocessed_url)  # Add protocol temporarily for parsing
             domain = parsed.netloc
             
             # Extract DNS features using our improved dns_features module
@@ -198,14 +224,17 @@ class URLFeatureExtractor:
             
             # Basic URL features
             features = {
-                'url_length': len(url),
+                'url_length': len(preprocessed_url),
                 'domain_length': len(domain),
-                'has_ip': self.is_ip_address(url),
-                'has_at_symbol': '@' in url,
-                'has_double_slash': '//' in parsed.path,
+                'has_ip': self.is_ip_address(preprocessed_url),
+                'has_at_symbol': '@' in preprocessed_url,
+                'has_double_slash': '//' in parsed.path,  # Look only in path
                 'has_dash': '-' in domain,
                 'has_multiple_subdomains': len(domain.split('.')) > 2,
-                'is_https': parsed.scheme == 'https',
+                # Remove 'is_https' feature as it's biasing the model
+                'suspicious_tld': domain.split('.')[-1] in ['xyz', 'top', 'work', 'live', 'monster', 'info'],
+                'domain_digit_ratio': sum(c.isdigit() for c in domain) / len(domain) if domain else 0,
+                'special_char_ratio': sum(not c.isalnum() for c in preprocessed_url) / len(preprocessed_url),
             }
             
             # Add DNS features
@@ -277,7 +306,7 @@ def extract_domain(url):
         logging.warning(f"Error extracting domain from URL {url}: {str(e)}")
         return "unknown_domain"
 
-def load_and_process_data(phishing_file_path: str, legitimate_file_path: str, sample_size: int = 100, batch_size: int = 50) -> pd.DataFrame:
+def load_and_process_data(phishing_file_path: str, legitimate_file_path: str, sample_size: int = 10000, batch_size: int = 50) -> pd.DataFrame:
     """
     Load and process both phishing and legitimate URL datasets with enhanced preprocessing
     """
@@ -287,9 +316,9 @@ def load_and_process_data(phishing_file_path: str, legitimate_file_path: str, sa
     phishing_df = pd.read_csv(phishing_file_path)
     legitimate_df = pd.read_csv(legitimate_file_path)
     
-    # Ensure URL column exists
-    phishing_urls = phishing_df['url'] if 'url' in phishing_df.columns else phishing_df.iloc[:, 0]
-    legitimate_urls = legitimate_df['url'] if 'url' in legitimate_df.columns else legitimate_df.iloc[:, 0]
+    # Ensure URL column exists and preprocess URLs
+    phishing_urls = phishing_df['url'].apply(preprocess_url) if 'url' in phishing_df.columns else phishing_df.iloc[:, 0].apply(preprocess_url)
+    legitimate_urls = legitimate_df['url'].apply(preprocess_url) if 'url' in legitimate_df.columns else legitimate_df.iloc[:, 0].apply(preprocess_url)
     
     # Sample equal numbers from each class
     if len(phishing_urls) > sample_size:
@@ -799,6 +828,10 @@ def process_and_train(phishing_file, legitimate_file, dataset_name, sample_size=
             # Generate plots
             plot_start_time = time.time()
             visualizer = ModelVisualizer(output_dir=f'plots/split_{split_idx + 1}')
+            
+            visualizer.plot_feature_importance(feature_names, best_base_model.feature_importances_,
+                                            title=f"Feature Importance Split {split_idx + 1}")
+            
             visualizer.plot_learning_curve(best_base_model, X_train, y_train)
             visualizer.plot_confusion_matrix(y_test, y_test_pred)
             visualizer.plot_roc_curve(y_test, y_test_prob)
@@ -1273,7 +1306,7 @@ def main():
         # Set dataset paths
         phishing_file = 'verified_online.csv'
         legitimate_file = 'URL-categorization-DFE.csv'
-        sample_size = 100  # Reduced sample size
+        sample_size = 10000  # Reduced sample size
         
         # Process data and train model
         start_time = time.time()
