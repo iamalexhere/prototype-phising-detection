@@ -9,48 +9,48 @@ def setup_logging():
         format='%(asctime)s - %(levelname)s - %(message)s'
     )
 
-def find_latest_model(base_dir='models'):
+def find_latest_model(base_dir='models/split_10'):
     """Find the latest model and its corresponding feature names file."""
+    logging.info("Searching for latest model in %s", base_dir)
     latest_model = None
     latest_features = None
     latest_time = datetime.min
     
-    # Walk through all subdirectories
-    for root, dirs, files in os.walk(base_dir):
-        for file in files:
-            if file.startswith('phishing_detector_') and file.endswith('.joblib'):
-                try:
-                    # Extract timestamp from filename
-                    # Handle both formats:
-                    # 1. phishing_detector_YYYYMMDD_HHMMSS.joblib
-                    # 2. phishing_detector_split_N_YYYYMMDD_HHMMSS.joblib
-                    parts = file.replace('phishing_detector_', '').replace('.joblib', '').split('_')
-                    
-                    # If it's a split model, get the last two parts for timestamp
-                    if 'split' in parts:
-                        timestamp_str = f"{parts[-2]}_{parts[-1]}"
-                    else:
-                        timestamp_str = f"{parts[0]}_{parts[1]}"
-                        
-                    timestamp = datetime.strptime(timestamp_str, '%Y%m%d_%H%M%S')
-                    
-                    if timestamp > latest_time:
-                        latest_time = timestamp
-                        latest_model = os.path.join(root, file)
-                        # Look for corresponding feature names file
-                        feature_file = os.path.join(root, f"feature_names_{timestamp_str}.joblib")
-                        if os.path.exists(feature_file):
-                            latest_features = feature_file
-                except Exception as e:
-                    logging.warning(f"Skipping file {file}: {str(e)}")
-                    continue
+    # Ensure base directory exists
+    if not os.path.exists(base_dir):
+        logging.error(f"Base directory {base_dir} does not exist!")
+        return None, None
+    
+    # List all files in directory
+    files = os.listdir(base_dir)
+    
+    # Find model files and their timestamps
+    for file in files:
+        if file.startswith('phishing_detector_split_9_') and file.endswith('.joblib'):
+            try:
+                # Extract timestamp from filename
+                # Format: phishing_detector_split_9_YYYYMMDD_HHMMSS.joblib
+                timestamp_str = '_'.join(file.split('_')[-2:]).replace('.joblib', '')
+                timestamp = datetime.strptime(timestamp_str, '%Y%m%d_%H%M%S')
+                
+                if timestamp > latest_time:
+                    latest_time = timestamp
+                    latest_model = os.path.join(base_dir, file)
+                    # Look for corresponding feature names file
+                    feature_file = os.path.join(base_dir, f"feature_names_split_9_{timestamp_str}.joblib")
+                    if os.path.exists(feature_file):
+                        latest_features = feature_file
+                        logging.info(f"Found newer model from {timestamp_str}")
+            except Exception as e:
+                logging.warning(f"Skipping file {file}: {str(e)}")
+                continue
     
     if not latest_model or not latest_features:
         logging.error("Could not find valid model and feature files!")
         return None, None
-        
-    logging.info(f"Found latest model: {latest_model}")
-    logging.info(f"Found latest features: {latest_features}")
+    
+    logging.info(f"Latest model: {os.path.basename(latest_model)}")
+    logging.info(f"Latest features: {os.path.basename(latest_features)}")
     return latest_model, latest_features
 
 def main():

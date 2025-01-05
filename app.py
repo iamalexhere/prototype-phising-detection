@@ -55,6 +55,8 @@ def analyze_url(url):
     try:
         # Load model
         model, feature_names, model_name = load_latest_model()
+        logger.info(f"Using model: {model_name}")
+        logger.info(f"Loaded {len(feature_names)} features: {', '.join(feature_names)}")
         
         # Extract features
         extractor = URLFeatureExtractor()
