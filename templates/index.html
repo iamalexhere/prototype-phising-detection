@@ -175,6 +175,33 @@
             background: var(--critical-bg);
             color: var(--critical-color);
         }
+
+        .dropzone {
+            width: 100%;
+            max-width: 400px;
+            height: 120px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+        }
+
+        .dropzone.dragover {
+            border-color: #4CAF50;
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .dropzone p {
+            margin: 0;
+            color: #666;
+            text-align: center;
+            padding: 15px;
+        }
     </style>
 </head>
 <body>
@@ -189,6 +216,10 @@
                 <input type="url" id="urlInput" class="url-input" placeholder="Enter URL to analyze" required>
                 <button type="submit" class="analyze-btn">Analyze URL</button>
             </form>
+            <div id="dropzone" class="dropzone">
+                <p>Drop QR code image here or click to upload</p>
+                <input type="file" id="fileInput" hidden accept="image/*">
+            </div>
         </div>
 
         <div id="loading" class="loading">
@@ -550,6 +581,84 @@
                 screenshotSection.style.display = 'block';
             } else {
                 screenshotSection.style.display = 'none';
+            }
+        }
+
+        // Add dropzone functionality
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+
+        // Handle click on dropzone
+        dropzone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Handle file selection
+        fileInput.addEventListener('change', handleFileUpload);
+
+        // Handle drag and drop events
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            
+            const file = e.dataTransfer.files[0];
+            if (file) {
+                handleFileUpload({ target: { files: [file] } });
+            }
+        });
+
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                showError("Please upload a valid image file");
+                return;
+            }
+            
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('results').classList.remove('show');
+            document.getElementById('errorMessage').classList.remove('show');
+            
+            const formData = new FormData();
+            formData.append('qr_image', file);
+            
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'An error occurred while processing the QR code');
+                }
+                
+                // Update URL input if URL was extracted from QR code
+                if (data.url) {
+                    document.getElementById('urlInput').value = data.url;
+                }
+                
+                updateResults(data);
+                document.getElementById('results').classList.add('show');
+            } catch (error) {
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.textContent = error.message || 'An error occurred while processing the QR code';
+                errorMessage.classList.add('show');
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+                // Reset file input
+                fileInput.value = '';
             }
         }
     </script>

@@ -7,6 +7,10 @@ from pathlib import Path
 import json
 from datetime import datetime
 from screenshot import capture_website_screenshot
+import cv2
+import numpy as np
+from pyzbar.pyzbar import decode
+import io
 
 app = Flask(__name__)
 
@@ -141,8 +145,35 @@ def analyze_url(url):
         screenshot_success, screenshot_path = capture_website_screenshot(url)
         
         # Calculate trust score
-        trust_score = 0
+        trust_score = 0.0
         
+        # DNS Group (46.01% importance)
+        if features.get('has_mx_record', 0):
+            trust_score += 0.20  # Most important feature (20.22%)
+        if features.get('num_mx_records', 0) > 1:
+            trust_score += 0.18  # Second most important (18.45%)
+        if features.get('has_a_record', 0):
+            trust_score += 0.06  # 5.58% importance
+        normalized_domain_age = feature_vector['domain_age_days'].iloc[0] if 'domain_age_days' in feature_names else 0
+        if normalized_domain_age > 0.7:
+            trust_score += 0.04  # 4.20% importance
+            
+        # SSL Group (26.14% importance)
+        ssl_days_valid = feature_vector['ssl_days_valid'].iloc[0] if 'ssl_days_valid' in feature_names else 0
+        if ssl_days_valid > 0.8:
+            trust_score += 0.14  # 14.31% importance
+        if features.get('ssl_is_valid', 0):
+            trust_score += 0.12  # 11.83% importance
+            
+        # URL Group (16.66% importance)
+        url_length = feature_vector['url_length'].iloc[0] if 'url_length' in feature_names else 0
+        if 0.3 <= url_length <= 0.7:  # Moderate URL length
+            trust_score += 0.09  # 8.70% importance
+        if not features.get('has_multiple_subdomains', 0):
+            trust_score += 0.05  # 4.52% importance
+        if not features.get('suspicious_tld', 0):
+            trust_score += 0.01  # 1.29% importance
+            
         # Prepare insights
         insights = {
             'domain_health': {
@@ -214,25 +245,6 @@ def analyze_url(url):
         else:
             insights['ssl_status']['details'].append("WARNING: No HTTPS encryption")
         
-        # SSL Group (~50% importance)
-        if features.get('is_https', 0) and features.get('ssl_is_valid', 0):
-            trust_score += 0.25
-            normalized_ssl_days = feature_vector['ssl_days_valid'].iloc[0] if 'ssl_days_valid' in feature_names else 0
-            if normalized_ssl_days > 0.5:
-                trust_score += 0.15
-        
-        # URL Group (~29% importance)
-        normalized_domain_length = feature_vector['domain_length'].iloc[0] if 'domain_length' in feature_names else 1
-        if not features.get('has_multiple_subdomains', 0) and normalized_domain_length < 0.5:
-            trust_score += 0.15
-            
-        # DNS Group (~11% importance)
-        normalized_domain_age = feature_vector['domain_age_days'].iloc[0] if 'domain_age_days' in feature_names else 0
-        if normalized_domain_age > 0.7:
-            trust_score += 0.10
-        if features.get('has_mx_record', 0) and features.get('has_ns_record', 0):
-            trust_score += 0.10
-            
         # Calculate adjusted probability
         adjusted_prob = max(0.01, min(0.99, phishing_prob / 100 - trust_score))
         is_phishing = adjusted_prob > 0.45
@@ -307,20 +319,80 @@ def is_private_ip(ip):
     except:
         return False
 
+def process_qr_code(file_storage):
+    """Process QR code image and extract URL"""
+    try:
+        # Read image file into memory
+        in_memory_file = io.BytesIO()
+        file_storage.save(in_memory_file)
+        data = np.frombuffer(in_memory_file.getvalue(), dtype=np.uint8)
+        
+        # Decode image
+        img = cv2.imdecode(data, cv2.IMREAD_GRAYSCALE)
+        if img is None:
+            raise ValueError("Failed to decode image")
+            
+        # Detect and decode QR code
+        decoded_objects = decode(img)
+        if not decoded_objects:
+            raise ValueError("No QR code found in image")
+            
+        # Get URL from QR code
+        qr_data = decoded_objects[0].data.decode('utf-8')
+        if not qr_data.startswith(('http://', 'https://')):
+            raise ValueError("QR code does not contain a valid URL")
+            
+        return qr_data
+        
+    except Exception as e:
+        logger.error(f"Error processing QR code: {str(e)}")
+        raise ValueError(f"Failed to process QR code: {str(e)}")
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    data = request.get_json()
-    url = data.get('url', '').strip()
-    
-    if not url:
-        return jsonify({"error": "URL is required"}), 400
-        
-    result = analyze_url(url)
-    return jsonify(result)
+    try:
+        # Check if the request has form data (file upload)
+        if 'qr_image' in request.files:
+            file = request.files['qr_image']
+            if file.filename == '':
+                return jsonify({"error": "No file selected"}), 400
+                
+            if not file.content_type.startswith('image/'):
+                return jsonify({"error": "File must be an image"}), 400
+                
+            try:
+                # Process QR code and get URL
+                url = process_qr_code(file)
+                
+                # Analyze the extracted URL
+                result = analyze_url(url)
+                result['url'] = url  # Include the extracted URL in response
+                return jsonify(result)
+                
+            except ValueError as e:
+                return jsonify({"error": str(e)}), 400
+            
+        # Handle JSON data for direct URL analysis
+        elif request.is_json:
+            data = request.get_json()
+            url = data.get('url', '').strip()
+            
+            if not url:
+                return jsonify({"error": "URL is required"}), 400
+                
+            result = analyze_url(url)
+            return jsonify(result)
+            
+        else:
+            return jsonify({"error": "Invalid request format"}), 400
+            
+    except Exception as e:
+        logger.error(f"Error in analyze endpoint: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

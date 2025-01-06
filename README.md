@@ -123,9 +123,6 @@ The system architecture diagram above shows:
    - Collection period: 2016
    - Source: https://data.world/crowdflower/url-categorization
 
-### Data Processing Pipeline
-**Data Split Ratios**
-
 ## Feature Engineering
 
 ### URL Features Extracted
