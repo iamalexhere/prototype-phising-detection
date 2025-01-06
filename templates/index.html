@@ -202,6 +202,107 @@
             text-align: center;
             padding: 15px;
         }
+
+        /* New styles for network analysis */
+        .network-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .network-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .network-card {
+            padding: 1.5rem;
+            background: var(--bg-color);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .network-details {
+            margin-top: 1rem;
+        }
+
+        .network-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .network-details th,
+        .network-details td {
+            padding: 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .network-details th {
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .redirect-chain {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .redirect-chain li {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .redirect-chain .arrow {
+            margin: 0 0.5rem;
+            color: var(--text-muted);
+        }
+
+        .status-code {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        .status-code.success {
+            background: var(--success-bg);
+            color: var(--success-color);
+        }
+
+        .status-code.redirect {
+            background: var(--info-bg);
+            color: var(--info-color);
+        }
+
+        .traceroute-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.5rem;
+        }
+
+        .reputation-meter {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+
+        .reputation-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--danger-color), var(--warning-color), var(--success-color));
+            transition: width 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -309,6 +410,82 @@
                     <!-- Features will be populated here -->
                 </div>
             </div>
+
+            <div id="networkAnalysis" class="network-section" style="display: none;">
+                <h2>Network Analysis</h2>
+                <div class="network-grid">
+                    <div class="network-card">
+                        <h3>Domain Registration</h3>
+                        <div class="network-details">
+                            <table id="domainInfo">
+                                <tr>
+                                    <th>Registrar</th>
+                                    <td id="registrar">-</td>
+                                </tr>
+                                <tr>
+                                    <th>Registration Date</th>
+                                    <td id="regDate">-</td>
+                                </tr>
+                                <tr>
+                                    <th>Organization</th>
+                                    <td id="organization">-</td>
+                                </tr>
+                                <tr>
+                                    <th>Last Updated</th>
+                                    <td id="lastUpdated">-</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="network-card">
+                        <h3>Reputation Analysis</h3>
+                        <div class="network-details">
+                            <div class="reputation-meter">
+                                <div id="reputationFill" class="reputation-fill" style="width: 0%"></div>
+                            </div>
+                            <p>Reputation Score: <span id="reputationScore">-</span>/100</p>
+                            <div id="blacklistStatus"></div>
+                        </div>
+                    </div>
+
+                    <div class="network-card">
+                        <h3>Hosting Information</h3>
+                        <div class="network-details">
+                            <table id="hostingInfo">
+                                <tr>
+                                    <th>Provider</th>
+                                    <td id="hostingProvider">-</td>
+                                </tr>
+                                <tr>
+                                    <th>Location</th>
+                                    <td id="hostingLocation">-</td>
+                                </tr>
+                                <tr>
+                                    <th>IP Address</th>
+                                    <td id="ipAddress">-</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="network-card" style="margin-top: 1rem;">
+                    <h3>Redirect Chain</h3>
+                    <div class="network-details">
+                        <ul id="redirectChain" class="redirect-chain">
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="network-card" style="margin-top: 1rem;">
+                    <h3>Network Route</h3>
+                    <div class="network-details">
+                        <div id="tracerouteInfo" class="traceroute-list">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -392,6 +569,78 @@
             
             // Update features
             updateFeatures(data.features);
+            
+            // Update network analysis section
+            updateNetworkAnalysis(data.network_details);
+        }
+        
+        function updateNetworkAnalysis(networkDetails) {
+            const networkSection = document.getElementById('networkAnalysis');
+            if (!networkDetails) {
+                networkSection.style.display = 'none';
+                return;
+            }
+            networkSection.style.display = 'block';
+
+            // Update domain registration info
+            const whoisInfo = networkDetails.whois_info || {};
+            document.getElementById('registrar').textContent = whoisInfo.registrar || '-';
+            document.getElementById('regDate').textContent = whoisInfo.creation_date || '-';
+            document.getElementById('organization').textContent = whoisInfo.registrant_org || '-';
+            document.getElementById('lastUpdated').textContent = whoisInfo.last_updated || '-';
+
+            // Update reputation info
+            const reputationData = networkDetails.reputation_data || {};
+            const reputationScore = reputationData.reputation_score || 0;
+            document.getElementById('reputationScore').textContent = reputationScore;
+            document.getElementById('reputationFill').style.width = `${reputationScore}%`;
+
+            const blacklistStatus = document.getElementById('blacklistStatus');
+            blacklistStatus.innerHTML = reputationData.blacklisted
+                ? '<div class="status suspicious">Blacklisted</div>'
+                : '<div class="status good">Clean</div>';
+
+            // Update hosting info
+            const hostingInfo = networkDetails.hosting_info || {};
+            document.getElementById('hostingProvider').textContent = hostingInfo.hosting_provider || '-';
+            document.getElementById('hostingLocation').textContent = 
+                `${hostingInfo.city || ''} ${hostingInfo.country || ''}`.trim() || '-';
+            document.getElementById('ipAddress').textContent = hostingInfo.ip || '-';
+
+            // Update redirect chain
+            const redirectChain = document.getElementById('redirectChain');
+            redirectChain.innerHTML = '';
+            if (networkDetails.redirect_chain && networkDetails.redirect_chain.length > 0) {
+                networkDetails.redirect_chain.forEach((redirect, index) => {
+                    const li = document.createElement('li');
+                    const statusClass = redirect.status_code >= 300 && redirect.status_code < 400 
+                        ? 'redirect' 
+                        : 'success';
+                    li.innerHTML = `
+                        ${redirect.url}
+                        <span class="status-code ${statusClass}">${redirect.status_code}</span>
+                        ${index < networkDetails.redirect_chain.length - 1 
+                            ? '<span class="arrow">→</span>' 
+                            : ''}
+                    `;
+                    redirectChain.appendChild(li);
+                });
+            } else {
+                redirectChain.innerHTML = '<li>No redirects</li>';
+            }
+
+            // Update traceroute info
+            const tracerouteInfo = document.getElementById('tracerouteInfo');
+            tracerouteInfo.innerHTML = '';
+            if (networkDetails.traceroute_info && networkDetails.traceroute_info.length > 0) {
+                networkDetails.traceroute_info.forEach(hop => {
+                    const div = document.createElement('div');
+                    div.textContent = `Hop ${hop.hop_number}: ${hop.ip} (${hop.response_time})`;
+                    tracerouteInfo.appendChild(div);
+                });
+            } else {
+                tracerouteInfo.innerHTML = 'Traceroute information not available';
+            }
         }
 
         function updateConfidenceBar(barId, textId, value) {

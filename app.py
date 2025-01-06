@@ -11,6 +11,15 @@ import cv2
 import numpy as np
 from pyzbar.pyzbar import decode
 import io
+import whois
+import socket
+import requests
+import subprocess
+import json
+from concurrent.futures import ThreadPoolExecutor
+import dns.resolver
+from typing import Dict, Any, List, Optional
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 
@@ -193,7 +202,6 @@ def analyze_url(url):
             'ssl_status': {
                 'title': 'SSL Security',
                 'status': 'Secure' if all([
-                    features.get('is_https', 0),
                     features.get('ssl_is_valid', 0),
                     features.get('ssl_days_valid', 0) > 90
                 ]) else 'Insecure',
@@ -233,17 +241,12 @@ def analyze_url(url):
                 insights['dns_security']['details'].append("WARNING: Resolves to private IP address")
         
         # SSL Security Details
-        if features.get('is_https'):
-            insights['ssl_status']['details'].append("Uses HTTPS encryption")
-            if features.get('ssl_is_valid'):
-                days_valid = features.get('ssl_days_valid', 0)
-                insights['ssl_status']['details'].append(
-                    f"Valid SSL certificate (expires in {int(days_valid)} days)"
-                )
-            else:
-                insights['ssl_status']['details'].append("WARNING: Invalid SSL certificate")
+        if features.get('ssl_is_valid', 0):
+            insights['ssl_status']['details'].append("Valid SSL certificate")
+            if features.get('ssl_days_valid', 0) > 365:
+                insights['ssl_status']['details'].append("Long-term SSL certificate")
         else:
-            insights['ssl_status']['details'].append("WARNING: No HTTPS encryption")
+            insights['ssl_status']['details'].append("WARNING: Invalid or missing SSL certificate")
         
         # Calculate adjusted probability
         adjusted_prob = max(0.01, min(0.99, phishing_prob / 100 - trust_score))
@@ -256,15 +259,13 @@ def analyze_url(url):
         trust_indicators = []
         warning_indicators = []
         
-        # SSL/HTTPS indicators
-        if features.get('is_https', 0):
-            trust_indicators.append("Uses HTTPS encryption")
-            if features.get('ssl_is_valid', 0):
-                trust_indicators.append(f"Valid SSL certificate (expires in {int(features.get('ssl_days_valid', 0))} days)")
-            else:
-                warning_indicators.append("Invalid SSL certificate")
+        # SSL indicators
+        if features.get('ssl_is_valid', 0):
+            trust_indicators.append(f"Valid SSL certificate (expires in {int(features.get('ssl_days_valid', 0))} days)")
+            if features.get('ssl_days_valid', 0) > 365:
+                trust_indicators.append("Long-term SSL certificate")
         else:
-            warning_indicators.append("No HTTPS encryption")
+            warning_indicators.append("Invalid or missing SSL certificate")
             
         # Domain age indicators
         domain_age = features.get('domain_age_days', 0)
@@ -291,7 +292,43 @@ def analyze_url(url):
         if features.get('has_double_slash', 0):
             warning_indicators.append("Contains double slash in path")
             
-        return {
+        # Extract domain for additional analysis
+        domain = urlparse(url).netloc
+        if domain.startswith('www.'):
+            domain = domain[4:]
+        
+        # Gather enhanced security metrics
+        whois_info = get_whois_info(domain)
+        reputation_data = check_reputation(domain)
+        hosting_info = analyze_hosting(domain)
+        redirect_chain = check_redirect_chain(url)
+        traceroute_info = perform_traceroute(domain)
+        
+        # Add network analysis results to insights
+        insights['network_analysis'] = {
+            'title': 'Network Analysis',
+            'status': 'Secure' if reputation_data['reputation_score'] >= 70 else 'Suspicious',
+            'details': [
+                f"Reputation Score: {reputation_data['reputation_score']}/100",
+                f"Hosting Provider: {hosting_info.get('hosting_provider', 'Unknown')}",
+                f"Server Location: {hosting_info.get('country', 'Unknown')}",
+                f"Redirect Chain Length: {len(redirect_chain)}",
+                f"Network Hops: {len(traceroute_info)}"
+            ]
+        }
+        
+        insights['domain_registration'] = {
+            'title': 'Domain Registration',
+            'status': 'Verified' if whois_info else 'Unknown',
+            'details': [
+                f"Registrar: {whois_info.get('registrar', 'Unknown')}",
+                f"Registration Date: {whois_info.get('creation_date', 'Unknown')}",
+                f"Organization: {whois_info.get('registrant_org', 'Unknown')}"
+            ]
+        }
+        
+        # Add detailed analysis results
+        analysis_results = {
             "url": url,
             "raw_probability": float(phishing_prob),
             "trust_score": float(trust_score * 100),
@@ -304,8 +341,27 @@ def analyze_url(url):
                        for k, v in features.items()},
             "model_name": str(model_name),
             "insights": dict(insights),
-            "screenshot": str(screenshot_path) if screenshot_success else None
+            "screenshot": str(screenshot_path) if screenshot_success else None,
+            "network_details": {
+                'whois_info': whois_info,
+                'reputation_data': reputation_data,
+                'hosting_info': hosting_info,
+                'redirect_chain': redirect_chain,
+                'traceroute_info': traceroute_info
+            }
         }
+        
+        # Adjust trust score based on new metrics
+        if reputation_data['reputation_score'] >= 70:
+            trust_score += 0.15
+        if not reputation_data['blacklisted']:
+            trust_score += 0.10
+        if hosting_info.get('is_hosting', False):
+            trust_score += 0.05
+        if len(redirect_chain) <= 2:  # Fewer redirects is better
+            trust_score += 0.05
+            
+        return analysis_results
         
     except Exception as e:
         logger.error(f"Error analyzing URL: {str(e)}")
@@ -347,6 +403,142 @@ def process_qr_code(file_storage):
     except Exception as e:
         logger.error(f"Error processing QR code: {str(e)}")
         raise ValueError(f"Failed to process QR code: {str(e)}")
+
+def get_whois_info(domain: str) -> Dict[str, Any]:
+    """Get detailed WHOIS information for a domain"""
+    try:
+        w = whois.whois(domain)
+        return {
+            'registrar': w.registrar,
+            'creation_date': str(w.creation_date[0] if isinstance(w.creation_date, list) else w.creation_date),
+            'expiration_date': str(w.expiration_date[0] if isinstance(w.expiration_date, list) else w.expiration_date),
+            'registrant_country': w.registrant_country,
+            'registrant_org': w.org,
+            'last_updated': str(w.updated_date[0] if isinstance(w.updated_date, list) else w.updated_date)
+        }
+    except Exception as e:
+        logger.error(f"WHOIS lookup failed: {str(e)}")
+        return {}
+
+def check_reputation(domain: str) -> Dict[str, Any]:
+    """Check domain reputation from multiple sources"""
+    reputation_data = {
+        'blacklisted': False,
+        'reputation_score': 0,
+        'threat_categories': [],
+        'sources_checked': []
+    }
+    
+    # Check against common blacklists
+    blacklists = [
+        'zen.spamhaus.org',
+        'bl.spamcop.net',
+        'dnsbl.sorbs.net'
+    ]
+    
+    def check_blacklist(bl):
+        try:
+            addr = f"{domain}.{bl}"
+            dns.resolver.resolve(addr, 'A')
+            return True
+        except:
+            return False
+    
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        results = list(executor.map(check_blacklist, blacklists))
+        
+    reputation_data['blacklisted'] = any(results)
+    reputation_data['sources_checked'] = blacklists
+    
+    # Calculate reputation score (0-100)
+    reputation_data['reputation_score'] = 100 - (sum(results) * 33)
+    
+    return reputation_data
+
+def perform_traceroute(domain: str) -> List[Dict[str, str]]:
+    """Perform traceroute analysis"""
+    try:
+        # Using tracert for Windows
+        process = subprocess.Popen(['tracert', '-h', '15', domain],
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                text=True)
+        output, _ = process.communicate()
+        
+        hops = []
+        for line in output.split('\n'):
+            # Skip empty lines and header lines
+            if not line.strip() or 'Tracing route to' in line or 'over a maximum' in line:
+                continue
+                
+            # Parse only lines that contain timing information
+            if 'ms' in line:
+                parts = line.strip().split()
+                
+                # Find hop number
+                hop_number = next((p for p in parts if p.isdigit()), '0')
+                
+                # Find IP address or hostname (usually the last part)
+                ip = parts[-1] if parts else 'Unknown'
+                
+                # Find the best response time
+                response_time = 'Unknown'
+                for part in parts:
+                    if 'ms' in part:
+                        response_time = part
+                        break
+                
+                hop = {
+                    'hop_number': hop_number,
+                    'ip': ip,
+                    'response_time': response_time
+                }
+                hops.append(hop)
+                
+        return hops
+    except Exception as e:
+        logger.error(f"Traceroute failed: {str(e)}")
+        return []
+
+def analyze_hosting(domain: str) -> Dict[str, Any]:
+    """Analyze hosting provider information"""
+    try:
+        ip = socket.gethostbyname(domain)
+        
+        # Get hosting provider info using ip-api.com (free API)
+        response = requests.get(f'http://ip-api.com/json/{ip}')
+        if response.status_code == 200:
+            data = response.json()
+            return {
+                'ip': ip,
+                'hosting_provider': data.get('isp', 'Unknown'),
+                'organization': data.get('org', 'Unknown'),
+                'country': data.get('country', 'Unknown'),
+                'city': data.get('city', 'Unknown'),
+                'is_hosting': data.get('hosting', False)
+            }
+    except Exception as e:
+        logger.error(f"Hosting analysis failed: {str(e)}")
+    return {}
+
+def check_redirect_chain(url: str, max_redirects: int = 5) -> List[Dict[str, str]]:
+    """Monitor URL redirect chain"""
+    redirects = []
+    try:
+        response = requests.get(url, allow_redirects=True)
+        for resp in response.history:
+            redirects.append({
+                'url': resp.url,
+                'status_code': resp.status_code
+            })
+        # Add final destination
+        redirects.append({
+            'url': response.url,
+            'status_code': response.status_code
+        })
+    except Exception as e:
+        logger.error(f"Redirect chain analysis failed: {str(e)}")
+    return redirects
 
 @app.route('/')
 def index():
